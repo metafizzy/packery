@@ -50,7 +50,7 @@ Rect.prototype.containsPoint = function( point ) {
     this.y < point.y &&
     this.x + this.width > point.x &&
     this.y + this.height > point.y;
-}
+};
 
 Rect.prototype.containsAnyCorner = function( otherRect ) {
   return this.containsPoint({ x: otherRect.x, y: otherRect.y }) ||
@@ -90,7 +90,7 @@ Rect.prototype.getMaximalFreeRects = function( otherRect ) {
       y: this.y,
       width: this.width,
       height: otherRect.y - this.y
-    })
+    });
     freeRects.push( freeRect );
   }
 
@@ -101,7 +101,7 @@ Rect.prototype.getMaximalFreeRects = function( otherRect ) {
       y: this.y,
       width: thisRight - otherRight,
       height: this.height
-    })
+    });
     freeRects.push( freeRect );
   }
 
@@ -112,7 +112,7 @@ Rect.prototype.getMaximalFreeRects = function( otherRect ) {
       y: otherBottom,
       width: this.width,
       height: thisBottom - otherBottom
-    })
+    });
     freeRects.push( freeRect );
   }
 
@@ -123,13 +123,12 @@ Rect.prototype.getMaximalFreeRects = function( otherRect ) {
       y: this.y,
       width: otherRect.x - this.x,
       height: this.height
-    })
+    });
     freeRects.push( freeRect );
   }
 
-
   return freeRects;
-}
+};
 
 
 
@@ -150,12 +149,13 @@ var r2 = new Rect({
 var freeRects = r2.getMaximalFreeRects( r1 );
 
 // console.log( r1.intersects( r2 ) );
-console.log( freeRects );
+// console.log( freeRects );
 
 // -------------------------- canvas -------------------------- //
 
 var w = 400;
-var h = 600;
+var h = 400;
+var ctx;
 
 window.onload = function() {
   var canvas = document.getElementsByTagName('canvas')[0];
@@ -163,17 +163,79 @@ window.onload = function() {
   canvas.width = w;
   canvas.height = h;
 
-  var ctx = canvas.getContext('2d');
+  ctx = canvas.getContext('2d');
 
   ctx.fillStyle = 'hsla(240, 100%, 50%, 0.3)';
-  ctx.fillRect( r1.x, r1.y, r1.width, r1.height );
-  ctx.fillRect( r2.x, r2.y, r2.width, r2.height );
 
-  ctx.fillStyle = 'hsla(0, 100%, 50%, 0.5)';
-  freeRects.forEach( function( rect ) {
-    ctx.fillRect( rect.x, rect.y, rect.width, rect.height );
-  });
+  getRects();
+
+  // renderRect( r1 );
+  // renderRect( r2 );
+  //
+  // // render free frects
+  // ctx.fillStyle = 'hsla(0, 100%, 50%, 0.5)';
+  // freeRects.forEach( renderRect );
 
 };
+
+function renderRect( rect ) {
+  var hue = Math.floor( Math.random() * 360 );
+  ctx.fillStyle = 'hsla( ' + hue + ', 100%, 50%, 0.3)';
+  ctx.fillRect( rect.x, rect.y, rect.width, rect.height );
+}
+
+var rects;
+
+function getRects() {
+  rects = [];
+  var rect, x, y;
+  var i = 0;
+  while ( i++ < 10 ) {
+    x = Math.floor( Math.random() * w / 10 ) * 10;
+    y = Math.floor( Math.random() * h / 10 ) * 10;
+    rect = new Rect({
+      x: x,
+      y: y,
+      width: Math.floor( Math.random() * ( w - x ) / 10 ) * 10,
+      height: Math.floor( Math.random() * ( h - y ) / 10 ) * 10
+    });
+    rects.push( rect );
+  }
+
+  console.log( rects );
+  renderRects()
+
+}
+
+function renderRects() {
+  ctx.fillStyle = 'white';
+  ctx.fillRect( 0, 0, w, h );
+  rects.forEach( renderRect );
+}
+
+var mergeRects = window.mergeRects = function() {
+  // clone rects
+  var testRects = rects.slice(0);
+  var removedCount = 0;
+  testRects.forEach( function( rect, i ) {
+    // var testRects
+    var compareRects = testRects.slice(0);
+    // do not compare with self
+    compareRects = compareRects.splice( i, 1 );
+    compareRects.forEach( function( compareRect, j ) {
+      // remove rect from test collection
+      if ( rect.contains( compareRect ) ) {
+        console.log('contains');
+        testRects.splice( i + j - removedCount, 1 );
+        removedCount++;
+      }
+    });
+  });
+
+  rects = testRects;
+  renderRects();
+};
+
+window.getRects = getRects;
 
 })( window );
