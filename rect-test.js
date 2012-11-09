@@ -115,12 +115,12 @@ function getTestingRects() {
     height: 25
   }));
 
-  // rects.push( new Rect({
-  //   x: 5,
-  //   y: 5,
-  //   width: 300,
-  //   height: 120
-  // }));
+  rects.push( new Rect({
+    x: 5,
+    y: 5,
+    width: 300,
+    height: 120
+  }));
 
   rects.push( new Rect({
     x: 100,
@@ -148,30 +148,7 @@ function renderRects() {
 }
 
 var mergeRects = window.mergeRects = function() {
-  // clone rects
-  var testRects = rects.slice(0);
-
-  testRects.forEach( function( rect, i ) {
-    // clone rects we're testing, remove this rect
-    var compareRects = testRects.slice(0);
-    // do not compare with self
-    compareRects.splice( i, 1 );
-    // compare this rect with others
-    var removedCount = 0;
-    compareRects.forEach( function( compareRect, j ) {
-      // if this rect contains another,
-      // remove that rect from test collection
-      var indexAdjust = i > j ? 0 : 1;
-      if ( rect.contains( compareRect ) ) {
-        // console.log( 'current test rects:' + testRects.length, testRects );
-        // console.log( i, j, indexAdjust, rect, compareRect );
-        testRects.splice( j + indexAdjust - removedCount, 1 );
-        removedCount++;
-      }
-    });
-  });
-
-  rects = testRects;
+  rects = Rect.mergeRects( rects );
   renderRects();
 };
 

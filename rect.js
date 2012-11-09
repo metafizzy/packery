@@ -130,6 +130,39 @@ Rect.prototype.getMaximalFreeRects = function( otherRect ) {
   return freeRects;
 };
 
+// -------------------------- utility methods -------------------------- //
+
+/**
+ * Remove redundant rectangle from array of rectangles
+ * @param {Array} rects: an array of Rects
+ * @returns {Array} rects: an array of Rects
+**/
+Rect.mergeRects = function( rects ) {
+  rects.forEach( function( rect, i ) {
+    // clone rects we're testing, remove this rect
+    var compareRects = rects.slice(0);
+    // do not compare with self
+    compareRects.splice( i, 1 );
+    // compare this rect with others
+    var removedCount = 0;
+    compareRects.forEach( function( compareRect, j ) {
+      // if this rect contains another,
+      // remove that rect from test collection
+      var indexAdjust = i > j ? 0 : 1;
+      if ( rect.contains( compareRect ) ) {
+        // console.log( 'current test rects:' + testRects.length, testRects );
+        // console.log( i, j, indexAdjust, rect, compareRect );
+        rects.splice( j + indexAdjust - removedCount, 1 );
+        removedCount++;
+      }
+    });
+  });
+
+  return rects;
+};
+
+// --------------------------  -------------------------- //
+
 window.Rect2D = Rect;
 
 })( window );
