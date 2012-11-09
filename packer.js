@@ -3,8 +3,8 @@
 'use strict';
 
 var Rect = window.Rect2D;
-var w = 200;
-var h = 400;
+var w = 400;
+var h = 600;
 var ctx;
 // var myPacker = new Packer( w, Number.POSITIVE_INFINITY );
 var myPacker = new Packer( w, h );
@@ -22,7 +22,7 @@ var rects = [];
 
 window.pack = function() {
   var hue = Math.floor( Math.random() * 360 );
-  var lum = Math.floor( Math.random() * 50 + 25 );
+  var lum = Math.floor( Math.random() * 25 + 25 );
 
   var rect = new Rect({
     width:  ( Math.floor( Math.random() * 4 ) + 1 ) * 20,
@@ -99,10 +99,12 @@ Packer.prototype.placeInSpace = function( rect, space ) {
   var revisedSpaces = [];
   this.spaces.forEach( function( iSpace, i ) {
     var newSpaces = iSpace.getMaximalFreeRects( rect );
-    // console.log( 'newSpaces.length', iSpace.overlaps( rect ), newSpaces.length );
-    var spacesToAdd = newSpaces.length ? newSpaces : iSpace;
-    revisedSpaces = revisedSpaces.concat( spacesToAdd );
-  }.bind( this ) );
+    // if it didn't overlap, or if it did and there are new spaces
+    if ( !newSpaces || newSpaces.length ) {
+      revisedSpaces = revisedSpaces.concat( newSpaces || iSpace );
+    }
+    // otherwise, rect took up entire space
+  });
 
   this.spaces = revisedSpaces;
   // remove redundant spaces

@@ -59,13 +59,13 @@ Rect.prototype.overlaps = function( rect ) {
 };
 
 Rect.prototype.getMaximalFreeRects = function( otherRect ) {
-  var freeRects = [];
 
-  // if no intersection, return empty array
+  // if no intersection, return false
   if ( !this.overlaps( otherRect ) ) {
-    return freeRects;
+    return false;
   }
 
+  var freeRects = [];
   var freeRect;
 
   var thisRight = this.x + this.width;
