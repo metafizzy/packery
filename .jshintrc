@@ -2,5 +2,8 @@
   "browser": true,
   "devel": true,
   "strict": true,
-  "undef": true
+  "undef": true,
+  "predef": {
+    "Rect": true
+  }
 }
