@@ -3,8 +3,8 @@
 'use strict';
 
 var Rect = window.Rect2D;
-var w = 400;
-var h = 600;
+var w = 200;
+var h = 400;
 var ctx;
 // var myPacker = new Packer( w, Number.POSITIVE_INFINITY );
 var myPacker = new Packer( w, h );
@@ -81,7 +81,7 @@ Packer.prototype.pack = function( rect ) {
     var space = this.spaces[i];
     if ( space.canFit( rect ) ) {
       // remove space from collection
-      this.spaces.splice( i, 1 );
+      // this.spaces.splice( i, 1 );
       this.placeInSpace( rect, space );
       break;
     }
@@ -93,38 +93,17 @@ Packer.prototype.placeInSpace = function( rect, space ) {
   rect.x = space.x;
   rect.y = space.y;
 
-  this.spaces.forEach( function( aSpace ) {
-    space.color = 'hsla(0, 0%, 0%, 0.05)';
-  });
+  // update spaces
+  var revisedSpaces = [];
+  this.spaces.forEach( function( iSpace, i ) {
+    var newSpaces = iSpace.getMaximalFreeRects( rect );
+    var spacesToAdd = newSpaces.length ? newSpaces : iSpace;
+    revisedSpaces = revisedSpaces.concat( spacesToAdd );
+  }.bind( this ) );
 
-
-  // get new spaces, areas around rect in space
-
-  var allNewSpaces = [];
-  var newSpaces = space.getMaximalFreeRects( rect );
-  allNewSpaces = allNewSpaces.concat( newSpaces );
-  // do the same for other spaces
-  this.spaces.forEach( function( aSpace ) {
-    newSpaces = aSpace.getMaximalFreeRects( rect );
-    console.log( newSpaces );
-    if ( newSpaces && newSpaces.length ) {
-      allNewSpaces = allNewSpaces.concat( newSpaces );
-    }
-  });
-
-  this.spaces = allNewSpaces;
-  // var newSpaces = space.getMaximalFreeRects( rect );
-  // this.newSpaces = newSpaces;
-  // this.newSpaces.forEach( function( aSpace ) {
-  //   space.color = 'hsla(0, 100%, 50%, 0.3)';
-  // });
-  // console.log( 'new spaces', newSpaces );
-  // // add to spaces collection
-  // this.spaces = this.spaces.concat( newSpaces );
-  // console.log( this.spaces.length );
+  this.spaces = revisedSpaces;
   // remove redundant spaces
   Rect.mergeRects( this.spaces );
-  console.log( this.spaces );
 };
 
 })( window );

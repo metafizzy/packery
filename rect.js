@@ -71,11 +71,13 @@ Rect.prototype.intersects = function( otherRect ) {
 };
 
 Rect.prototype.getMaximalFreeRects = function( otherRect ) {
+  var freeRects = [];
+
+  // if no intersection, return empty array
   if ( !this.intersects( otherRect ) ) {
-    return;
+    return freeRects;
   }
 
-  var freeRects = [];
   var freeRect;
 
   var thisRight = this.x + this.width;
