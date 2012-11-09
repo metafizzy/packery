@@ -189,25 +189,73 @@ function renderRect( rect ) {
 
 var rects;
 
+// function getRects() {
+//   rects = [];
+//   var rect, x, y;
+//   var i = 0;
+//   while ( i++ < 10 ) {
+//     x = Math.floor( Math.random() * w / 10 ) * 10;
+//     y = Math.floor( Math.random() * h / 10 ) * 10;
+//     rect = new Rect({
+//       x: x,
+//       y: y,
+//       width: Math.floor( Math.random() * ( w - x ) / 10 + 1 ) * 10,
+//       height: Math.floor( Math.random() * ( h - y ) / 10 + 1 ) * 10
+//     });
+//     rects.push( rect );
+//   }
+//
+//   console.log( rects );
+//   renderRects()
+//
+// }
+
 function getRects() {
   rects = [];
-  var rect, x, y;
-  var i = 0;
-  while ( i++ < 10 ) {
-    x = Math.floor( Math.random() * w / 10 ) * 10;
-    y = Math.floor( Math.random() * h / 10 ) * 10;
-    rect = new Rect({
-      x: x,
-      y: y,
-      width: Math.floor( Math.random() * ( w - x ) / 10 + 1 ) * 10,
-      height: Math.floor( Math.random() * ( h - y ) / 10 + 1 ) * 10
-    });
-    rects.push( rect );
-  }
+  rects.push( new Rect({
+    x: 20,
+    y: 20,
+    width: 100,
+    height: 100
+  }));
 
-  console.log( rects );
-  renderRects()
+  rects.push( new Rect({
+    x: 200,
+    y: 20,
+    width: 100,
+    height: 100
+  }));
 
+  rects.push( new Rect({
+    x: 20,
+    y: 140,
+    width: 100,
+    height: 100
+  }));
+
+  rects.push( new Rect({
+    x: 30,
+    y: 30,
+    width: 70,
+    height: 25
+  }));
+
+  rects.push( new Rect({
+    x: 100,
+    y: 100,
+    width:  120,
+    height: 120
+  }));
+
+  rects.push( new Rect({
+    x: 40,
+    y: 160,
+    width:  40,
+    height: 60
+
+  }));
+  console.log('get rects: ', rects);
+  renderRects();
 }
 
 function renderRects() {
@@ -220,18 +268,19 @@ function renderRects() {
 var mergeRects = window.mergeRects = function() {
   // clone rects
   var testRects = rects.slice(0);
-  var removedCount = 0;
+
   testRects.forEach( function( rect, i ) {
-    // var testRects
+    // clone rects we're testing, remove this rect
     var compareRects = testRects.slice(0);
     // do not compare with self
     compareRects.splice( i, 1 );
+    // compare this rect with others
     compareRects.forEach( function( compareRect, j ) {
-      // remove rect from test collection
+      // if this rect contains another,
+      // remove that rect from test collection
       if ( rect.contains( compareRect ) ) {
-        console.log('contains', i, j, rect, compareRect );
-        testRects.splice( i + j - removedCount, 1 );
-        removedCount++;
+        // console.log( i, j, rect, compareRect );
+        testRects.splice( j + 1, 1 );
       }
     });
   });
