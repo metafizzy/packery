@@ -6,17 +6,29 @@ var Rect = window.Rect2D;
 
 var r1 = new Rect({
   x: 40,
-  y: 160,
-  width: 250,
-  height: 100
+  y: 260,
+  width:  40,
+  height: 70
 });
 
 var r2 = new Rect({
-  x: 60,
-  y: 30,
-  width: 140,
-  height: 200
+  x: 40,
+  y: 270,
+  width:  40,
+  height: 50
 });
+
+// adjance to r2
+var r3 = new Rect({
+  x: 80,
+  y: 300,
+  width:  40,
+  height: 50
+
+})
+
+console.log( 'r1.overlaps( r2 )', r1.overlaps( r2 ) );
+console.log( 'r3.overlaps( r2 )', r3.overlaps( r2 ) );
 
 var freeRects = r2.getMaximalFreeRects( r1 );
 
@@ -37,12 +49,13 @@ window.onload = function() {
 
   ctx = canvas.getContext('2d');
 
-  ctx.fillStyle = 'hsla(240, 100%, 50%, 0.3)';
+  // ctx.fillStyle = 'hsla(240, 100%, 50%, 0.3)';
 
   getRects();
 
-  // renderRect( r1 );
-  // renderRect( r2 );
+  renderRect( r1 );
+  renderRect( r2 );
+  renderRect( r3 );
   //
   // // render free frects
   // ctx.fillStyle = 'hsla(0, 100%, 50%, 0.5)';

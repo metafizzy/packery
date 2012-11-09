@@ -41,40 +41,28 @@ Rect.prototype.contains = function( otherRect ) {
 };
 
 /**
- * Determines whether or not the rectangle contains point.
- * @param {Object} point: { x: , y: }
- * @returns {Boolean}
-**/
-Rect.prototype.containsPoint = function( point ) {
-  return this.x < point.x &&
-    this.y < point.y &&
-    this.x + this.width > point.x &&
-    this.y + this.height > point.y;
-};
-
-Rect.prototype.containsAnyCorner = function( otherRect ) {
-  return this.containsPoint({ x: otherRect.x, y: otherRect.y }) ||
-    this.containsPoint({ x: otherRect.x + otherRect.width, y: otherRect.y }) ||
-    this.containsPoint({ x: otherRect.x + otherRect.width, y: otherRect.y + otherRect.height }) ||
-    this.containsPoint({ x: otherRect.x, y: otherRect.y + otherRect.height });
-};
-
-/**
  * Determines whether or not the rectangle intersects with another.
- * @param {Rect} otherRect
+ * @param {Rect} rect
  * @returns {Boolean}
 **/
-Rect.prototype.intersects = function( otherRect ) {
-  // check if any point in either rect are contained in the other
-  return this.containsAnyCorner( otherRect ) ||
-    otherRect.containsAnyCorner( this );
+Rect.prototype.overlaps = function( rect ) {
+  var thisRight = this.x + this.width;
+  var thisBottom = this.y + this.height;
+  var rectRight = rect.x + rect.width;
+  var rectBottom = rect.y + rect.height;
+
+  // http://stackoverflow.com/a/306332
+  return this.x < rectRight &&
+    thisRight > rect.x &&
+    this.y < rectBottom &&
+    thisBottom > rect.y;
 };
 
 Rect.prototype.getMaximalFreeRects = function( otherRect ) {
   var freeRects = [];
 
   // if no intersection, return empty array
-  if ( !this.intersects( otherRect ) ) {
+  if ( !this.overlaps( otherRect ) ) {
     return freeRects;
   }
 
