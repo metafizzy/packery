@@ -189,74 +189,82 @@ function renderRect( rect ) {
 
 var rects;
 
-// function getRects() {
-//   rects = [];
-//   var rect, x, y;
-//   var i = 0;
-//   while ( i++ < 10 ) {
-//     x = Math.floor( Math.random() * w / 10 ) * 10;
-//     y = Math.floor( Math.random() * h / 10 ) * 10;
-//     rect = new Rect({
-//       x: x,
-//       y: y,
-//       width: Math.floor( Math.random() * ( w - x ) / 10 + 1 ) * 10,
-//       height: Math.floor( Math.random() * ( h - y ) / 10 + 1 ) * 10
-//     });
-//     rects.push( rect );
-//   }
-//
-//   console.log( rects );
-//   renderRects()
-//
-// }
-
 function getRects() {
   rects = [];
-  rects.push( new Rect({
-    x: 20,
-    y: 20,
-    width: 100,
-    height: 100
-  }));
+  var rect, x, y;
+  var i = 0;
+  while ( i++ < 10 ) {
+    x = Math.floor( Math.random() * w / 10 ) * 10;
+    y = Math.floor( Math.random() * h / 10 ) * 10;
+    rect = new Rect({
+      x: x,
+      y: y,
+      width: Math.floor( Math.random() * ( w - x ) / 10 + 1 ) * 10,
+      height: Math.floor( Math.random() * ( h - y ) / 10 + 1 ) * 10
+    });
+    rects.push( rect );
+  }
 
-  rects.push( new Rect({
-    x: 200,
-    y: 20,
-    width: 100,
-    height: 100
-  }));
+  console.log( rects );
+  renderRects()
 
-  rects.push( new Rect({
-    x: 20,
-    y: 140,
-    width: 100,
-    height: 100
-  }));
-
-  rects.push( new Rect({
-    x: 30,
-    y: 30,
-    width: 70,
-    height: 25
-  }));
-
-  rects.push( new Rect({
-    x: 100,
-    y: 100,
-    width:  120,
-    height: 120
-  }));
-
-  rects.push( new Rect({
-    x: 40,
-    y: 160,
-    width:  40,
-    height: 60
-
-  }));
-  console.log('get rects: ', rects);
-  renderRects();
 }
+
+// function getRects() {
+//   rects = [];
+//
+//   rects.push( new Rect({
+//     x: 20,
+//     y: 20,
+//     width: 100,
+//     height: 100
+//   }));
+//
+//   rects.push( new Rect({
+//     x: 200,
+//     y: 20,
+//     width: 100,
+//     height: 100
+//   }));
+//
+//   rects.push( new Rect({
+//     x: 20,
+//     y: 140,
+//     width: 100,
+//     height: 100
+//   }));
+//
+//   rects.push( new Rect({
+//     x: 30,
+//     y: 30,
+//     width: 70,
+//     height: 25
+//   }));
+//
+//   rects.push( new Rect({
+//     x: 5,
+//     y: 5,
+//     width: 300,
+//     height: 120
+//   }));
+//
+//   rects.push( new Rect({
+//     x: 100,
+//     y: 100,
+//     width:  120,
+//     height: 120
+//   }));
+//
+//   rects.push( new Rect({
+//     x: 40,
+//     y: 160,
+//     width:  40,
+//     height: 60
+//   }));
+//
+//   console.log('get rects: ', rects);
+//   renderRects();
+// }
 
 function renderRects() {
   ctx.fillStyle = 'white';
@@ -275,12 +283,16 @@ var mergeRects = window.mergeRects = function() {
     // do not compare with self
     compareRects.splice( i, 1 );
     // compare this rect with others
+    var removedCount = 0;
     compareRects.forEach( function( compareRect, j ) {
       // if this rect contains another,
       // remove that rect from test collection
+      var indexAdjust = i > j ? 0 : 1;
       if ( rect.contains( compareRect ) ) {
-        // console.log( i, j, rect, compareRect );
-        testRects.splice( j + 1, 1 );
+        console.log( 'current test rects:' + testRects.length, testRects );
+        console.log( i, j, indexAdjust, rect, compareRect );
+        testRects.splice( j + indexAdjust - removedCount, 1 );
+        removedCount++;
       }
     });
   });
