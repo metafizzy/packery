@@ -27,6 +27,8 @@ window.pack = function() {
   var rect = new Rect({
     width:  ( Math.floor( Math.random() * 4 ) + 1 ) * 20,
     height: ( Math.floor( Math.random() * 4 ) + 1 ) * 20
+    // width:  ( Math.floor( Math.random() * 50 ) + 10 ),
+    // height: ( Math.floor( Math.random() * 50 ) + 10 )
     // width:  100,
     // height: 100
   });
@@ -82,8 +84,6 @@ Packer.prototype.pack = function( rect ) {
   for ( var i=0, len = this.spaces.length; i < len; i++ ) {
     var space = this.spaces[i];
     if ( space.canFit( rect ) ) {
-      // remove space from collection
-      // this.spaces.splice( i, 1 );
       this.placeInSpace( rect, space );
       break;
     }
@@ -111,11 +111,15 @@ Packer.prototype.placeInSpace = function( rect, space ) {
   Rect.mergeRects( this.spaces );
   console.log( this.spaces );
 
-  this.spaces.sort( Packer.spaceSorter );
+  this.spaces.sort( Packer.spaceSorterTopLeft );
 };
 
-Packer.spaceSorter = function( a, b ) {
+Packer.spaceSorterTopLeft = function( a, b ) {
   return a.y - b.y || a.x - b.x;
+};
+
+Packer.spaceSorterLeftTop = function( a, b ) {
+  return a.x - b.x || a.y - b.y;
 };
 
 })( window );
