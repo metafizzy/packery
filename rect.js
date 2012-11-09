@@ -130,6 +130,10 @@ Rect.prototype.getMaximalFreeRects = function( otherRect ) {
   return freeRects;
 };
 
+Rect.prototype.canFit = function( rect ) {
+  return this.width >= rect.width && this.height >= rect.height;
+};
+
 // -------------------------- utility methods -------------------------- //
 
 /**
