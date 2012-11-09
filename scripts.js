@@ -189,7 +189,9 @@ function renderRect( rect ) {
 
 var rects;
 
-function getRects() {
+var getRects = getTestingRects;
+
+function getRandomRects() {
   rects = [];
   var rect, x, y;
   var i = 0;
@@ -210,61 +212,61 @@ function getRects() {
 
 }
 
-// function getRects() {
-//   rects = [];
-//
-//   rects.push( new Rect({
-//     x: 20,
-//     y: 20,
-//     width: 100,
-//     height: 100
-//   }));
-//
-//   rects.push( new Rect({
-//     x: 200,
-//     y: 20,
-//     width: 100,
-//     height: 100
-//   }));
-//
-//   rects.push( new Rect({
-//     x: 20,
-//     y: 140,
-//     width: 100,
-//     height: 100
-//   }));
-//
-//   rects.push( new Rect({
-//     x: 30,
-//     y: 30,
-//     width: 70,
-//     height: 25
-//   }));
-//
-//   rects.push( new Rect({
-//     x: 5,
-//     y: 5,
-//     width: 300,
-//     height: 120
-//   }));
-//
-//   rects.push( new Rect({
-//     x: 100,
-//     y: 100,
-//     width:  120,
-//     height: 120
-//   }));
-//
-//   rects.push( new Rect({
-//     x: 40,
-//     y: 160,
-//     width:  40,
-//     height: 60
-//   }));
-//
-//   console.log('get rects: ', rects);
-//   renderRects();
-// }
+function getTestingRects() {
+  rects = [];
+
+  rects.push( new Rect({
+    x: 20,
+    y: 20,
+    width: 100,
+    height: 100
+  }));
+
+  rects.push( new Rect({
+    x: 200,
+    y: 20,
+    width: 100,
+    height: 100
+  }));
+
+  rects.push( new Rect({
+    x: 20,
+    y: 140,
+    width: 100,
+    height: 100
+  }));
+
+  rects.push( new Rect({
+    x: 30,
+    y: 30,
+    width: 70,
+    height: 25
+  }));
+
+  rects.push( new Rect({
+    x: 5,
+    y: 5,
+    width: 300,
+    height: 120
+  }));
+
+  rects.push( new Rect({
+    x: 100,
+    y: 100,
+    width:  120,
+    height: 120
+  }));
+
+  rects.push( new Rect({
+    x: 40,
+    y: 160,
+    width:  40,
+    height: 60
+  }));
+
+  console.log('get rects: ', rects);
+  renderRects();
+}
 
 function renderRects() {
   ctx.fillStyle = 'white';
