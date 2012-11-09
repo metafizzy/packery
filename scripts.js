@@ -179,9 +179,12 @@ window.onload = function() {
 };
 
 function renderRect( rect ) {
-  var hue = Math.floor( Math.random() * 360 );
-  ctx.fillStyle = 'hsla( ' + hue + ', 100%, 50%, 0.3)';
+  // var hue = Math.floor( Math.random() * 360 );
+  // ctx.fillStyle = 'hsla( ' + hue + ', 100%, 50%, 0.3)';
   ctx.fillRect( rect.x, rect.y, rect.width, rect.height );
+
+  ctx.strokeRect( rect.x + 0.5, rect.y + 0.5, rect.width, rect.height );
+  // ctx.
 }
 
 var rects;
@@ -196,8 +199,8 @@ function getRects() {
     rect = new Rect({
       x: x,
       y: y,
-      width: Math.floor( Math.random() * ( w - x ) / 10 ) * 10,
-      height: Math.floor( Math.random() * ( h - y ) / 10 ) * 10
+      width: Math.floor( Math.random() * ( w - x ) / 10 + 1 ) * 10,
+      height: Math.floor( Math.random() * ( h - y ) / 10 + 1 ) * 10
     });
     rects.push( rect );
   }
@@ -210,6 +213,7 @@ function getRects() {
 function renderRects() {
   ctx.fillStyle = 'white';
   ctx.fillRect( 0, 0, w, h );
+  ctx.fillStyle = 'hsla( 220, 100%, 50%, 0.4)';
   rects.forEach( renderRect );
 }
 
@@ -221,11 +225,11 @@ var mergeRects = window.mergeRects = function() {
     // var testRects
     var compareRects = testRects.slice(0);
     // do not compare with self
-    compareRects = compareRects.splice( i, 1 );
+    compareRects.splice( i, 1 );
     compareRects.forEach( function( compareRect, j ) {
       // remove rect from test collection
       if ( rect.contains( compareRect ) ) {
-        console.log('contains');
+        console.log('contains', i, j, rect, compareRect );
         testRects.splice( i + j - removedCount, 1 );
         removedCount++;
       }
