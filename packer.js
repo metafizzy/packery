@@ -47,8 +47,7 @@ function render() {
 
   rects.forEach( renderRect );
 
-  myPacker.spaces.forEach( renderRect );
-  myPacker.newSpaces.forEach( renderRect );
+  // myPacker.spaces.forEach( renderRect );
 }
 
 function renderRect( rect ) {
