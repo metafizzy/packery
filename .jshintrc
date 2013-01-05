@@ -4,6 +4,22 @@
   "strict": true,
   "undef": true,
   "predef": {
-    "Rect": true
+    "Packery": true,
+
+    "asyncTest": false,
+    "deepEqual": false,
+    "equal": false,
+    "expect": false,
+    "module": false,
+    "notDeepEqual": false,
+    "notEqual": false,
+    "notStrictEqual": false,
+    "ok": false,
+    "QUnit": false,
+    "raises": false,
+    "start": false,
+    "stop": false,
+    "strictEqual": false,
+    "test": false
   }
 }

@@ -1,6 +1,16 @@
+/**
+ * Rect
+ * low-level utility class for basic geometry
+ */
+
 ( function( window ) {
 
 "use strict";
+
+// -------------------------- Packery -------------------------- //
+
+// global namespace
+var Packery = window.Packery = function() {};
 
 // -------------------------- Rect -------------------------- //
 
@@ -11,12 +21,13 @@ function Rect( props ) {
   }
 
   for ( prop in props ) {
-    if ( Rect.defaults.hasOwnProperty( prop ) ) {
-      this[ prop ] = props[ prop ];
-    }
+    this[ prop ] = props[ prop ];
   }
 
 }
+
+// make available
+Packery.Rect = Rect;
 
 Rect.defaults = {
   x: 0,
@@ -58,6 +69,10 @@ Rect.prototype.overlaps = function( rect ) {
     thisBottom > rect.y;
 };
 
+/**
+ * @param {Rect} rect - the overlapping rect
+ * @returns {Array} freeRects - rects representing the area around the rect
+**/
 Rect.prototype.getMaximalFreeRects = function( otherRect ) {
 
   // if no intersection, return false
@@ -154,9 +169,5 @@ Rect.mergeRects = function( rects ) {
 
   return rects;
 };
-
-// --------------------------  -------------------------- //
-
-window.Rect2D = Rect;
 
 })( window );
