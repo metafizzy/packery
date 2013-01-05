@@ -31,6 +31,68 @@ test( 'set properties with initial argument object', function() {
   equal( rect.height, -4, 'default height property' );
 });
 
+test( 'contains', function() {
+
+  var rectA = new Rect({
+    x: 10,
+    y: 30,
+    width: 100,
+    height: 400
+  });
+
+  var rectB = new Rect({
+    x: 40,
+    y: 60,
+    width: 10,
+    height: 20
+  });
+
+  strictEqual( rectA.contains( rectB ), true, 'A clearly contains B' );
+
+  rectB = new Rect({
+    x: 500,
+    y: 40,
+    width: 40,
+    height: 20
+  });
+
+  strictEqual( rectA.contains( rectB ), false, 'A clearly does not contain B' );
+
+  rectB = new Rect({
+    x: 20,
+    y: 40
+  });
+
+  strictEqual( rectA.contains( rectB ), true, 'A contains B, which has no width or height' );
+
+  rectB = new Rect({
+    x: 20,
+    y: 50,
+    width: 60,
+    height: 150
+  });
+
+  strictEqual( rectA.contains( rectB ), true, 'B is at upper left corner of A' );
+
+  rectB = new Rect({
+    x: rectA.x,
+    y: rectA.y,
+    width: rectA.width,
+    height: rectA.height
+  });
+
+  strictEqual( rectA.contains( rectB ), true, 'A contains B. B is equal to A' );
+
+  rectB = new Rect({
+    x: rectA.x - 20,
+    y: rectA.y,
+    width: rectA.width,
+    height: rectA.height
+  });
+
+  strictEqual( rectA.contains( rectB ), false, 'A does not contain B. B same size A, but offset' );
+
+});
 
 
 })( window );
