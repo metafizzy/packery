@@ -63,7 +63,8 @@ test( 'contains', function() {
     y: 40
   });
 
-  strictEqual( rectA.contains( rectB ), true, 'A contains B, which has no width or height' );
+  strictEqual( rectA.contains( rectB ), true,
+    'A contains B, which has no width or height' );
 
   rectB = new Rect({
     x: 20,
@@ -90,9 +91,62 @@ test( 'contains', function() {
     height: rectA.height
   });
 
-  strictEqual( rectA.contains( rectB ), false, 'A does not contain B. B same size A, but offset' );
+  strictEqual( rectA.contains( rectB ), false,
+    'A does not contain B. B same size A, but offset' );
 
 });
 
+
+test( 'overlaps', function() {
+
+  var rectA = new Rect({
+    x: 100,
+    y: 50,
+    width: 300,
+    height: 200
+  });
+
+  var rectB = new Rect({
+    x: 150,
+    y: 100,
+    width: 100,
+    height: 50
+  });
+
+  strictEqual( rectA.overlaps( rectB ), true, 'B is inside A, A overlaps B' );
+  strictEqual( rectB.overlaps( rectA ), true, 'B is inside A, B overlaps A' );
+
+  rectB.x = 50;
+
+  strictEqual( rectA.overlaps( rectB ), true,
+    'B overlaps left edge of A, A overlaps B' );
+  strictEqual( rectB.overlaps( rectA ), true,
+    'B overlaps left edge of A, B overlaps A' );
+
+  rectB.y = 25;
+
+  strictEqual( rectA.overlaps( rectB ), true,
+    'B overlaps left top corner of A, A overlaps B' );
+  strictEqual( rectB.overlaps( rectA ), true,
+    'B overlaps left top corner of A, B overlaps A' );
+
+  rectB.x = 0;
+  rectB.y = 0;
+
+  strictEqual( rectA.overlaps( rectB ), false,
+    'B bottom right corner meets A top left corner, A DOES NOT overlap B' );
+  strictEqual( rectB.overlaps( rectA ), false,
+    'B bottom right corner meets A top left corner, B DOES NOT overlap A' );
+
+  rectB.x = rectA.x - rectB.width;
+  rectB.y = rectA.y;
+  rectB.height = rectA.height;
+
+  strictEqual( rectA.overlaps( rectB ), false,
+    'B is completely adjacent to A, A DOES NOT overlap B' );
+  strictEqual( rectB.overlaps( rectA ), false,
+    'B is completely adjacent to A, B DOES NOT overlap A' );
+
+});
 
 })( window );
