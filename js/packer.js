@@ -107,10 +107,43 @@ Packer.prototype.placeInSpace = function( rect, space ) {
 
   this.spaces = revisedSpaces;
   // remove redundant spaces
-  Rect.mergeRects( this.spaces );
+  Packer.mergeRects( this.spaces );
   console.log( this.spaces );
 
   this.spaces.sort( Packer.spaceSorterTopLeft );
+};
+
+// -------------------------- utility functions -------------------------- //
+
+/**
+ * Remove redundant rectangle from array of rectangles
+ * @param {Array} rects: an array of Rects
+ * @returns {Array} rects: an array of Rects
+**/
+Packer.mergeRects = function( rects ) {
+  for ( var i=0, len = rects.length; i < len; i++ ) {
+    var rect = rects[i];
+    // clone rects we're testing, remove this rect
+    var compareRects = rects.slice(0);
+    // do not compare with self
+    compareRects.splice( i, 1 );
+    // compare this rect with others
+    var removedCount = 0;
+    for ( var j=0, jLen = compareRects.length; j < jLen; j++ ) {
+      var compareRect = compareRects[j];
+      // if this rect contains another,
+      // remove that rect from test collection
+      var indexAdjust = i > j ? 0 : 1;
+      if ( rect.contains( compareRect ) ) {
+        // console.log( 'current test rects:' + testRects.length, testRects );
+        // console.log( i, j, indexAdjust, rect, compareRect );
+        rects.splice( j + indexAdjust - removedCount, 1 );
+        removedCount++;
+      }
+    }
+  }
+
+  return rects;
 };
 
 Packer.spaceSorterTopLeft = function( a, b ) {
