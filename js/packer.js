@@ -98,17 +98,13 @@ Packer.prototype.placeInSpace = function( rect, space ) {
   var revisedSpaces = [];
   this.spaces.forEach( function( iSpace, i ) {
     var newSpaces = iSpace.getMaximalFreeRects( rect );
-    // if it didn't overlap, or if it did and there are new spaces
-    if ( !newSpaces || newSpaces.length ) {
-      revisedSpaces = revisedSpaces.concat( newSpaces || iSpace );
-    }
-    // otherwise, rect took up entire space
+    // add either the original space or the new spaces to the revised spaces
+    revisedSpaces = revisedSpaces.concat( newSpaces || iSpace );
   });
 
   this.spaces = revisedSpaces;
   // remove redundant spaces
   Packer.mergeRects( this.spaces );
-  console.log( this.spaces );
 
   this.spaces.sort( Packer.spaceSorterTopLeft );
 };
