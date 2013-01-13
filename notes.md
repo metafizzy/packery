@@ -4,6 +4,14 @@
 
 jQuery plugin-ability (bridget?)
 
+## options
+
+orientation
+rowHeight
+columnWidth
+
+
+
 ## methods
 
 prepend
