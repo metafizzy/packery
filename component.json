@@ -3,6 +3,6 @@
   "version": "0.0.1",
   "author": "David DeSandro / Metafizzy",
   "dependencies": {
-    "desandro/get-size": "latest"
+    "get-size": "../get-size/"
   }
 }
