@@ -29,6 +29,19 @@
   width: 50%;
 }
 
+#ex5 {
+  width: 50%;
+}
+
+#ex5 .item {
+  margin-left: 1%;
+  margin-right: 1%;
+  width: 7.9%;
+}
+
+#ex5 .item.w2 { width: 17.9%; }
+#ex5 .item.w4 { width: 37.9%; }
+
 </style>
 
 </head>
@@ -94,6 +107,32 @@
     <div class="item h2"></div>
   </div>
 
+  <div id="ex5" class="container">
+    <div class="item w4"></div>
+    <div class="item h4"></div>
+    <div class="item w2"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+    <div class="item w4"></div>
+    <div class="item w2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item w2 h2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item w4"></div>
+    <div class="item"></div>
+    <div class="item w2"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+  </div>
+
 <script src="components/get-size/get-size.js"></script>
 <script src="js/rect.js"></script>
 <script src="js/packer.js"></script>
@@ -133,6 +172,9 @@ window.onload = function() {
 
   var ex4 = document.getElementById('ex4');
   var packery4 = new Packery( ex4 );
+
+  var ex5 = document.getElementById('ex5');
+  var packery5 = new Packery( ex5 );
 
 };
 </script>
