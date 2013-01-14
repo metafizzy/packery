@@ -38,8 +38,12 @@ function Packery( element, options ) {
 
   // initial properties
   this.packer = new Packer();
+  this.maxY = 0;
+
+  // kick it off
   this._create();
   this._init();
+
 }
 
 
@@ -84,11 +88,15 @@ Packery.prototype.getSize = function() {
 // ----- init ----- //
 
 Packery.prototype._init = function() {
+  // reset packer
   var elemSize = getSize( this.element );
   this.packer.width = elemSize.innerWidth;
   this.packer.height = Number.POSITIVE_INFINITY;
   this.packer.reset();
+  // layout
   this.layoutItems( this.items );
+  // set container size
+  this.element.style.height = this.maxY + 'px';
 };
 
 Packery.prototype.layoutItems = function( items ) {
@@ -112,6 +120,8 @@ Packery.prototype._layoutItem = function( item ) {
   item.style.left = rect.x + 'px';
   item.style.top  = rect.y + 'px';
   // console.log( size, rect.x, rect.y );
+
+  this.maxY = Math.max( rect.y + rect.height, this.maxY );
 };
 
 // -----  ----- //

@@ -69,9 +69,12 @@ Packer.prototype.placeInSpace = function( rect, space ) {
  * @returns {Array} rects: an array of Rects
 **/
 Packer.mergeRects = function( rects ) {
-  console.log('merging rects', rects );
   for ( var i=0, len = rects.length; i < len; i++ ) {
     var rect = rects[i];
+    // skip over this rect if it was already removed
+    if ( !rect ) {
+      continue;
+    }
     // clone rects we're testing, remove this rect
     var compareRects = rects.slice(0);
     // do not compare with self
