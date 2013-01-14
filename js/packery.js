@@ -14,6 +14,7 @@ var Rect = _Packery.Rect;
 var Packer = _Packery.Packer;
 var getSize = window.getSize;
 
+// extend objects
 function extend( a, b ) {
   for ( var prop in b ) {
     a[ prop ] = b[ prop ];
@@ -72,6 +73,10 @@ Packery.prototype.reloadItems = function() {
 },
 
 
+/**
+ * get item elements
+ * @param {Array or NodeList} elems
+ */
 Packery.prototype._getItems = function( elems ) {
   for ( var i=0, len = elems.length; i < len; i++ ) {
     var elem = elems[i];
@@ -99,6 +104,10 @@ Packery.prototype._init = function() {
   this.element.style.height = this.maxY + 'px';
 };
 
+/**
+ * layout a collection of item elements
+ * @param {Array} items
+ */
 Packery.prototype.layoutItems = function( items ) {
   for ( var i=0, len = items.length; i < len; i++ ) {
     // console.log( i );
@@ -107,12 +116,16 @@ Packery.prototype.layoutItems = function( items ) {
   }
 };
 
+/**
+ * layout item element in container
+ * @param {Element} item
+ */
 Packery.prototype._layoutItem = function( item ) {
   // console.log( item );
   var size = getSize( item );
   var w = size.outerWidth;
   var h = size.outerHeight;
-  // size for columnWidth and rowHeight
+  // size for columnWidth and rowHeight, if available
   var colW = this.options.columnWidth;
   w = colW ? Math.ceil( w / colW ) * colW : w;
   var rowH = this.options.rowHeight;
