@@ -60,7 +60,6 @@ function Packery( element, options ) {
 
   // initial properties
   this.packer = new Packer();
-  this.maxY = 0;
 
   // kick it off
   this._create();
@@ -129,7 +128,9 @@ Packery.prototype._init = function() {
   this.packer.width = elemSize.innerWidth;
   this.packer.height = Number.POSITIVE_INFINITY;
   this.packer.reset();
+
   // layout
+  this.maxY = 0;
   this.layoutItems( this.items );
   // set container size
   this.element.style.height = this.maxY + 'px';
