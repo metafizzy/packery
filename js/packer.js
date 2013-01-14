@@ -54,6 +54,7 @@ Packer.prototype.placeInSpace = function( rect, space ) {
   });
 
   this.spaces = revisedSpaces;
+
   // remove redundant spaces
   Packer.mergeRects( this.spaces );
 
@@ -68,6 +69,7 @@ Packer.prototype.placeInSpace = function( rect, space ) {
  * @returns {Array} rects: an array of Rects
 **/
 Packer.mergeRects = function( rects ) {
+  console.log('merging rects', rects );
   for ( var i=0, len = rects.length; i < len; i++ ) {
     var rect = rects[i];
     // clone rects we're testing, remove this rect
