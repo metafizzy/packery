@@ -110,9 +110,17 @@ Packery.prototype.layoutItems = function( items ) {
 Packery.prototype._layoutItem = function( item ) {
   // console.log( item );
   var size = getSize( item );
+  var w = size.outerWidth;
+  var h = size.outerHeight;
+  // size for columnWidth and rowHeight
+  var colW = this.options.columnWidth;
+  w = colW ? Math.ceil( w / colW ) * colW : w;
+  var rowH = this.options.rowHeight;
+  h = rowH ? Math.ceil( h / rowH ) * rowH : h;
+
   var rect = new Rect({
-    width: size.outerWidth,
-    height: size.outerHeight
+    width: w,
+    height: h
   });
   // pack the rect in the packer
   this.packer.pack( rect );

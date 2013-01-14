@@ -7,8 +7,9 @@
 
 <style>
 .container {
-  background: #EEE;
   width: 500px;
+  margin-bottom: 20px;
+  background: #EEE;
 }
 
 .item {
@@ -34,18 +35,18 @@
   <div id="ex1" class="container">
     <div class="item w4"></div>
     <div class="item h4"></div>
-    <div class="item"></div>
     <div class="item w2"></div>
-    <div class="item"></div>
+    <div class="item h4"></div>
     <div class="item"></div>
     <div class="item"></div>
     <div class="item h2"></div>
-    <div class="item"></div>
     <div class="item w4"></div>
-    <div class="item"></div>
     <div class="item w2"></div>
+    <div class="item"></div>
     <div class="item"></div>
     <div class="item w2 h2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
     <div class="item h4"></div>
     <div class="item"></div>
     <div class="item w4"></div>
@@ -54,7 +55,13 @@
     <div class="item"></div>
     <div class="item h2"></div>
     <div class="item"></div>
-    <div class="item h4"></div>
+    <div class="item h2"></div>
+  </div>
+
+  <div id="ex2" class="container">
+  </div>
+
+  <div id="ex3" class="container">
   </div>
 
 <script src="components/get-size/get-size.js"></script>
@@ -62,9 +69,38 @@
 <script src="js/packer.js"></script>
 <script src="js/packery.js"></script>
 <script>
+
+function appendRandomSizedItems( container ) {
+  var frag = document.createDocumentFragment();
+  for ( var i=0; i < 35; i++ ) {
+    var item = document.createElement('div');
+    item.className = 'item';
+    var w = Math.floor( Math.random() * Math.random() * 180 ) + 20;
+    var h = Math.floor( Math.random() * Math.random() * 180 ) + 20;
+    item.style.width  = w + 'px';
+    item.style.height = h + 'px';
+    frag.appendChild( item );
+  }
+
+  container.appendChild( frag );
+}
+
+
 window.onload = function() {
   var ex1 = document.getElementById('ex1');
   var packery1 = new Packery( ex1 );
+
+  var ex2 = document.getElementById('ex2');
+  appendRandomSizedItems( ex2 );
+  var packery2 = new Packery( ex2 );
+
+  var ex3 = document.getElementById('ex3');
+  appendRandomSizedItems( ex3 );
+  var packery3 = new Packery( ex3, {
+    columnWidth: 50,
+    rowHeight: 50
+  });
+
 };
 </script>
 
