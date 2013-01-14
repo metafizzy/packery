@@ -29,13 +29,8 @@ function Packery( element, options ) {
 
   // options
   this.options = {};
-  for ( var prop in Packery.defaults ) {
-    this.options[ prop ] = Packery.defaults[ prop ];
-  }
-
-  for( prop in options ) {
-    this.options[ prop ] = options[ prop ];
-  }
+  extend( this.options, Packery.defaults );
+  extend( this.options, options );
 
   // initial properties
   this.packer = new Packer();
