@@ -22,6 +22,32 @@ function extend( a, b ) {
   return a;
 }
 
+// -------------------------- addEvent / removeEvent -------------------------- //
+
+// by John Resig - http://ejohn.org/projects/flexible-javascript-events/
+
+function addEvent( obj, type, fn ) {
+  if ( obj.addEventListener ) {
+    obj.addEventListener( type, fn, false );
+  } else if ( obj.attachEvent ) {
+    obj[ 'e' + type + fn ] = fn;
+    obj[ type + fn ] = function() {
+      obj[ 'e' + type + fn ]( window.event );
+    };
+    obj.attachEvent( "on" + type, obj[ type + fn ] );
+  }
+}
+
+function removeEvent( obj, type, fn ) {
+  if ( obj.removeEventListener ) {
+    obj.removeEventListener( type, fn, false );
+  } else if ( obj.detachEvent ) {
+    obj.detachEvent( "on" + type, obj[ type + fn ] );
+    delete obj[ type + fn ];
+    delete obj[ 'e' + type + fn ];
+  }
+}
+
 // -------------------------- Packery -------------------------- //
 
 function Packery( element, options ) {
@@ -47,7 +73,8 @@ function Packery( element, options ) {
 Packery.defaults = {
   containerStyle: {
     position: 'relative'
-  }
+  },
+  isResizable: true
 };
 
 Packery.prototype._create = function() {
@@ -56,6 +83,15 @@ Packery.prototype._create = function() {
   var containerStyle = this.options.containerStyle;
   for ( var prop in containerStyle ) {
     this.element.style[ prop ] = containerStyle[ prop ];
+  }
+
+  var _this = this;
+
+  // bind resize method
+  if ( this.options.isResizable ) {
+    addEvent( window, 'resize', function(){
+      _this._handleResize();
+    });
   }
 
 };
@@ -139,6 +175,34 @@ Packery.prototype._layoutItem = function( item ) {
 
   this.maxY = Math.max( rect.y + rect.height, this.maxY );
 };
+
+// -------------------------- resize -------------------------- //
+
+// original debounce by John Hann
+// http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
+
+// this fires every resize
+Packery.prototype._handleResize = function() {
+  var _this = this;
+
+  if ( this.resizeTimeout ) {
+    clearTimeout( this.resizeTimeout );
+  }
+
+  function delayed() {
+    _this.resize();
+  }
+
+  this.resizeTimeout = setTimeout( delayed, 100 );
+};
+
+// debounced, layout on resize
+Packery.prototype.resize = function() {
+  this._init();
+
+  delete this.resizeTimeout;
+};
+
 
 // -----  ----- //
 
