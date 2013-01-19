@@ -9,12 +9,14 @@
 'use strict';
 
 var document = window.document;
+// Packery classes
 var _Packery = window.Packery;
 var Rect = _Packery.Rect;
 var Packer = _Packery.Packer;
-var getSize = window.getSize;
+var Item = _Packery.Item;
 
 // dependencies
+var getSize = window.getSize;
 var matchesSelector = window.matchesSelector;
 
 // -------------------------- helpers -------------------------- //
@@ -124,7 +126,7 @@ Packery.prototype._getItems = function( elems ) {
     potentials.push( elems );
   }
 
-  var items = [];
+  var itemElems = [];
   var itemSelector = this.options.itemSelector;
 
   if ( itemSelector ) {
@@ -133,27 +135,28 @@ Packery.prototype._getItems = function( elems ) {
       var potential = potentials[j];
       // filter
       if ( matchesSelector( potential, itemSelector ) ) {
-        items.push( potential );
+        itemElems.push( potential );
       }
       // find
       var recentlyFound = potential.querySelectorAll( itemSelector );
       // concat recentlyFound to filterFound array
       for ( var k=0, kLen = recentlyFound.length; k < kLen; k++ ) {
-        items.push( recentlyFound[k] );
+        itemElems.push( recentlyFound[k] );
       }
     }
   } else {
-    items = potentials;
+    itemElems = potentials;
   }
 
   // style items
-  for ( var l=0, lLen = items.length; l < lLen; l++ ) {
-    var item = items[l];
-    item.style.position = 'absolute';
+  var items = [];
+  for ( var l=0, lLen = itemElems.length; l < lLen; l++ ) {
+    var elem = itemElems[l];
+    var item = new Item( elem );
+    items.push( item );
   }
 
   return items;
-
 },
 
 Packery.prototype.getSize = function() {
@@ -195,7 +198,8 @@ Packery.prototype.layoutItems = function( items ) {
  */
 Packery.prototype._layoutItem = function( item ) {
   // console.log( item );
-  var size = getSize( item );
+  var elem = item.element;
+  var size = getSize( elem );
   var w = size.outerWidth;
   var h = size.outerHeight;
   // size for columnWidth and rowHeight, if available
@@ -210,11 +214,9 @@ Packery.prototype._layoutItem = function( item ) {
   });
   // pack the rect in the packer
   this.packer.pack( rect );
-  // copy over position of packed rect to item element
-  // item.style.left = rect.x + 'px';
-  // item.style.top  = rect.y + 'px';
 
-  this._transitionPosition( item, rect.x, rect.y );
+  // copy over position of packed rect to item element
+  item.transitionPosition( rect.x, rect.y );
 
   this.maxY = Math.max( rect.y + rect.height, this.maxY );
 };
@@ -232,10 +234,11 @@ Packery.prototype._transitionPosition = function( item, x, y ) {
   item.style.webkitTransform = 'translate( ' + transX + 'px, ' + transY + 'px)';
   item.addEventListener( 'webkitTransitionEnd', function( event ) {
     item.style.webkitTransform = '';
-    item.style.webkitTransition = 'none';
+    item.style.webkitTransition = '';
     item.style.left = x + 'px';
     item.style.top  = y + 'px';
     // console.log('tranny end');
+    // TODO remove this listener
   }, false );
 
 
