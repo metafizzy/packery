@@ -9,18 +9,18 @@ animation
 ## options
 
 orientation
-rowHeight
-columnWidth
+<!-- rowHeight -->
+<!-- columnWidth -->
 minSize - throw away empty spaces smaller in width or height
 
 
 ## methods
 
 prepend
-append
+<!-- append -->
 destroy
-layoutItems
-layout
+<!-- layoutItems -->
+<!-- layout -->
 add
 remove
 

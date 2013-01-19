@@ -128,6 +128,7 @@ Packery.prototype._getItems = function( elems ) {
   var itemSelector = this.options.itemSelector;
 
   if ( itemSelector ) {
+    // filter & find items if we have an item selector
     for ( var j=0, jLen = potentials.length; j < jLen; j++ ) {
       var potential = potentials[j];
       // filter
@@ -143,6 +144,12 @@ Packery.prototype._getItems = function( elems ) {
     }
   } else {
     items = potentials;
+  }
+
+  // style items
+  for ( var l=0, lLen = items.length; l < lLen; l++ ) {
+    var item = items[l];
+    item.style.position = 'absolute';
   }
 
   return items;
@@ -165,13 +172,11 @@ Packery.prototype._init = function() {
   // layout
   this.maxY = 0;
   this.layoutItems( this.items );
-  // set container size
-  this.element.style.height = this.maxY + 'px';
 };
 
 /**
  * layout a collection of item elements
- * @param {Array} items
+ * @param {Array} items - array of elements
  */
 Packery.prototype.layoutItems = function( items ) {
   for ( var i=0, len = items.length; i < len; i++ ) {
@@ -179,6 +184,9 @@ Packery.prototype.layoutItems = function( items ) {
     var item = items[i];
     this._layoutItem( item );
   }
+
+  // set container size
+  this.element.style.height = this.maxY + 'px';
 };
 
 /**
@@ -237,6 +245,21 @@ Packery.prototype.resize = function() {
   delete this.resizeTimeout;
 };
 
+
+// -------------------------- methods -------------------------- //
+
+Packery.prototype.appended = function( elems ) {
+  var items = this._getItems( elems );
+  if ( !items.length ) {
+    return;
+  }
+
+  // add items to collection
+  this.items = this.items.concat( items );
+
+  // layout just the new items
+  this.layoutItems( items );
+};
 
 // -----  ----- //
 

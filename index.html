@@ -149,6 +149,17 @@
   <div id="ex6" class="container">
   </div>
 
+
+  <p><button id="add-to-7">Add items</button></p>
+
+  <div id="ex7" class="container">
+    <div class="item w4"></div>
+    <div class="item h4"></div>
+    <div class="item w2"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+  </div>
+
 <script src="components/get-size/get-size.js"></script>
 <script src="js/rect.js"></script>
 <script src="js/packer.js"></script>
@@ -195,6 +206,30 @@ window.onload = function() {
   var ex6 = document.getElementById('ex6');
   appendRandomSizedItems( ex6 );
   var packery6 = new Packery( ex6 );
+
+  var ex7 = document.getElementById('ex7');
+  var packery7 = new Packery( ex7 );
+
+  var add7Button = document.getElementById('add-to-7');
+
+  add7Button.addEventListener( 'click', function( event ) {
+    var fragment = document.createDocumentFragment();
+    var items = [];
+    for ( var i=0; i < 3; i++ ) {
+      var item = document.createElement('div');
+      var wRand = Math.random();
+      var widthClass = wRand > 0.85 ? 'w4' :
+        wRand > 0.7 ? 'w2' : '';
+      var hRand = Math.random();
+      var heightClass = hRand > 0.85 ? 'h4' :
+        hRand > 0.7 ? 'h2' : '';
+      item.className = 'item ' + widthClass + ' ' + heightClass;
+      fragment.appendChild( item );
+      items.push( item )
+    }
+    ex7.appendChild( fragment );
+    packery7.appended( items );
+  });
 
 };
 </script>
