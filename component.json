@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "author": "David DeSandro / Metafizzy",
   "dependencies": {
-    "get-size": "../get-size/"
+    "get-size": "../get-size/",
+    "matches-selector-helper": "../matches-selector-helper"
   }
 }

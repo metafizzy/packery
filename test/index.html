@@ -7,6 +7,27 @@
 
   <link rel="stylesheet" href="qunit.css" />
 
+  <style>
+    .container {
+      width: 500px;
+      margin-bottom: 20px;
+      background: #EEE;
+    }
+
+    .item {
+      float: left;
+      width: 44px;
+      height: 44px;
+      margin: 3px;
+      background: #444;
+    }
+
+    .item.w2 { width:   94px; }
+    .item.h2 { height:  94px; }
+    .item.w4 { width:  194px; }
+    .item.h4 { height: 194px; }
+  </style>
+
   <script src="qunit.js"></script>
 
 </head>
@@ -16,11 +37,33 @@
 
   <div id="qunit"></div>
 
+  <div id="ex1" class="container">
+    <div class="item w2"></div>
+    <div class="item h2"></div>
+    <div class="item w2"></div>
+    <div class="item h2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="foobar"></div>
+  </div>
+
+  <div id="ex2" class="container">
+    <div><div class="item w2"></div></div>
+    <div><div class="item h2"></div></div>
+    <div><div class="item w2"></div></div>
+    <div><div class="item"></div></div>
+  </div>
+
+
 <script src="../js/rect.js"></script>
 <script src="../js/packer.js"></script>
+<script src="../components/get-size/get-size.js"></script>
+<script src="../components/matches-selector-helper/matches-selector.js"></script>
 <script src="../js/packery.js"></script>
 
+
 <script src="test-rect.js"></script>
+<script src="test-packery.js"></script>
 
 </body>
 </html>

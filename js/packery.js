@@ -14,6 +14,11 @@ var Rect = _Packery.Rect;
 var Packer = _Packery.Packer;
 var getSize = window.getSize;
 
+// dependencies
+var matchesSelector = window.matchesSelector;
+
+// -------------------------- helpers -------------------------- //
+
 // extend objects
 function extend( a, b ) {
   for ( var prop in b ) {
@@ -98,22 +103,50 @@ Packery.prototype._create = function() {
 // goes through all children again and gets bricks in proper order
 Packery.prototype.reloadItems = function() {
   // collection of item elements
-  this.items = [];
-  this._getItems( this.element.children );
+  this.items = this._getItems( this.element.children );
 },
 
 
 /**
- * get item elements
- * @param {Array or NodeList} elems
+ * get item elements to be used in layout
+ * @param {Array or NodeList or HTMLElement} elems
+ * @returns {Array} items - item elements
  */
 Packery.prototype._getItems = function( elems ) {
-  for ( var i=0, len = elems.length; i < len; i++ ) {
-    var elem = elems[i];
-    elem.style.position = 'absolute';
-    // addClass( item, 'masonry-brick' );
-    this.items.push( elem );
+
+  // make array of elems
+  var potentials = [];
+  if ( elems.length ) {
+    for ( var i=0, len = elems.length; i < len; i++ ) {
+      potentials.push( elems[i] );
+    }
+  } else {
+    potentials.push( elems );
   }
+
+  var items = [];
+  var itemSelector = this.options.itemSelector;
+
+  if ( itemSelector ) {
+    for ( var j=0, jLen = potentials.length; j < jLen; j++ ) {
+      var potential = potentials[j];
+      // filter
+      if ( matchesSelector( potential, itemSelector ) ) {
+        items.push( potential );
+      }
+      // find
+      var recentlyFound = potential.querySelectorAll( itemSelector );
+      // concat recentlyFound to filterFound array
+      for ( var k=0, kLen = recentlyFound.length; k < kLen; k++ ) {
+        items.push( recentlyFound[k] );
+      }
+    }
+  } else {
+    items = potentials;
+  }
+
+  return items;
+
 },
 
 Packery.prototype.getSize = function() {
