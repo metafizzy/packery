@@ -22,7 +22,7 @@ destroy
 <!-- layoutItems -->
 <!-- layout -->
 add
-remove
+<!-- remove -->
 
 ## Future features
 

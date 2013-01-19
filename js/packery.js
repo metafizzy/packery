@@ -248,6 +248,11 @@ Packery.prototype.resize = function() {
 
 // -------------------------- methods -------------------------- //
 
+
+/**
+ * Layout newly-appended item elements
+ * @param {Array or NodeList or Element} elems
+ */
 Packery.prototype.appended = function( elems ) {
   var items = this._getItems( elems );
   if ( !items.length ) {
@@ -259,6 +264,35 @@ Packery.prototype.appended = function( elems ) {
 
   // layout just the new items
   this.layoutItems( items );
+};
+
+/**
+ * remove element(s) from instance and DOM
+ * @param {Array or NodeList or Element} elems
+ */
+
+// faux method, so we can pass in nodelist, element, or array
+Packery.prototype.remove = function( elems ) {
+  if ( elems.length ) {
+    // multiple elements, remove 'em
+    for ( var i=0, len = elems.length; i < len; i++ ) {
+      this._remove( elems[i] );
+    }
+  } else {
+    // single element, remove it
+    this._remove( elems );
+  }
+};
+
+Packery.prototype._remove = function( elem ) {
+  var index = this.items.indexOf( elem );
+  if ( index === -1 ) {
+    return;
+  }
+  // remove item from collection
+  this.items.splice( index, 1 );
+  // remove item element from DOM
+  elem.parentNode.removeChild( elem );
 };
 
 // -----  ----- //

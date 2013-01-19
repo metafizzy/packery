@@ -231,6 +231,17 @@ window.onload = function() {
     packery7.appended( items );
   });
 
+  ex7.addEventListener( 'click', function( event ) {
+    var elem = event.target;
+    if ( elem.className.indexOf('item') === -1 ) {
+      return;
+    }
+
+    packery7.remove( elem );
+    packery7._init();
+
+  });
+
 };
 </script>
 
