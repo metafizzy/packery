@@ -51,6 +51,10 @@
 
 }
 
+#ex6 {
+  width: 50%;
+}
+
 </style>
 
 </head>
@@ -142,6 +146,9 @@
     <div class="item h2"></div>
   </div>
 
+  <div id="ex6" class="container">
+  </div>
+
 <script src="components/get-size/get-size.js"></script>
 <script src="js/rect.js"></script>
 <script src="js/packer.js"></script>
@@ -184,6 +191,10 @@ window.onload = function() {
 
   var ex5 = document.getElementById('ex5');
   var packery5 = new Packery( ex5 );
+
+  var ex6 = document.getElementById('ex6');
+  appendRandomSizedItems( ex6 );
+  var packery6 = new Packery( ex6 );
 
 };
 </script>
