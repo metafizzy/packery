@@ -211,12 +211,36 @@ Packery.prototype._layoutItem = function( item ) {
   // pack the rect in the packer
   this.packer.pack( rect );
   // copy over position of packed rect to item element
-  item.style.left = rect.x + 'px';
-  item.style.top  = rect.y + 'px';
-  // console.log( size, rect.x, rect.y );
+  // item.style.left = rect.x + 'px';
+  // item.style.top  = rect.y + 'px';
+
+  this._transitionPosition( item, rect.x, rect.y );
 
   this.maxY = Math.max( rect.y + rect.height, this.maxY );
 };
+
+Packery.prototype._transitionPosition = function( item, x, y ) {
+  // get current x & y
+  var curX = item.style.left && parseInt( item.style.left, 10 ) || 0;
+  var curY = item.style.top  && parseInt( item.style.top,  10 ) || 0;
+
+  var transX = x - curX;
+  var transY = y - curY;
+
+  // enable the transition
+  item.style.webkitTransition = '-webkit-transform 1s';
+  item.style.webkitTransform = 'translate( ' + transX + 'px, ' + transY + 'px)';
+  item.addEventListener( 'webkitTransitionEnd', function( event ) {
+    item.style.webkitTransform = '';
+    item.style.webkitTransition = 'none';
+    item.style.left = x + 'px';
+    item.style.top  = y + 'px';
+    // console.log('tranny end');
+  }, false );
+
+
+};
+
 
 // -------------------------- resize -------------------------- //
 

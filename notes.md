@@ -5,6 +5,8 @@
 jQuery plugin-ability (bridget?)
 
 animation
+1. set transform to new destination
+2. once element reaches destination, remove transform, set top/left
 
 ## options
 
