@@ -312,14 +312,15 @@ Packery.prototype.remove = function( elems ) {
 };
 
 Packery.prototype._remove = function( elem ) {
-  var index = this.items.indexOf( elem );
-  if ( index === -1 ) {
-    return;
+  for ( var i=0, len = this.items.length; i < len; i++ ) {
+    var item = this.items[i];
+    if ( item.element === elem ) {
+      // remove item from collection
+      item.remove();
+      this.items.splice( i, 1 );
+      break;
+    }
   }
-  // remove item from collection
-  this.items.splice( index, 1 );
-  // remove item element from DOM
-  elem.parentNode.removeChild( elem );
 };
 
 // -----  ----- //

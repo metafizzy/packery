@@ -46,30 +46,40 @@ Item.prototype.transitionPosition = function( x, y ) {
   var transX = x - curX;
   var transY = y - curY;
 
+  // add event listener
+  if ( !this.isTransitioning ) {
+    this.onTransitionEnd = this.setEndPosition;
+    elem.addEventListener( 'webkitTransitionEnd', this, false );
+  }
+
   // start transition
   this.css({
     webkitTransition: '-webkit-transform 1s',
     webkitTransform: 'translate( ' + transX + 'px, ' + transY + 'px)'
   });
 
-  // add event listener
-  if ( !this.isTransitioning ) {
-    elem.addEventListener( 'webkitTransitionEnd', this, false );
-  }
-
   this.isTransitioning = true;
 
 };
 
-Item.prototype.webkitTransitionEndHandler = function( event ) {
-  this.css({  
-    // disable transition
-    webkitTransform: '',
-    // remove transform
-    webkitTransition: '',
+Item.prototype.setEndPosition = function() {
+  this.css({
     // set settled position
     left: this.position.x + 'px',
     top : this.position.y + 'px'
+  });
+};
+
+Item.prototype.webkitTransitionEndHandler = function( event ) {
+  if ( this.onTransitionEnd ) {
+    this.onTransitionEnd();
+  }
+
+  this.css({
+    // disable transition
+    webkitTransform: '',
+    // remove transform
+    webkitTransition: ''
   });
 
   this.element.removeEventListener( 'webkitTransitionEnd', this, false );
@@ -77,6 +87,29 @@ Item.prototype.webkitTransitionEndHandler = function( event ) {
   this.isTransitioning = false;
 };
 
+Item.prototype.remove = function() {
+  console.log('hiding');
+  // start transition
+  this.css({
+    webkitTransition: '-webkit-transform 1s, opacity 1s',
+    opacity: 0,
+    webkitTransform: 'scale(0.001)'
+  });
+
+  this.onTransitionEnd = this.removeElem;
+
+  this.element.addEventListener( 'webkitTransitionEnd', this, false );
+
+  this.isTransitioning = true;
+
+};
+
+
+// remove element from DOM
+Item.prototype.removeElem = function() {
+  console.log('removing elem');
+  this.element.parentNode.removeChild( this.element );
+};
 
 // --------------------------  -------------------------- //
 
