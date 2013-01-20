@@ -174,18 +174,22 @@ Packery.prototype._init = function() {
 
   // layout
   this.maxY = 0;
-  this.layoutItems( this.items );
+  this.layoutItems( this.items, !this._isInited );
+
+  // flag for initalized
+  this._isInited = true;
 };
 
 /**
  * layout a collection of item elements
  * @param {Array} items - array of elements
  */
-Packery.prototype.layoutItems = function( items ) {
+Packery.prototype.layoutItems = function( items, isStill ) {
   for ( var i=0, len = items.length; i < len; i++ ) {
     // console.log( i );
     var item = items[i];
-    this._layoutItem( item );
+    this._packItem( item );
+    this._layoutItem( item, isStill );
   }
 
   // set container size
@@ -196,54 +200,41 @@ Packery.prototype.layoutItems = function( items ) {
  * layout item element in container
  * @param {Element} item
  */
-Packery.prototype._layoutItem = function( item ) {
+Packery.prototype._packItem = function( item ) {
   // console.log( item );
-  var elem = item.element;
-  var size = getSize( elem );
+  var size = getSize( item.element );
   var w = size.outerWidth;
   var h = size.outerHeight;
   // size for columnWidth and rowHeight, if available
   var colW = this.options.columnWidth;
-  w = colW ? Math.ceil( w / colW ) * colW : w;
   var rowH = this.options.rowHeight;
+  w = colW ? Math.ceil( w / colW ) * colW : w;
   h = rowH ? Math.ceil( h / rowH ) * rowH : h;
 
-  var rect = new Rect({
-    width: w,
-    height: h
-  });
+  var rect = item.rect;
+  rect.width = w;
+  rect.height = h;
   // pack the rect in the packer
   this.packer.pack( rect );
-
-  // copy over position of packed rect to item element
-  item.transitionPosition( rect.x, rect.y );
 
   this.maxY = Math.max( rect.y + rect.height, this.maxY );
 };
 
-Packery.prototype._transitionPosition = function( item, x, y ) {
-  // get current x & y
-  var curX = item.style.left && parseInt( item.style.left, 10 ) || 0;
-  var curY = item.style.top  && parseInt( item.style.top,  10 ) || 0;
+Packery.prototype._layoutItem = function( item, isStill ) {
 
-  var transX = x - curX;
-  var transY = y - curY;
-
-  // enable the transition
-  item.style.webkitTransition = '-webkit-transform 1s';
-  item.style.webkitTransform = 'translate( ' + transX + 'px, ' + transY + 'px)';
-  item.addEventListener( 'webkitTransitionEnd', function( event ) {
-    item.style.webkitTransform = '';
-    item.style.webkitTransition = '';
-    item.style.left = x + 'px';
-    item.style.top  = y + 'px';
-    // console.log('tranny end');
-    // TODO remove this listener
-  }, false );
-
+  // copy over position of packed rect to item element
+  var rect = item.rect;
+  if ( isStill ) {
+    // if not transition, just set CSS
+    item.css({
+      left: rect.x + 'px',
+      top: rect.y + 'px'
+    });
+  } else {
+    item.transitionPosition( rect.x, rect.y );
+  }
 
 };
-
 
 // -------------------------- resize -------------------------- //
 
@@ -290,7 +281,13 @@ Packery.prototype.appended = function( elems ) {
   this.items = this.items.concat( items );
 
   // layout just the new items
-  this.layoutItems( items );
+  this.layoutItems( items, true );
+
+  // reveal new items
+  for ( var i=0, len = items.length; i < len; i++ ) {
+    var item = items[i];
+    item.reveal();
+  }
 };
 
 /**

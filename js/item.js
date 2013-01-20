@@ -7,6 +7,7 @@
 'use strict';
 
 var Packery = window.Packery;
+var Rect = Packery.Rect;
 
 function Item( element ) {
   this.element = element;
@@ -14,6 +15,8 @@ function Item( element ) {
     x: 0,
     y: 0
   };
+
+  this.rect = new Rect();
 
   // style initial style
   this.element.style.position = 'absolute';
@@ -60,6 +63,10 @@ Item.prototype.setEndPosition = function() {
   });
 };
 
+/**
+ * @param {Object} style - CSS
+ * @param {Function} onTransitionEnd
+ */
 Item.prototype.transition = function( style, onTransitionEnd ) {
 
   var transitionProperty = [];
@@ -118,6 +125,21 @@ Item.prototype.remove = function() {
 Item.prototype.removeElem = function() {
   console.log('removing elem');
   this.element.parentNode.removeChild( this.element );
+};
+
+Item.prototype.reveal = function() {
+  // hide item
+  this.css({
+    '-webkit-transform': 'scale(0.001)',
+    opacity: 0
+  });
+  // force redraw. http://blog.alexmaccaw.com/css-transitions
+  this.element.offsetHeight;
+  // transition to revealed
+  this.transition({
+    '-webkit-transform': 'scale(1)',
+    opacity: 1
+  });
 };
 
 // --------------------------  -------------------------- //
