@@ -9,8 +9,9 @@
 var Packery = window.Packery;
 var Rect = Packery.Rect;
 
-function Item( element ) {
+function Item( element, packery ) {
   this.element = element;
+  this.packery = packery;
   this.position = {
     x: 0,
     y: 0
@@ -46,20 +47,22 @@ Item.prototype.transitionPosition = function( x, y ) {
   var curX = elem.style.left && parseInt( elem.style.left, 10 ) || 0;
   var curY = elem.style.top  && parseInt( elem.style.top,  10 ) || 0;
 
-  var transX = x - curX;
-  var transY = y - curY;
+  var packerySize = this.packery.elementSize;
+  var transX = ( x - curX ) + packerySize.paddingLeft;
+  var transY = ( y - curY ) + packerySize.paddingTop;
 
   this.transition({
     '-webkit-transform': 'translate( ' + transX + 'px, ' + transY + 'px)'
-  }, this.setEndPosition );
+  }, this.layoutPosition );
 
 };
 
-Item.prototype.setEndPosition = function() {
+Item.prototype.layoutPosition = function() {
+  var packerySize = this.packery.elementSize;
   this.css({
     // set settled position
-    left: this.position.x + 'px',
-    top : this.position.y + 'px'
+    left: ( this.position.x + packerySize.paddingLeft ) + 'px',
+    top : ( this.position.y + packerySize.paddingTop ) + 'px'
   });
 };
 

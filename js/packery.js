@@ -152,7 +152,7 @@ Packery.prototype._getItems = function( elems ) {
   var items = [];
   for ( var l=0, lLen = itemElems.length; l < lLen; l++ ) {
     var elem = itemElems[l];
-    var item = new Item( elem );
+    var item = new Item( elem, this );
     items.push( item );
   }
 
@@ -167,8 +167,8 @@ Packery.prototype.getSize = function() {
 
 Packery.prototype._init = function() {
   // reset packer
-  var elemSize = getSize( this.element );
-  this.packer.width = elemSize.innerWidth;
+  this.elementSize = getSize( this.element );
+  this.packer.width = this.elementSize.innerWidth;
   this.packer.height = Number.POSITIVE_INFINITY;
   this.packer.reset();
 
@@ -226,10 +226,9 @@ Packery.prototype._layoutItem = function( item, isStill ) {
   var rect = item.rect;
   if ( isStill ) {
     // if not transition, just set CSS
-    item.css({
-      left: rect.x + 'px',
-      top: rect.y + 'px'
-    });
+    item.position.x = rect.x;
+    item.position.y = rect.y;
+    item.layoutPosition();
   } else {
     item.transitionPosition( rect.x, rect.y );
   }
