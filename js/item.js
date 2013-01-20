@@ -46,19 +46,9 @@ Item.prototype.transitionPosition = function( x, y ) {
   var transX = x - curX;
   var transY = y - curY;
 
-  // add event listener
-  if ( !this.isTransitioning ) {
-    this.onTransitionEnd = this.setEndPosition;
-    elem.addEventListener( 'webkitTransitionEnd', this, false );
-  }
-
-  // start transition
-  this.css({
-    webkitTransition: '-webkit-transform 1s',
-    webkitTransform: 'translate( ' + transX + 'px, ' + transY + 'px)'
-  });
-
-  this.isTransitioning = true;
+  this.transition({
+    '-webkit-transform': 'translate( ' + transX + 'px, ' + transY + 'px)'
+  }, this.setEndPosition );
 
 };
 
@@ -70,9 +60,35 @@ Item.prototype.setEndPosition = function() {
   });
 };
 
+Item.prototype.transition = function( style, onTransitionEnd ) {
+
+  var transitionProperty = [];
+  for ( var prop in style ) {
+    transitionProperty.push( prop );
+  }
+
+  // enable transition
+  this.css({
+    webkitTransitionProperty: transitionProperty.join(','),
+    webkitTransitionDuration: '1s'
+  });
+
+  // transition end callback
+  if ( onTransitionEnd ) {
+    this.onTransitionEnd = onTransitionEnd;
+    this.element.addEventListener( 'webkitTransitionEnd', this, false );
+  }
+
+  // set transition styles
+  this.css( style );
+
+  this.isTransitioning = true;
+};
+
 Item.prototype.webkitTransitionEndHandler = function( event ) {
   if ( this.onTransitionEnd ) {
     this.onTransitionEnd();
+    delete this.onTransitionEnd;
   }
 
   this.css({
@@ -90,17 +106,10 @@ Item.prototype.webkitTransitionEndHandler = function( event ) {
 Item.prototype.remove = function() {
   console.log('hiding');
   // start transition
-  this.css({
-    webkitTransition: '-webkit-transform 1s, opacity 1s',
-    opacity: 0,
-    webkitTransform: 'scale(0.001)'
-  });
-
-  this.onTransitionEnd = this.removeElem;
-
-  this.element.addEventListener( 'webkitTransitionEnd', this, false );
-
-  this.isTransitioning = true;
+  this.transition({
+    '-webkit-transform': 'scale(0.001)',
+    opacity: 0
+  }, this.removeElem );
 
 };
 
