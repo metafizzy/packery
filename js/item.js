@@ -68,6 +68,7 @@ Item.prototype.setEndPosition = function() {
  * @param {Function} onTransitionEnd
  */
 Item.prototype.transition = function( style, onTransitionEnd ) {
+  this.transitionStyle = style;
 
   var transitionProperty = [];
   for ( var prop in style ) {
@@ -75,16 +76,12 @@ Item.prototype.transition = function( style, onTransitionEnd ) {
   }
 
   // enable transition
-  this.css({
-    webkitTransitionProperty: transitionProperty.join(','),
-    webkitTransitionDuration: '1s'
-  });
+  style.webkitTransitionProperty = transitionProperty.join(',');
+  style.webkitTransitionDuration = '1s';
 
   // transition end callback
-  if ( onTransitionEnd ) {
-    this.onTransitionEnd = onTransitionEnd;
-    this.element.addEventListener( 'webkitTransitionEnd', this, false );
-  }
+  this.onTransitionEnd = onTransitionEnd;
+  this.element.addEventListener( 'webkitTransitionEnd', this, false );
 
   // set transition styles
   this.css( style );
@@ -93,19 +90,28 @@ Item.prototype.transition = function( style, onTransitionEnd ) {
 };
 
 Item.prototype.webkitTransitionEndHandler = function( event ) {
+
   if ( this.onTransitionEnd ) {
     this.onTransitionEnd();
     delete this.onTransitionEnd;
   }
 
-  this.css({
-    // disable transition
-    webkitTransform: '',
-    // remove transform
-    webkitTransition: ''
-  });
+  // clean up transition styles
+  var elemStyle = this.element.style;
+  var cleanStyle = {
+    // remove transition
+    webkitTransitionProperty: '',
+    webkitTransitionDuration: ''
+  };
+  for ( var prop in this.transitionStyle ) {
+    cleanStyle[ prop ] = '';
+  }
+
+  this.css( cleanStyle );
 
   this.element.removeEventListener( 'webkitTransitionEnd', this, false );
+
+  delete this.transitionStyle;
 
   this.isTransitioning = false;
 };
@@ -134,7 +140,7 @@ Item.prototype.reveal = function() {
     opacity: 0
   });
   // force redraw. http://blog.alexmaccaw.com/css-transitions
-  this.element.offsetHeight;
+  var h = this.element.offsetHeight;
   // transition to revealed
   this.transition({
     '-webkit-transform': 'scale(1)',
