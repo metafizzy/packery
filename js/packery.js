@@ -80,7 +80,8 @@ Packery.defaults = {
   containerStyle: {
     position: 'relative'
   },
-  isResizable: true
+  isResizable: true,
+  transitionDuration: '0.4s'
 };
 
 Packery.prototype._create = function() {

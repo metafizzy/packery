@@ -142,7 +142,7 @@ Item.prototype.transition = function( style, onTransitionEnd ) {
 
   // enable transition
   style[ transitionProperty + 'Property' ] = transitionValue.join(',');
-  style[ transitionProperty + 'Duration' ] = '1s';
+  style[ transitionProperty + 'Duration' ] = this.packery.options.transitionDuration;
 
   // transition end callback
   this.onTransitionEnd = onTransitionEnd;

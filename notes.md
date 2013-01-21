@@ -20,7 +20,7 @@ minSize - throw away empty spaces smaller in width or height
 
 prepend
 <!-- append -->
-destroy
+<!-- destroy -->
 <!-- layoutItems -->
 <!-- layout -->
 add
