@@ -323,6 +323,22 @@ Packery.prototype._remove = function( elem ) {
   }
 };
 
+// ----- destroy ----- //
+
+Packery.prototype.destroy = function() {
+  // reset element styles
+  this.element.style.position = '';
+  this.element.style.height = '';
+
+  // destroy items
+  for ( var i=0, len = this.items.length; i < len; i++ ) {
+    var item = this.items[i];
+    item.destroy();
+  }
+
+  removeEvent( window, 'resize', this );
+};
+
 // -----  ----- //
 
 // back in global

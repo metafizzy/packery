@@ -229,6 +229,14 @@ Item.prototype.reveal = function() {
   });
 };
 
+Item.prototype.destroy = function() {
+  this.css({
+    position: '',
+    left: '',
+    top: ''
+  });
+};
+
 // --------------------------  -------------------------- //
 
 // publicize
