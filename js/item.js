@@ -221,10 +221,13 @@ Item.prototype.transitionEndHandler = function( event ) {
 Item.prototype.remove = function() {
   console.log('hiding');
   // start transition
-  this.transition({
-    '-webkit-transform': 'scale(0.001)',
+
+  var hiddenStyle = {
     opacity: 0
-  }, this.removeElem );
+  };
+  hiddenStyle[ transformCSSProperty ] = 'scale(0.001)';
+
+  this.transition( hiddenStyle, this.removeElem );
 
 };
 
@@ -237,17 +240,19 @@ Item.prototype.removeElem = function() {
 
 Item.prototype.reveal = !transitionProperty ? function() {} : function() {
   // hide item
-  this.css({
-    '-webkit-transform': 'scale(0.001)',
+  var hiddenStyle = {
     opacity: 0
-  });
+  };
+  hiddenStyle[ transformCSSProperty ] = 'scale(0.001)';
+  this.css( hiddenStyle );
   // force redraw. http://blog.alexmaccaw.com/css-transitions
   var h = this.element.offsetHeight;
   // transition to revealed
-  this.transition({
-    '-webkit-transform': 'scale(1)',
+  var visibleStyle = {
     opacity: 1
-  });
+  };
+  visibleStyle[ transformCSSProperty ] = 'scale(1)';
+  this.transition( visibleStyle );
 };
 
 Item.prototype.destroy = function() {
