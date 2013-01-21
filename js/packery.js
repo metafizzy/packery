@@ -160,14 +160,17 @@ Packery.prototype.getSize = function() {
 
 };
 
-// ----- init ----- //
+// ----- init & layout ----- //
 
 Packery.prototype._init = function() {
   // reset packer
   this.elementSize = getSize( this.element );
+
   this.packer.width = this.elementSize.innerWidth;
   this.packer.height = Number.POSITIVE_INFINITY;
   this.packer.reset();
+
+  this.saveSpaces();
 
   // layout
   this.maxY = 0;
@@ -177,9 +180,39 @@ Packery.prototype._init = function() {
   this._isInited = true;
 };
 
+
+Packery.prototype.saveSpaces = function() {
+  var savedElems = this.options.savedElements;
+  if ( !savedElems ) {
+    return;
+  }
+
+  this.elementBoundingRect = this.element.getBoundingClientRect();
+  for ( var i=0, len = savedElems.length; i < len; i++ ) {
+    var elem = savedElems[i];
+    this.saveSpace( elem );
+  }
+};
+
+Packery.prototype.saveSpace = function( elem ) {
+  var size = getSize( elem );
+  var boundingRect = elem.getBoundingClientRect();
+  // size a rect
+  var rect = new Rect({
+    width: size.outerWidth,
+    height: size.outerHeight,
+    x: boundingRect.left - ( this.elementBoundingRect.left + this.elementSize.paddingLeft ),
+    y: boundingRect.top - ( this.elementBoundingRect.top + this.elementSize.paddingTop )
+  });
+
+  // save its space in the packer
+  this.packer.placed( rect );
+};
+
 /**
  * layout a collection of item elements
  * @param {Array} items - array of elements
+ * @param {Boolean} isStill - disable transitions for setting item position
  */
 Packery.prototype.layoutItems = function( items, isStill ) {
   for ( var i=0, len = items.length; i < len; i++ ) {

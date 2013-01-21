@@ -54,6 +54,26 @@
 
 #ex6 {
   width: 50%;
+  padding: 10px 20px 30px 40px;
+}
+
+.bogey {
+  background: red;
+  position: absolute;
+}
+
+#ex6 .bogey1 {
+  width: 30%;
+  height: 140px;
+  left: 20%;
+  top: 20px;
+}
+
+#ex6 .bogey2 {
+  width: 140px;
+  height: 180px;
+  right: 20px;
+  top: 140px;
 }
 
 </style>
@@ -148,6 +168,8 @@
   </div>
 
   <div id="ex6" class="container">
+    <div class="bogey bogey1"></div>
+    <div class="bogey bogey2"></div>
   </div>
 
 
@@ -162,6 +184,7 @@
   </div>
 
 <script src="components/get-size/get-size.js"></script>
+<script src="components/matches-selector-helper/matches-selector.js"></script>
 <script src="js/rect.js"></script>
 <script src="js/packer.js"></script>
 <script src="js/item.js"></script>
@@ -207,7 +230,10 @@ window.onload = function() {
 
   var ex6 = document.getElementById('ex6');
   appendRandomSizedItems( ex6 );
-  var packery6 = new Packery( ex6 );
+  var packery6 = new Packery( ex6, {
+    itemSelector: '.item',
+    savedElements: ex6.querySelectorAll('.bogey')
+  });
 
   var ex7 = document.getElementById('ex7');
   var packery7 = window.packery7 = new Packery( ex7 );

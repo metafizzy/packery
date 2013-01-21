@@ -45,13 +45,19 @@ Packer.prototype.placeInSpace = function( rect, space ) {
   rect.x = space.x;
   rect.y = space.y;
 
+  this.placed( rect );
+};
+
+// update spaces with placed rect
+Packer.prototype.placed = function( rect ) {
   // update spaces
   var revisedSpaces = [];
-  this.spaces.forEach( function( iSpace, i ) {
-    var newSpaces = iSpace.getMaximalFreeRects( rect );
+  for ( var i=0, len = this.spaces.length; i < len; i++ ) {
+    var space = this.spaces[i];
+    var newSpaces = space.getMaximalFreeRects( rect );
     // add either the original space or the new spaces to the revised spaces
-    revisedSpaces = revisedSpaces.concat( newSpaces || iSpace );
-  });
+    revisedSpaces = revisedSpaces.concat( newSpaces || space );
+  }
 
   this.spaces = revisedSpaces;
 
