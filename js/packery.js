@@ -170,7 +170,7 @@ Packery.prototype._init = function() {
   this.packer.height = Number.POSITIVE_INFINITY;
   this.packer.reset();
 
-  this.saveSpaces();
+  this.spacePlacedElements();
 
   // layout
   this.maxY = 0;
@@ -180,29 +180,32 @@ Packery.prototype._init = function() {
   this._isInited = true;
 };
 
-
-Packery.prototype.saveSpaces = function() {
-  var savedElems = this.options.savedElements;
-  if ( !savedElems ) {
+// make spaces for placed elements
+Packery.prototype.spacePlacedElements = function() {
+  var placedElems = this.options.placedElements;
+  if ( !placedElems ) {
     return;
   }
 
-  this.elementBoundingRect = this.element.getBoundingClientRect();
-  for ( var i=0, len = savedElems.length; i < len; i++ ) {
-    var elem = savedElems[i];
-    this.saveSpace( elem );
+  var elementBoundingRect = this.element.getBoundingClientRect();
+  this._boundingLeft = elementBoundingRect.left + this.elementSize.paddingLeft;
+  this._boundingTop  = elementBoundingRect.top  + this.elementSize.paddingTop;
+  for ( var i=0, len = placedElems.length; i < len; i++ ) {
+    var elem = placedElems[i];
+    this.spacePlaced( elem );
   }
 };
 
-Packery.prototype.saveSpace = function( elem ) {
+// makes space for element
+Packery.prototype.spacePlaced = function( elem ) {
   var size = getSize( elem );
   var boundingRect = elem.getBoundingClientRect();
   // size a rect
   var rect = new Rect({
     width: size.outerWidth,
     height: size.outerHeight,
-    x: boundingRect.left - ( this.elementBoundingRect.left + this.elementSize.paddingLeft ),
-    y: boundingRect.top - ( this.elementBoundingRect.top + this.elementSize.paddingTop )
+    x: boundingRect.left - this._boundingLeft,
+    y: boundingRect.top  - this._boundingTop
   });
 
   // save its space in the packer
