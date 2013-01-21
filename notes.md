@@ -13,6 +13,8 @@ animation
 orientation
 <!-- rowHeight -->
 <!-- columnWidth -->
+<!-- placeElements -->
+<!-- transitionDuration -->
 minSize - throw away empty spaces smaller in width or height
 
 

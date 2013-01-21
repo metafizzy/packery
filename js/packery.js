@@ -230,8 +230,8 @@ Packery.prototype.layoutItems = function( items, isStill ) {
 };
 
 /**
- * layout item element in container
- * @param {Element} item
+ * layout item in packer
+ * @param {Packery.Item} item
  */
 Packery.prototype._packItem = function( item ) {
   // console.log( item );
@@ -253,6 +253,11 @@ Packery.prototype._packItem = function( item ) {
   this.maxY = Math.max( rect.y + rect.height, this.maxY );
 };
 
+/**
+ * Sets position of item in DOM
+ * @param {Packery.Item} item
+ * @param {Boolean} isStill - disables transitions
+ */
 Packery.prototype._layoutItem = function( item, isStill ) {
 
   // copy over position of packed rect to item element
@@ -348,6 +353,7 @@ Packery.prototype.remove = function( elems ) {
 };
 
 Packery.prototype._remove = function( elem ) {
+  // loop through items to get the one that matches
   for ( var i=0, len = this.items.length; i < len; i++ ) {
     var item = this.items[i];
     if ( item.element === elem ) {
@@ -361,6 +367,7 @@ Packery.prototype._remove = function( elem ) {
 
 // ----- destroy ----- //
 
+// remove and disable Packery instance
 Packery.prototype.destroy = function() {
   // reset element styles
   this.element.style.position = '';
