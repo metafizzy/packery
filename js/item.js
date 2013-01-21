@@ -96,6 +96,10 @@ Item.prototype.css = function( style ) {
 };
 
 Item.prototype.transitionPosition = function( x, y ) {
+  // do not proceed if no change in position
+  if ( parseInt( x, 10 ) === this.position.x && parseInt( y, 10 ) === this.position.y ) {
+    return;
+  }
   // save end position
   this.setPosition( x, y );
 
@@ -176,18 +180,17 @@ Item.prototype._transition = function( style, onTransitionEnd ) {
 Item.prototype.transition = Item.prototype[ transitionProperty ? '_transition' : '_nonTransition' ];
 
 Item.prototype.webkitTransitionEndHandler = function( event ) {
-  this.transitionEndHandler( event );
+  this.transitionendHandler( event );
 };
 
-Item.prototype.mozTransitionEndHandler = function( event ) {
-  this.transitionEndHandler( event );
+Item.prototype.otransitionendHandler = function( event ) {
+  this.transitionendHandler( event );
 };
 
-Item.prototype.otransitionEndHandler = function( event ) {
-  this.transitionEndHandler( event );
-};
+console.log( transitionEndEvent );
 
-Item.prototype.transitionEndHandler = function( event ) {
+Item.prototype.transitionendHandler = function( event ) {
+  console.log('transition end');
   // disregard bubbled events from children
   if ( event.target !== this.element ) {
     return;
