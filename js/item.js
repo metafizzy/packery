@@ -41,32 +41,29 @@ function getStyleProperty( propName ) {
 }
 
 var transitionProperty = getStyleProperty('transition');
-var transitionEndEvent, transitionCSSProperty, transformCSSProperty;
 
-if ( transitionProperty ) {
+var transitionEndEvent = {
+  WebkitTransition: 'webkitTransitionEnd',
+  MozTransition: 'transitionend',
+  OTransition: 'otransitionend',
+  transition: 'transitionend'
+}[ transitionProperty ];
 
-  transitionEndEvent = {
-    WebkitTransition: 'webkitTransitionEnd',
-    MozTransition: 'transitionend',
-    OTransition: 'otransitionend',
-    transition: 'transitionend'
-  }[ transitionProperty ];
+var transitionCSSProperty = {
+  WebkitTransition: '-webkit-transition',
+  MozTransition: '-moz-transition',
+  OTransition: '-o-transition',
+  transition: 'transition'
+}[ transitionProperty ];
 
-  transitionCSSProperty = {
-    WebkitTransition: '-webkit-transition',
-    MozTransition: '-moz-transition',
-    OTransition: '-o-transition',
-    transition: 'transition'
-  }[ transitionProperty ];
+var transformProperty = getStyleProperty('transform');
 
-  transformCSSProperty = {
-    WebkitTransition: '-webkit-transform',
-    MozTransition: '-moz-transform',
-    OTransition: '-o-transform',
-    transition: 'transform'
-  }[ transitionProperty ];
-
-}
+var transformCSSProperty = {
+  WebkitTransform: '-webkit-transform',
+  MozTransform: '-moz-transform',
+  OTransform: '-o-transform',
+  transform: 'transform'
+}[ transformProperty ];
 
 // -------------------------- Item -------------------------- //
 
@@ -103,6 +100,12 @@ Item.prototype.transitionPosition = function( x, y ) {
   this.position.x = x;
   this.position.y = y;
 
+  // if transitions aren't supported, just go to layout
+  if ( !transitionProperty || !transformProperty ) {
+    this.layoutPosition();
+    return;
+  }
+
   // get current x & y
   var elem = this.element;
   var curX = elem.style.left && parseInt( elem.style.left, 10 ) || 0;
@@ -132,7 +135,16 @@ Item.prototype.layoutPosition = function() {
  * @param {Object} style - CSS
  * @param {Function} onTransitionEnd
  */
-Item.prototype.transition = function( style, onTransitionEnd ) {
+
+// non transition, just trigger callback
+Item.prototype._nonTransition = function( style, onTransitionEnd ) {
+  if ( onTransitionEnd ) {
+    onTransitionEnd.call( this );
+  }
+};
+
+// proper transition
+Item.prototype._transition = function( style, onTransitionEnd ) {
   this.transitionStyle = style;
 
   var transitionValue = [];
@@ -144,15 +156,18 @@ Item.prototype.transition = function( style, onTransitionEnd ) {
   style[ transitionProperty + 'Property' ] = transitionValue.join(',');
   style[ transitionProperty + 'Duration' ] = this.packery.options.transitionDuration;
 
+  this.element.addEventListener( transitionEndEvent, this, false );
+
   // transition end callback
   this.onTransitionEnd = onTransitionEnd;
-  this.element.addEventListener( transitionEndEvent, this, false );
 
   // set transition styles
   this.css( style );
 
   this.isTransitioning = true;
 };
+
+Item.prototype.transition = Item.prototype[ transitionProperty ? '_transition' : '_nonTransition' ];
 
 Item.prototype.webkitTransitionEndHandler = function( event ) {
   this.transitionEndHandler( event );
@@ -214,7 +229,7 @@ Item.prototype.removeElem = function() {
   this.element.parentNode.removeChild( this.element );
 };
 
-Item.prototype.reveal = function() {
+Item.prototype.reveal = !transitionProperty ? function() {} : function() {
   // hide item
   this.css({
     '-webkit-transform': 'scale(0.001)',
