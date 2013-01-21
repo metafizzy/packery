@@ -97,8 +97,7 @@ Item.prototype.css = function( style ) {
 
 Item.prototype.transitionPosition = function( x, y ) {
   // save end position
-  this.position.x = x;
-  this.position.y = y;
+  this.setPosition( x, y );
 
   // if transitions aren't supported, just go to layout
   if ( !transitionProperty || !transformProperty ) {
@@ -114,12 +113,19 @@ Item.prototype.transitionPosition = function( x, y ) {
   var packerySize = this.packery.elementSize;
   var transX = ( x - curX ) + packerySize.paddingLeft;
   var transY = ( y - curY ) + packerySize.paddingTop;
+  transX = parseInt( transX, 10 );
+  transY = parseInt( transY, 10 );
 
   var transitionStyle = {};
   transitionStyle[ transformCSSProperty ] = 'translate( ' + transX + 'px, ' + transY + 'px)';
 
   this.transition( transitionStyle, this.layoutPosition );
 
+};
+
+Item.prototype.setPosition = function( x, y ) {
+  this.position.x = parseInt( x, 10 );
+  this.position.y = parseInt( y, 10 );
 };
 
 Item.prototype.layoutPosition = function() {

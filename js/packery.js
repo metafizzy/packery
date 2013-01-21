@@ -259,8 +259,7 @@ Packery.prototype._layoutItem = function( item, isStill ) {
   var rect = item.rect;
   if ( isStill ) {
     // if not transition, just set CSS
-    item.position.x = rect.x;
-    item.position.y = rect.y;
+    item.setPosition( rect.x, rect.y );
     item.layoutPosition();
   } else {
     item.transitionPosition( rect.x, rect.y );
