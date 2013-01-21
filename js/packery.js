@@ -91,13 +91,9 @@ Packery.prototype._create = function() {
     this.element.style[ prop ] = containerStyle[ prop ];
   }
 
-  var _this = this;
-
   // bind resize method
   if ( this.options.isResizable ) {
-    addEvent( window, 'resize', function(){
-      _this._handleResize();
-    });
+    addEvent( window, 'resize', this );
   }
 
 };
@@ -237,11 +233,19 @@ Packery.prototype._layoutItem = function( item, isStill ) {
 
 // -------------------------- resize -------------------------- //
 
+Packery.prototype.handleEvent = function( event ) {
+  var method = event.type + 'Handler';
+  if ( this[ method ] ) {
+    this[ method ]( event );
+  }
+};
+
+
 // original debounce by John Hann
 // http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
 
 // this fires every resize
-Packery.prototype._handleResize = function() {
+Packery.prototype.resizeHandler = function() {
   var _this = this;
 
   if ( this.resizeTimeout ) {

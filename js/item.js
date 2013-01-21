@@ -6,8 +6,69 @@
 
 'use strict';
 
+// dependencies
 var Packery = window.Packery;
 var Rect = Packery.Rect;
+
+// -------------------------- getStyleProperty by kangax -------------------------- //
+// http://perfectionkills.com/feature-testing-css-properties/
+
+function capitalize( str ) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+var prefixes = 'Moz Webkit Ms O'.split(' ');
+
+function getStyleProperty( propName ) {
+  var style = document.documentElement.style,
+      prefixed;
+
+  // test standard property first
+  if ( typeof style[propName] === 'string' ) {
+    return propName;
+  }
+
+  // capitalize
+  propName = capitalize( propName );
+
+  // test vendor specific properties
+  for ( var i=0, len = prefixes.length; i < len; i++ ) {
+    prefixed = prefixes[i] + propName;
+    if ( typeof style[ prefixed ] === 'string' ) {
+      return prefixed;
+    }
+  }
+}
+
+var transitionProperty = getStyleProperty('transition');
+var transitionEndEvent, transitionCSSProperty, transformCSSProperty;
+
+if ( transitionProperty ) {
+
+  transitionEndEvent = {
+    WebkitTransition: 'webkitTransitionEnd',
+    MozTransition: 'transitionend',
+    OTransition: 'otransitionend',
+    transition: 'transitionend'
+  }[ transitionProperty ];
+
+  transitionCSSProperty = {
+    WebkitTransition: '-webkit-transition',
+    MozTransition: '-moz-transition',
+    OTransition: '-o-transition',
+    transition: 'transition'
+  }[ transitionProperty ];
+
+  transformCSSProperty = {
+    WebkitTransition: '-webkit-transform',
+    MozTransition: '-moz-transform',
+    OTransition: '-o-transform',
+    transition: 'transform'
+  }[ transitionProperty ];
+
+}
+
+// -------------------------- Item -------------------------- //
 
 function Item( element, packery ) {
   this.element = element;
@@ -51,9 +112,10 @@ Item.prototype.transitionPosition = function( x, y ) {
   var transX = ( x - curX ) + packerySize.paddingLeft;
   var transY = ( y - curY ) + packerySize.paddingTop;
 
-  this.transition({
-    '-webkit-transform': 'translate( ' + transX + 'px, ' + transY + 'px)'
-  }, this.layoutPosition );
+  var transitionStyle = {};
+  transitionStyle[ transformCSSProperty ] = 'translate( ' + transX + 'px, ' + transY + 'px)';
+
+  this.transition( transitionStyle, this.layoutPosition );
 
 };
 
@@ -73,18 +135,18 @@ Item.prototype.layoutPosition = function() {
 Item.prototype.transition = function( style, onTransitionEnd ) {
   this.transitionStyle = style;
 
-  var transitionProperty = [];
+  var transitionValue = [];
   for ( var prop in style ) {
-    transitionProperty.push( prop );
+    transitionValue.push( prop );
   }
 
   // enable transition
-  style.webkitTransitionProperty = transitionProperty.join(',');
-  style.webkitTransitionDuration = '1s';
+  style[ transitionProperty + 'Property' ] = transitionValue.join(',');
+  style[ transitionProperty + 'Duration' ] = '1s';
 
   // transition end callback
   this.onTransitionEnd = onTransitionEnd;
-  this.element.addEventListener( 'webkitTransitionEnd', this, false );
+  this.element.addEventListener( transitionEndEvent, this, false );
 
   // set transition styles
   this.css( style );
@@ -93,6 +155,22 @@ Item.prototype.transition = function( style, onTransitionEnd ) {
 };
 
 Item.prototype.webkitTransitionEndHandler = function( event ) {
+  this.transitionEndHandler( event );
+};
+
+Item.prototype.mozTransitionEndHandler = function( event ) {
+  this.transitionEndHandler( event );
+};
+
+Item.prototype.otransitionEndHandler = function( event ) {
+  this.transitionEndHandler( event );
+};
+
+Item.prototype.transitionEndHandler = function( event ) {
+  // disregard bubbled events from children
+  if ( event.target !== this.element ) {
+    return;
+  }
 
   if ( this.onTransitionEnd ) {
     this.onTransitionEnd();
@@ -101,18 +179,18 @@ Item.prototype.webkitTransitionEndHandler = function( event ) {
 
   // clean up transition styles
   var elemStyle = this.element.style;
-  var cleanStyle = {
-    // remove transition
-    webkitTransitionProperty: '',
-    webkitTransitionDuration: ''
-  };
+  var cleanStyle = {};
+  // remove transition
+  cleanStyle[ transitionProperty + 'Property' ] = '';
+  cleanStyle[ transitionProperty + 'Duration' ] = '';
+
   for ( var prop in this.transitionStyle ) {
     cleanStyle[ prop ] = '';
   }
 
   this.css( cleanStyle );
 
-  this.element.removeEventListener( 'webkitTransitionEnd', this, false );
+  this.element.removeEventListener( transitionEndEvent, this, false );
 
   delete this.transitionStyle;
 
