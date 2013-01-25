@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "author": "David DeSandro / Metafizzy",
   "dependencies": {
+    "draggabilly": "../draggabilly/",
     "get-size": "../get-size/",
+    "get-style-property": "desandro/get-style-property",
     "matches-selector-helper": "../matches-selector-helper"
   }
 }

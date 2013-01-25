@@ -1,6 +1,6 @@
 # Packery
 
-_Dynamic bin-packing layouts_
+_Uncanny layout library_
 
 Install with [Bower](https://github.com/twitter/bower).
 

@@ -41,3 +41,15 @@ drag & drop
 
 pass in array of elements
 pass in parent element, with child elements
+
+
+## Drag flow
+
+drag item
+debounce drag
+  layout around item
+
+drop
+  transition item to end place
+  sort items by position
+
