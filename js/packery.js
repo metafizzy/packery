@@ -318,10 +318,8 @@ Packery.prototype.spacePlaced = function( elem ) {
     });
   }
 
-
   rect.width = size.outerWidth;
   rect.height = size.outerHeight;
-
 
   // save its space in the packer
   this.packer.placed( rect );

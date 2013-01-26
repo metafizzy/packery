@@ -259,20 +259,20 @@ Item.prototype.reveal = !transitionProperty ? function() {} : function() {
 Item.prototype.positionPlacedDragRect = function( x, y ) {
   var options = this.packery.options;
   var packerySize = this.packery.elementSize;
-  var columnWidth = options.columnWidth;
-  var rowHeight = options.rowHeight;
 
   var rectX = x - packerySize.paddingLeft;
+  var rectY = y - packerySize.paddingTop;
+  // apply grid
+  var columnWidth = options.columnWidth;
+  var rowHeight = options.rowHeight;
   if ( columnWidth ) {
     rectX = Math.round( rectX / columnWidth ) * columnWidth;
   }
-
-  var rectY = y - packerySize.paddingTop;
   if ( rowHeight ) {
     rectY = Math.round( rectY / rowHeight ) * rowHeight;
   }
 
-  // keep track of rect if elem is an item
+  // keep track of rect
   this.placedRect = this.placedRect || new Rect();
   this.placedRect.x = rectX;
   this.placedRect.y = rectY;
