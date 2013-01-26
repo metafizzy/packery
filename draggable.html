@@ -14,17 +14,17 @@
 
 .item {
   float: left;
-  width: 44px;
-  height: 44px;
-  margin: 2px;
+  width: 48px;
+  height: 48px;
+/*  margin: 2px;*/
   border: 1px solid;
   background: #ACE;
 }
 
-.item.w2 { width:   94px; }
-.item.h2 { height:  94px; }
-.item.w4 { width:  194px; }
-.item.h4 { height: 194px; }
+.item.w2 { width:   98px; }
+.item.h2 { height:  98px; }
+.item.w4 { width:  198px; }
+.item.h4 { height: 198px; }
 
 #ex4 {
   width: 50%;
@@ -113,17 +113,13 @@ function bindDraggies( packery ) {
   var item, draggie;
 
   function onItemStart( event, pointer, instance ) {
-    if ( !packery.options.placedElements ) {
-      packery.options.placedElements = [];
-    }
     packery.ignore( instance.element );
-    packery.options.placedElements.push( instance.element );
+    packery.place( instance.element );
   }
 
   function onItemDrag( event, pointer, instance ) {
     // debounce
     function delayed() {
-      console.log('delayed');
       packery._init();
       delete instance._resizeTimeout;
     }
@@ -137,12 +133,15 @@ function bindDraggies( packery ) {
 
   function onItemStop( event, pointer, instance ) {
     var elem = instance.element;
-    packery.unignore( elem );
-    var index = packery.options.placedElements.indexOf( elem );
-
-    packery.options.placedElements.splice( index, 1 );
-    packery.sortItemsByPosition();
     packery._init();
+
+    setTimeout( function() {
+      packery.unignore( elem );
+      packery.unplace( elem );
+      if ( instance.position.x !== instance.startPosition.x || instance.position.y !== instance.startPosition.y ) {
+        packery.sortItemsByPosition();
+      }
+    }, 1000 );
   }
 
 
@@ -154,7 +153,7 @@ function bindDraggies( packery ) {
     draggie.on( 'stop', onItemStop );
     draggies.push( draggie );
   }
-  
+
 }
 
 

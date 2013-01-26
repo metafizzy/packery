@@ -29,6 +29,21 @@ function extend( a, b ) {
   return a;
 }
 
+// turn element or nodeList into an array
+function makeArray( obj ) {
+  var ary = [];
+  if ( obj.length ) {
+    // convert nodeList to array
+    for ( var i=0, len = obj.length; i < len; i++ ) {
+      ary.push( obj[i] );
+    }
+  } else {
+    // array of single index
+    ary.push( obj );
+  }
+  return ary;
+}
+
 // -------------------------- addEvent / removeEvent -------------------------- //
 
 // by John Resig - http://ejohn.org/projects/flexible-javascript-events/
@@ -92,6 +107,12 @@ Packery.defaults = {
 Packery.prototype._create = function() {
   this.reloadItems();
 
+  // collection of element that don't get laid out
+  this.placedElements = [];
+  if ( this.options.placedElements ) {
+    this.place( this.options.placedElements );
+  }
+
   var containerStyle = this.options.containerStyle;
   for ( var prop in containerStyle ) {
     this.element.style[ prop ] = containerStyle[ prop ];
@@ -119,14 +140,7 @@ Packery.prototype.reloadItems = function() {
 Packery.prototype._getItems = function( elems ) {
 
   // make array of elems
-  var potentials = [];
-  if ( elems.length ) {
-    for ( var i=0, len = elems.length; i < len; i++ ) {
-      potentials.push( elems[i] );
-    }
-  } else {
-    potentials.push( elems );
-  }
+  var potentials = makeArray( elems );
 
   var itemElems = [];
   var itemSelector = this.options.itemSelector;
@@ -175,46 +189,13 @@ Packery.prototype._init = function() {
   this.packer.height = Number.POSITIVE_INFINITY;
   this.packer.reset();
 
-  this.spacePlacedElements();
-
   // layout
   this.maxY = 0;
+  this.spacePlacedElements();
   this.layoutItems( this.items, !this._isInited );
 
   // flag for initalized
   this._isInited = true;
-};
-
-// make spaces for placed elements
-Packery.prototype.spacePlacedElements = function() {
-  var placedElems = this.options.placedElements;
-  if ( !placedElems ) {
-    return;
-  }
-
-  var elementBoundingRect = this.element.getBoundingClientRect();
-  this._boundingLeft = elementBoundingRect.left + this.elementSize.paddingLeft;
-  this._boundingTop  = elementBoundingRect.top  + this.elementSize.paddingTop;
-  for ( var i=0, len = placedElems.length; i < len; i++ ) {
-    var elem = placedElems[i];
-    this.spacePlaced( elem );
-  }
-};
-
-// makes space for element
-Packery.prototype.spacePlaced = function( elem ) {
-  var size = getSize( elem );
-  var boundingRect = elem.getBoundingClientRect();
-  // size a rect
-  var rect = new Rect({
-    width: size.outerWidth,
-    height: size.outerHeight,
-    x: boundingRect.left - this._boundingLeft,
-    y: boundingRect.top  - this._boundingTop
-  });
-
-  // save its space in the packer
-  this.packer.placed( rect );
 };
 
 /**
@@ -282,6 +263,64 @@ Packery.prototype._layoutItem = function( item, isStill ) {
   }
 
 };
+
+// -------------------------- place -------------------------- //
+
+Packery.prototype.place = function( elems ) {
+  elems = makeArray( elems );
+  this.placedElements = this.placedElements.concat( elems );
+};
+
+Packery.prototype.unplace = function( elems ) {
+  elems = makeArray( elems );
+  var revised = [];
+  var placedElem;
+  // filter out removed place elements
+  for ( var i=0, len = this.placedElements.length; i < len; i++ ) {
+    placedElem = this.placedElements[i];
+    if ( elems.indexOf( placedElem ) === -1 ) {
+      revised.push( placedElem );
+    }
+  }
+
+  this.placedElements = revised;
+};
+
+// make spaces for placed elements
+Packery.prototype.spacePlacedElements = function() {
+  var placedElems = this.placedElements;
+  if ( !placedElems ) {
+    return;
+  }
+
+  var elementBoundingRect = this.element.getBoundingClientRect();
+  this._boundingLeft = elementBoundingRect.left + this.elementSize.paddingLeft;
+  this._boundingTop  = elementBoundingRect.top  + this.elementSize.paddingTop;
+  for ( var i=0, len = placedElems.length; i < len; i++ ) {
+    var elem = placedElems[i];
+    this.spacePlaced( elem );
+  }
+};
+
+// makes space for element
+Packery.prototype.spacePlaced = function( elem ) {
+  var size = getSize( elem );
+  var boundingRect = elem.getBoundingClientRect();
+  // size a rect
+  var rect = new Rect({
+    width: size.outerWidth,
+    height: size.outerHeight,
+    x: boundingRect.left - this._boundingLeft,
+    y: boundingRect.top  - this._boundingTop
+  });
+
+  // save its space in the packer
+  this.packer.placed( rect );
+
+  this.maxY = Math.max( rect.y + rect.height, this.maxY );
+};
+
+
 
 // -------------------------- resize -------------------------- //
 
