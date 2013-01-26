@@ -120,7 +120,7 @@ function bindDraggies( packery ) {
 
     // debounce
     function delayed() {
-      packery.elementDragMove( instance.element );
+      packery.elementDragMove( instance.element, instance.position.x, instance.position.y );
       delete instance._dragTimeout;
     }
 
