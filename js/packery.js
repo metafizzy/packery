@@ -305,50 +305,23 @@ Packery.prototype.spacePlacedElements = function() {
 Packery.prototype.spacePlaced = function( elem ) {
   var size = getSize( elem );
   var x, y;
-  var boundingRect = ( !elem._dragX || !elem._dragY ) && elem.getBoundingClientRect();
-  var columnWidth = this.options.columnWidth;
-  var rowHeight = this.options.rowHeight;
-
-  if ( elem._dragX ) {
-    x = elem._dragX;
-    if ( columnWidth ) {
-      x -= this.elementSize.paddingLeft;
-      x = Math.round( x / columnWidth ) * columnWidth;
-    }
-    x += this._boundingLeft;
-  } else {
-    x = boundingRect.left;
-  }
-
-  if ( elem._dragY ) {
-    y = elem._dragY;
-    if ( rowHeight ) {
-      y -= this.elementSize.paddingTop;
-      y = Math.round( y / rowHeight ) * rowHeight;
-    }
-    y += this._boundingTop;
-  } else {
-    y = boundingRect.top;
-  }
-
-
-  // keep track of rect if elem is an item
-  var item = this.getItemFromElement( elem );
   var rect;
-  if ( item ) {
-    item.placedRect = item.placedRect || new Rect();
+
+  var item = this.getItemFromElement( elem );
+  if ( item && item.placedRect ) {
     rect = item.placedRect;
   } else {
-    rect = new Rect();
+    var boundingRect = elem.getBoundingClientRect();
+    rect = new Rect({
+      x: boundingRect.left - this._boundingLeft,
+      y: boundingRect.top - this._boundingTop
+    });
   }
 
-  // size and position a rect
+
   rect.width = size.outerWidth;
   rect.height = size.outerHeight;
-  rect.x = x - this._boundingLeft;
-  rect.y = y - this._boundingTop;
 
-  console.log( rect.x, rect.y );
 
   // save its space in the packer
   this.packer.placed( rect );
@@ -487,25 +460,54 @@ Packery.prototype.sortItemsByPosition = function() {
 
 // -------------------------- drag -------------------------- //
 
-Packery.prototype.elementDragStart = function( elem, x, y ) {
+Packery.prototype.itemDragStart = function( elem ) {
   this.ignore( elem );
-  var isGridded = this.options.columnWidth || this.options.rowHeight;
-  // expando element with gridded flag
-  if ( isGridded) {
-    elem._isGridded = true;
-  }
   this.place( elem );
 };
 
-Packery.prototype.elementDragMove = function( elem, x, y ) {
-  elem._dragX = x;
-  elem._dragY = y;
-  // console.log( x, y );
-  this._init();
+Packery.prototype.itemDragMove = function( elem, x, y ) {
+  var item = this.getItemFromElement( elem );
+  // console.log( elem, item );
+
+  item.dragX = x;
+  item.dragY = y;
+
+  var columnWidth = this.options.columnWidth;
+  var rowHeight = this.options.rowHeight;
+
+  var rectX = item.dragX;
+  if ( columnWidth ) {
+    rectX -= this.elementSize.paddingLeft;
+    rectX = Math.round( rectX / columnWidth ) * columnWidth;
+  }
+
+  var rectY = item.dragY;
+  if ( rowHeight ) {
+    rectY -= this.elementSize.paddingTop;
+    rectY = Math.round( rectY / rowHeight ) * rowHeight;
+  }
+
+  // keep track of rect if elem is an item
+  item.placedRect = item.placedRect || new Rect();
+  item.placedRect.x = rectX;
+  item.placedRect.y = rectY;
+
+  // debounce
+  var _this = this;
+  function delayed() {
+    _this._init();
+    delete item._dragTimeout;
+  }
+
+  if ( item._dragTimeout ) {
+    clearTimeout( item._dragTimeout );
+  }
+
+  item._dragTimeout = setTimeout( delayed, 100 );
 };
 
-Packery.prototype.elementDragStop = function( elem ) {
-  if ( elem._isGridded ) {
+Packery.prototype.itemDragStop = function( elem ) {
+  if ( this.options.columnWidth || this.options.rowHeight ) {
     var item = this.getItemFromElement( elem );
     var x = item.placedRect.x;
     var y = item.placedRect.y;

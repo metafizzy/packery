@@ -113,26 +113,15 @@ function bindDraggies( packery ) {
   var item, draggie;
 
   function onDragStart( event, pointer, instance ) {
-    packery.elementDragStart( instance.element )
+    packery.itemDragStart( instance.element )
   }
 
   function onDragMove( event, pointer, instance ) {
-
-    // debounce
-    function delayed() {
-      packery.elementDragMove( instance.element, instance.position.x, instance.position.y );
-      delete instance._dragTimeout;
-    }
-
-    if ( instance._dragTimeout ) {
-      clearTimeout( instance._dragTimeout );
-    }
-
-    instance._dragTimeout = setTimeout( delayed, 100 );
+    packery.itemDragMove( instance.element, instance.position.x, instance.position.y );
   }
 
   function onDragStop( event, pointer, instance ) {
-    packery.elementDragStop( instance.element );
+    packery.itemDragStop( instance.element );
   }
 
   for ( var i=0, len = packery.items.length; i < len; i++ ) {
