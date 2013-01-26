@@ -3,6 +3,8 @@
 
 animation callback
 
+gridded draggable, release item and catch it before placement transition has ended
+
 
 jQuery plugin-ability (bridget?)
 
@@ -34,7 +36,7 @@ add
 
 infinite scroll
 
-drag & drop
+<!-- drag & drop -->
 
 
 ## Test

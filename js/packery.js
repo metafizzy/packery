@@ -467,30 +467,9 @@ Packery.prototype.itemDragStart = function( elem ) {
 
 Packery.prototype.itemDragMove = function( elem, x, y ) {
   var item = this.getItemFromElement( elem );
-  // console.log( elem, item );
-
-  item.dragX = x;
-  item.dragY = y;
-
-  var columnWidth = this.options.columnWidth;
-  var rowHeight = this.options.rowHeight;
-
-  var rectX = item.dragX;
-  if ( columnWidth ) {
-    rectX -= this.elementSize.paddingLeft;
-    rectX = Math.round( rectX / columnWidth ) * columnWidth;
+  if ( item ) {
+    item.positionPlacedDragRect( x, y );
   }
-
-  var rectY = item.dragY;
-  if ( rowHeight ) {
-    rectY -= this.elementSize.paddingTop;
-    rectY = Math.round( rectY / rowHeight ) * rowHeight;
-  }
-
-  // keep track of rect if elem is an item
-  item.placedRect = item.placedRect || new Rect();
-  item.placedRect.x = rectX;
-  item.placedRect.y = rectY;
 
   // debounce
   var _this = this;

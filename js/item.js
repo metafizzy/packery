@@ -256,6 +256,30 @@ Item.prototype.reveal = !transitionProperty ? function() {} : function() {
   this.transition( visibleStyle );
 };
 
+Item.prototype.positionPlacedDragRect = function( x, y ) {
+  var options = this.packery.options;
+  var packerySize = this.packery.elementSize;
+  var columnWidth = options.columnWidth;
+  var rowHeight = options.rowHeight;
+
+  var rectX = x - packerySize.paddingLeft;
+  if ( columnWidth ) {
+    rectX = Math.round( rectX / columnWidth ) * columnWidth;
+  }
+
+  var rectY = y - packerySize.paddingTop;
+  if ( rowHeight ) {
+    rectY = Math.round( rectY / rowHeight ) * rowHeight;
+  }
+
+  // keep track of rect if elem is an item
+  this.placedRect = this.placedRect || new Rect();
+  this.placedRect.x = rectX;
+  this.placedRect.y = rectY;
+};
+
+
+
 Item.prototype.destroy = function() {
   this.css({
     position: '',
