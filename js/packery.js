@@ -305,21 +305,41 @@ Packery.prototype.spacePlacedElements = function() {
 Packery.prototype.spacePlaced = function( elem ) {
   var size = getSize( elem );
   var boundingRect = elem.getBoundingClientRect();
-  // size a rect
-  var rect = new Rect({
-    width: size.outerWidth,
-    height: size.outerHeight,
-    x: boundingRect.left - this._boundingLeft,
-    y: boundingRect.top  - this._boundingTop
-  });
+  var x = boundingRect.left;
+  var y = boundingRect.top;
+  var columnWidth = this.options.columnWidth;
+  var rowHeight = this.options.rowHeight;
+  // apply grid
+  if ( elem._isGridded && columnWidth ) {
+    x = Math.round( x / columnWidth ) * columnWidth;
+  }
+  if ( elem._isGridded && rowHeight ) {
+    y = Math.round( y / rowHeight ) * rowHeight;
+  }
+
+  // keep track of rect if elem is an item
+  var item = this.getItemFromElement( elem );
+  var rect;
+  if ( item ) {
+    item.placedRect = item.placedRect || new Rect();
+    rect = item.placedRect;
+  } else {
+    rect = new Rect();
+  }
+
+  // size and position a rect
+  rect.width = size.outerWidth;
+  rect.height = size.outerHeight;
+  rect.x = x - this._boundingLeft;
+  rect.y = y - this._boundingTop;
+
+  console.log( rect.width, rect.height, rect.x, rect.y );
 
   // save its space in the packer
   this.packer.placed( rect );
 
   this.maxY = Math.max( rect.y + rect.height, this.maxY );
 };
-
-
 
 // -------------------------- resize -------------------------- //
 
@@ -436,19 +456,55 @@ Packery.prototype.ignore = function( elem ) {
 Packery.prototype.unignore = function( elem ) {
   var item = this.getItemFromElement( elem );
   if ( item ) {
-    console.log('unignoring item');
     delete item.isIgnored;
   }
 };
 
 Packery.prototype.sortItemsByPosition = function() {
-  console.log('sortItemsByPosition');
+  // console.log('sortItemsByPosition');
   for ( var i=0, len = this.items.length; i < len; i++ ) {
     this.items[i].getPosition();
   }
   this.items.sort( function( a, b ) {
     return a.position.y - b.position.y || a.position.x - b.position.x;
   });
+};
+
+// -------------------------- drag -------------------------- //
+
+Packery.prototype.elementDragStart = function( elem ) {
+  this.ignore( elem );
+  var isGridded = this.options.columnWidth || this.options.rowHeight;
+  // expando element with gridded flag
+  if ( isGridded) {
+    elem._isGridded = true;
+  }
+  this.place( elem );
+};
+
+Packery.prototype.elementDragMove = function( elem ) {
+  this._init();
+};
+
+Packery.prototype.elementDragStop = function( elem ) {
+  if ( elem._isGridded ) {
+    var item = this.getItemFromElement( elem );
+    var x = item.placedRect.x - this.elementSize.paddingLeft;
+    var y = item.placedRect.y - this.elementSize.paddingTop;
+    item.transitionPosition( x, y );
+  }s
+
+  this._init();
+
+  var _this = this;
+  setTimeout( function() {
+    _this.unignore( elem );
+    _this.unplace( elem );
+    // if ( instance.position.x !== instance.startPosition.x || instance.position.y !== instance.startPosition.y ) {
+    _this.sortItemsByPosition();
+    // }
+  }, 1000 );
+
 };
 
 // ----- destroy ----- //
