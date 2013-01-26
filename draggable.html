@@ -141,6 +141,7 @@ function bindDraggies( packery ) {
     var index = packery.options.placedElements.indexOf( elem );
 
     packery.options.placedElements.splice( index, 1 );
+    packery.sortItemsByPosition();
     packery._init();
   }
 
