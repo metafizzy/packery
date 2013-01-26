@@ -11,6 +11,18 @@ var Packery = window.Packery;
 var Rect = Packery.Rect;
 var getStyleProperty = window.getStyleProperty;
 
+// ----- get style ----- //
+
+var defView = document.defaultView;
+
+var getStyle = defView && defView.getComputedStyle ?
+  function( elem ) {
+    return defView.getComputedStyle( elem, null );
+  } :
+  function( elem ) {
+    return elem.currentStyle;
+  };
+
 // -------------------------- CSS3 support -------------------------- //
 
 var transitionProperty = getStyleProperty('transition');
@@ -68,7 +80,20 @@ Item.prototype.css = function( style ) {
   }
 };
 
+Item.prototype.getPosition = function() {
+  var style = getStyle( this.element );
+
+  var x = parseInt( style.left, 10 );
+  var y = parseInt( style.top, 10 );
+
+  // clean up 'auto' or other non-integer values
+  this.position.x = isNaN( x ) ? 0 : x;
+  this.position.y = isNaN( y ) ? 0 : y;
+};
+
 Item.prototype.transitionPosition = function( x, y ) {
+  this.getPosition();
+
   // do not proceed if no change in position
   if ( parseInt( x, 10 ) === this.position.x && parseInt( y, 10 ) === this.position.y ) {
     return;

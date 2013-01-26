@@ -58,6 +58,11 @@ function removeEvent( obj, type, fn ) {
 // -------------------------- Packery -------------------------- //
 
 function Packery( element, options ) {
+  if ( !element ) {
+    console.error( element + ' Packery element' );
+    return;
+  }
+
   this.element = element;
 
   // options
@@ -222,7 +227,9 @@ Packery.prototype.layoutItems = function( items, isStill ) {
   for ( var i=0, len = items.length; i < len; i++ ) {
     // console.log( i );
     item = items[i];
+    // ignore item
     if ( item.isIgnored ) {
+      console.log( 'ignoring item ' + i );
       continue;
     }
     this._packItem( item );
@@ -344,9 +351,11 @@ Packery.prototype.getItemFromElement = function( elem, callback ) {
   for ( var i=0, len = this.items.length; i < len; i++ ) {
     item = this.items[i];
     if ( item.element === elem ) {
+      // trigger callback
       if ( callback ) {
         callback( item, i );
       }
+      // return item
       return item;
     }
   }
@@ -383,6 +392,14 @@ Packery.prototype.ignore = function( elem ) {
   var item = this.getItemFromElement( elem );
   if ( item ) {
     item.isIgnored = true;
+  }
+};
+
+Packery.prototype.unignore = function( elem ) {
+  var item = this.getItemFromElement( elem );
+  if ( item ) {
+    console.log('unignoring item');
+    delete item.isIgnored;
   }
 };
 
