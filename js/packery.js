@@ -218,9 +218,13 @@ Packery.prototype.spacePlaced = function( elem ) {
  * @param {Boolean} isStill - disable transitions for setting item position
  */
 Packery.prototype.layoutItems = function( items, isStill ) {
+  var item;
   for ( var i=0, len = items.length; i < len; i++ ) {
     // console.log( i );
-    var item = items[i];
+    item = items[i];
+    if ( item.isIgnored ) {
+      continue;
+    }
     this._packItem( item );
     this._layoutItem( item, isStill );
   }
@@ -334,6 +338,20 @@ Packery.prototype.appended = function( elems ) {
   }
 };
 
+Packery.prototype.getItemFromElement = function( elem, callback ) {
+  // loop through items to get the one that matches
+  var item;
+  for ( var i=0, len = this.items.length; i < len; i++ ) {
+    item = this.items[i];
+    if ( item.element === elem ) {
+      if ( callback ) {
+        callback( item, i );
+      }
+      return item;
+    }
+  }
+};
+
 /**
  * remove element(s) from instance and DOM
  * @param {Array or NodeList or Element} elems
@@ -353,15 +371,18 @@ Packery.prototype.remove = function( elems ) {
 };
 
 Packery.prototype._remove = function( elem ) {
-  // loop through items to get the one that matches
-  for ( var i=0, len = this.items.length; i < len; i++ ) {
-    var item = this.items[i];
-    if ( item.element === elem ) {
-      // remove item from collection
-      item.remove();
-      this.items.splice( i, 1 );
-      break;
-    }
+  var _this = this;
+  this.getItemFromElement( elem, function( item, i ) {
+    // remove item from collection
+    item.remove();
+    _this.items.splice( i, 1 );
+  });
+};
+
+Packery.prototype.ignore = function( elem ) {
+  var item = this.getItemFromElement( elem );
+  if ( item ) {
+    item.isIgnored = true;
   }
 };
 
