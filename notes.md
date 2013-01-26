@@ -1,6 +1,8 @@
 
 ## To do
 
+animation callback
+
 
 jQuery plugin-ability (bridget?)
 

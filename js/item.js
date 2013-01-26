@@ -188,7 +188,7 @@ Item.prototype.otransitionendHandler = function( event ) {
 console.log( transitionEndEvent );
 
 Item.prototype.transitionendHandler = function( event ) {
-  console.log('transition end');
+  // console.log('transition end');
   // disregard bubbled events from children
   if ( event.target !== this.element ) {
     return;

@@ -210,7 +210,6 @@ Packery.prototype.layoutItems = function( items, isStill ) {
     item = items[i];
     // ignore item
     if ( item.isIgnored ) {
-      console.log( 'ignoring item ' + i );
       continue;
     }
     this._packItem( item );

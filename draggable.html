@@ -114,26 +114,64 @@ function bindDraggies( packery ) {
 
   function onItemStart( event, pointer, instance ) {
     packery.ignore( instance.element );
-    packery.place( instance.element );
+    if ( packery.options.columnWidth || packery.options.rowHeight ) {
+      instance._clone = instance.element.cloneNode( true );
+      var size = getSize( instance.element );
+      instance._cloneWidth = size.outerWidth;
+      instance._cloneHeight = size.outerHeight;
+      // instance._clone.style.visibility = 'hidden';
+      instance._clone.style.background = 'orange';
+      instance._clone.style.opacity = 0.5;
+      instance.element.parentNode.appendChild( instance._clone );
+      packery.place( instance._clone );
+    } else {
+      packery.place( instance.element );
+    }
+
+
   }
 
   function onItemDrag( event, pointer, instance ) {
+    var options = packery.options;
+    var size = packery.elementSize;
+    if ( options.columnWidth || options.rowHeight ) {
+      // position clone in grid
+      var x = instance.position.x - size.paddingLeft;
+      var y = instance.position.y - size.paddingTop;
+      x = Math.round( x / options.columnWidth ) * options.columnWidth + size.paddingLeft;
+      y = Math.round( y / options.rowHeight ) * options.rowHeight + size.paddingTop;
+      instance._clone.style.left = x + 'px';
+      instance._clone.style.top  = y + 'px';
+    }
+
     // debounce
     function delayed() {
       packery._init();
-      delete instance._resizeTimeout;
+      delete instance._dragTimeout;
     }
 
-    if ( instance._resizeTimeout ) {
-      clearTimeout( instance._resizeTimeout );
+    if ( instance._dragTimeout ) {
+      clearTimeout( instance._dragTimeout );
     }
 
-    instance._resizeTimeout = setTimeout( delayed, 100 );
+    instance._dragTimeout = setTimeout( delayed, 100 );
   }
 
   function onItemStop( event, pointer, instance ) {
     var elem = instance.element;
+
+    if ( packery.options.columnWidth || packery.options.rowHeight ) {
+      var item = packery.getItemFromElement( instance.element );
+      var x = parseInt( instance._clone.style.left, 10 ) - packery.elementSize.paddingLeft;
+      var y = parseInt( instance._clone.style.top,  10 ) - packery.elementSize.paddingTop;
+      item.transitionPosition( x, y );
+    }
+
     packery._init();
+
+    if ( instance._clone ) {
+      instance._clone.parentNode.removeChild( instance._clone );
+    }
 
     setTimeout( function() {
       packery.unignore( elem );
@@ -160,7 +198,10 @@ function bindDraggies( packery ) {
 window.onload = function() {
 
   var ex4 = document.getElementById('ex4');
-  var packery4 = new Packery( ex4 );
+  var packery4 = new Packery( ex4, {
+    columnWidth: 50,
+    rowHeight: 50
+  });
 
   var ex6 = document.getElementById('ex6');
   appendRandomSizedItems( ex6 );
