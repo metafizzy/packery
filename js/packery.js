@@ -508,16 +508,18 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
 
   // debounce
   var _this = this;
+  // use item for timer, or fall back to this
+  var timer = item || this;
   function delayed() {
     _this.layout();
-    delete item._dragTimeout;
+    delete timer._dragTimeout;
   }
 
-  if ( item._dragTimeout ) {
-    clearTimeout( item._dragTimeout );
+  if ( timer._dragTimeout ) {
+    clearTimeout( timer._dragTimeout );
   }
 
-  item._dragTimeout = setTimeout( delayed, 40 );
+  timer._dragTimeout = setTimeout( delayed, 40 );
 };
 
 function onDragStoppedItemLayout( item ) {
