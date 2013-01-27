@@ -26,6 +26,7 @@ var getStyle = defView && defView.getComputedStyle ?
 // -------------------------- CSS3 support -------------------------- //
 
 var transitionProperty = getStyleProperty('transition');
+var is3d = !!getStyleProperty('perspective');
 
 var transitionEndEvent = {
   WebkitTransition: 'webkitTransitionEnd',
@@ -91,8 +92,21 @@ Item.prototype.getPosition = function() {
   this.position.y = isNaN( y ) ? 0 : y;
 };
 
+// transform translate function
+var translate = is3d ?
+  function( x, y ) {
+    return 'translate3d( ' + x + 'px, ' + y + 'px, 0)';
+  } :
+  function( x, y ) {
+    return 'translate( ' + x + 'px, ' + y + 'px)';
+  };
+
+
 Item.prototype.transitionPosition = function( x, y ) {
   this.getPosition();
+  // get current x & y from top/left
+  var curX = this.position.x;
+  var curY = this.position.y;
 
   // do not proceed if no change in position
   if ( parseInt( x, 10 ) === this.position.x && parseInt( y, 10 ) === this.position.y ) {
@@ -107,19 +121,12 @@ Item.prototype.transitionPosition = function( x, y ) {
     return;
   }
 
-  // get current x & y
-  var elem = this.element;
-  var curX = elem.style.left && parseInt( elem.style.left, 10 ) || 0;
-  var curY = elem.style.top  && parseInt( elem.style.top,  10 ) || 0;
-
   var packerySize = this.packery.elementSize;
   var transX = ( x - curX ) + packerySize.paddingLeft;
   var transY = ( y - curY ) + packerySize.paddingTop;
-  transX = parseInt( transX, 10 );
-  transY = parseInt( transY, 10 );
 
   var transitionStyle = {};
-  transitionStyle[ transformCSSProperty ] = 'translate( ' + transX + 'px, ' + transY + 'px)';
+  transitionStyle[ transformCSSProperty ] = translate( transX, transY );
 
   this.transition( transitionStyle, this.layoutPosition );
 
@@ -254,6 +261,7 @@ Item.prototype.reveal = !transitionProperty ? function() {} : function() {
   };
   visibleStyle[ transformCSSProperty ] = 'scale(1)';
   this.transition( visibleStyle );
+
 };
 
 Item.prototype.positionPlacedDragRect = function( x, y ) {

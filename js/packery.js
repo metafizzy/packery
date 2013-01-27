@@ -484,11 +484,10 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
 };
 
 Packery.prototype.itemDragStop = function( elem ) {
-  if ( this.options.columnWidth || this.options.rowHeight ) {
-    var item = this.getItemFromElement( elem );
-    var x = item.placedRect.x;
-    var y = item.placedRect.y;
-    item.transitionPosition( x, y );
+  var item = this.getItemFromElement( elem );
+  // position item in grid
+  if ( item && ( this.options.columnWidth || this.options.rowHeight ) ) {
+    item.transitionPosition( item.placedRect.x, item.placedRect.y );
   }
 
   this._init();

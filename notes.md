@@ -5,6 +5,9 @@ animation callback
 
 gridded draggable, release item and catch it before placement transition has ended
 
+on resize, don't trigger layout if size hasn't changed
+
+placed draggable item should be on top when released
 
 jQuery plugin-ability (bridget?)
 
