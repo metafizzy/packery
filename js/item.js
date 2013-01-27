@@ -129,8 +129,8 @@ Item.prototype._transitionPosition = function( x, y ) {
   // save end position
   this.setPosition( x, y );
 
-  // if did not move or transitions/transforms aren't supported, just go to layout
-  if ( didNotMove ) {
+  // if did not move and not transitioning, just go to layout
+  if ( didNotMove && !this.isTransitioning ) {
     this.layoutPosition();
     return;
   }
