@@ -90,7 +90,7 @@ function Packery( element, options ) {
 
   // kick it off
   this._create();
-  this._init();
+  this.layout();
 
 }
 
@@ -181,7 +181,7 @@ Packery.prototype.getSize = function() {
 
 // ----- init & layout ----- //
 
-Packery.prototype._init = function() {
+Packery.prototype.layout = function() {
   // reset packer
   this.elementSize = getSize( this.element );
 
@@ -197,6 +197,9 @@ Packery.prototype._init = function() {
   // flag for initalized
   this._isInited = true;
 };
+
+// _init is alias for layout
+Packery.prototype._init = Packery.prototype.layout;
 
 /**
  * layout a collection of item elements
@@ -357,7 +360,7 @@ Packery.prototype.resizeHandler = function() {
 
 // debounced, layout on resize
 Packery.prototype.resize = function() {
-  this._init();
+  this.layout();
 
   delete this.resizeTimeout;
 };
@@ -472,7 +475,7 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
   // debounce
   var _this = this;
   function delayed() {
-    _this._init();
+    _this.layout();
     delete item._dragTimeout;
   }
 
@@ -490,7 +493,7 @@ Packery.prototype.itemDragStop = function( elem ) {
     item.transitionPosition( item.placedRect.x, item.placedRect.y );
   }
 
-  this._init();
+  this.layout();
 
   var _this = this;
   setTimeout( function() {
