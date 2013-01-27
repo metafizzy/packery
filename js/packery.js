@@ -531,7 +531,7 @@ function onDragStoppedItemLayout( item ) {
 Packery.prototype.itemDragStop = function( elem ) {
   var item = this.getItemFromElement( elem );
   // position item in grid
-  var isItemGridded = item && ( this.options.columnWidth || this.options.rowHeight );
+  var isItemGridded = item && item.placedRect && ( this.options.columnWidth || this.options.rowHeight );
   var isItemLaidOut = !isItemGridded;
   var isPackeryLaidOut = false;
   var _this = this;
@@ -548,7 +548,7 @@ Packery.prototype.itemDragStop = function( elem ) {
     _this.unignore( elem );
     _this.unplace( elem );
     // TODO do not sort when item never moved
-    // if ( instance.position.x !== instance.startPosition.x || instance.position.y !== instance.startPosition.y ) {
+    // if ( item && item.placedRect ) {
     _this.sortItemsByPosition();
     // }
   }
@@ -557,13 +557,15 @@ Packery.prototype.itemDragStop = function( elem ) {
     classie.add( item.element, 'is-positioning-post-drag' );
   }
 
-  if ( isItemGridded ) {
-    item.on( 'layout', function onItemLayout( iItem ) {
+  // TODO
+  if ( isItemGridded && item.placedRect ) {
+     item.on( 'layout', function onItemLayout( iItem ) {
       isItemLaidOut = true;
       onLayoutComplete();
       // listen once
       return true;
     });
+
     item.transitionPosition( item.placedRect.x, item.placedRect.y );
   }
 
