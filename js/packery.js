@@ -480,7 +480,7 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
     clearTimeout( item._dragTimeout );
   }
 
-  item._dragTimeout = setTimeout( delayed, 100 );
+  item._dragTimeout = setTimeout( delayed, 40 );
 };
 
 Packery.prototype.itemDragStop = function( elem ) {
