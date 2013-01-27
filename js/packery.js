@@ -378,7 +378,11 @@ Packery.prototype.handleEvent = function( event ) {
 // http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
 
 // this fires every resize
-Packery.prototype.resizeHandler = function() {
+Packery.prototype.resizeHandler = function( event ) {
+  if ( event.target !== window ) {
+    return;
+  }
+
   var _this = this;
 
   if ( this.resizeTimeout ) {
@@ -394,6 +398,12 @@ Packery.prototype.resizeHandler = function() {
 
 // debounced, layout on resize
 Packery.prototype.resize = function() {
+  // don't trigger if size did not change
+  var size = getSize( this.element );
+  if ( size.innerWidth === this.elementSize.innerWidth ) {
+    return;
+  }
+
   this.layout();
 
   delete this.resizeTimeout;
