@@ -16,6 +16,7 @@ var Packer = _Packery.Packer;
 var Item = _Packery.Item;
 
 // dependencies
+var EventEmitter = window.EventEmitter;
 var getSize = window.getSize;
 var matchesSelector = window.matchesSelector;
 
@@ -94,7 +95,8 @@ function Packery( element, options ) {
 
 }
 
-
+// inherit EventEmitter
+extend( Packery.prototype, EventEmitter.prototype );
 
 Packery.defaults = {
   containerStyle: {
@@ -221,7 +223,7 @@ Packery.prototype.layoutItems = function( items, isStill ) {
 
     if ( completedItemLayouts === layoutItemCount ) {
       _this.layoutCount++;
-      console.log( 'layout count', _this.layoutCount );
+      _this.emitEvent( 'layoutComplete', [ _this ] );
     }
     // listen once
     return true;
@@ -528,22 +530,41 @@ function onDragStoppedItemLayout( item ) {
 Packery.prototype.itemDragStop = function( elem ) {
   var item = this.getItemFromElement( elem );
   // position item in grid
-  if ( item && ( this.options.columnWidth || this.options.rowHeight ) ) {
-    item.transitionPosition( item.placedRect.x, item.placedRect.y );
-    item.on( 'layout', onDragStoppedItemLayout );
-  }
-
-  this.layout();
-
-  // TODO, trigger all of this in callback after layout transitioning is complete
+  var isItemGridded = item && ( this.options.columnWidth || this.options.rowHeight );
+  var isItemLaidOut = !isItemGridded;
+  var isPackeryLaidOut = false;
   var _this = this;
-  setTimeout( function() {
+  function onLayoutComplete() {
+    // only trigger when both are laid out
+    // console.log('completeing clayout', isItemLaidOut, isPackeryLaidOut );
+    if ( !isItemLaidOut || !isPackeryLaidOut ) {
+      return;
+    }
     _this.unignore( elem );
     _this.unplace( elem );
+    // do not sort when item never moved
     // if ( instance.position.x !== instance.startPosition.x || instance.position.y !== instance.startPosition.y ) {
     _this.sortItemsByPosition();
     // }
-  }, 1000 );
+  }
+
+  if ( isItemGridded ) {
+    item.on( 'layout', function onItemLayout( iItem ) {
+      isItemLaidOut = true;
+      onLayoutComplete();
+      // listen once
+      return true;
+    });
+    item.transitionPosition( item.placedRect.x, item.placedRect.y );
+  }
+
+  this.on( 'layoutComplete', function onPackeryLayoutComplete( packery ) {
+    isPackeryLaidOut = true;
+    onLayoutComplete();
+    // listen once
+    return true;
+  });
+  this.layout();
 
 };
 

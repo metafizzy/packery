@@ -43,6 +43,10 @@
 
 .is-dragging {
   z-index: 10;
+  -webkit-transition-duration: 0s !important;
+     -moz-transition-duration: 0s !important;
+       -o-transition-duration: 0s !important;
+          transition-duration: 0s !important;
 }
 
 </style>
@@ -141,7 +145,12 @@ window.onload = function() {
   var ex4 = document.getElementById('ex4');
   var packery4 = new Packery( ex4, {
     columnWidth: 50,
-    rowHeight: 50
+    rowHeight: 50,
+    transitionDuration: '2.0s'
+  });
+
+  packery4.on( 'layoutComplete', function( packery ) {
+    console.log( 'completed layouts', packery.layoutCount );
   });
 
   // var ex6 = document.getElementById('ex6');
