@@ -144,11 +144,13 @@ Item.prototype._transitionPosition = function( x, y ) {
   this.transition( transitionStyle, this.layoutPosition );
 };
 
+// non transition + transform support
 Item.prototype._noTransitionPosition = function( x, y ) {
   this.setPosition( x, y );
   this.layoutPosition();
 };
 
+// use transition and transforms if supported
 Item.prototype.transitionPosition = supportsCSS3 ?
   Item.prototype._transitionPosition : Item.prototype._noTransitionPosition;
 
@@ -174,6 +176,7 @@ Item.prototype.layoutPosition = function() {
 
 // non transition, just trigger callback
 Item.prototype._nonTransition = function( style, onTransitionEnd ) {
+  this.css( style );
   if ( onTransitionEnd ) {
     onTransitionEnd.call( this );
   }
