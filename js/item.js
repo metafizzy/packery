@@ -24,6 +24,15 @@ var getStyle = defView && defView.getComputedStyle ?
     return elem.currentStyle;
   };
 
+
+// extend objects
+function extend( a, b ) {
+  for ( var prop in b ) {
+    a[ prop ] = b[ prop ];
+  }
+  return a;
+}
+
 // -------------------------- CSS3 support -------------------------- //
 
 var transitionProperty = getStyleProperty('transition');
@@ -68,8 +77,8 @@ function Item( element, packery ) {
   this.element.style.position = 'absolute';
 }
 
-// inherit EventEmittere
-Item.prototype = new EventEmitter();
+// inherit EventEmitter
+extend( Item.prototype, EventEmitter.prototype );
 
 Item.prototype.handleEvent = function( event ) {
   var method = event.type + 'Handler';
@@ -106,21 +115,20 @@ var translate = is3d ?
   };
 
 
+var isNotCSS3 = !transitionProperty || !transformProperty;
+
 Item.prototype.transitionPosition = function( x, y ) {
   this.getPosition();
   // get current x & y from top/left
   var curX = this.position.x;
   var curY = this.position.y;
 
-  // do not proceed if no change in position
-  if ( parseInt( x, 10 ) === this.position.x && parseInt( y, 10 ) === this.position.y ) {
-    return;
-  }
+  var didNotMove = parseInt( x, 10 ) === this.position.x && parseInt( y, 10 ) === this.position.y;
   // save end position
   this.setPosition( x, y );
 
-  // if transitions aren't supported, just go to layout
-  if ( !transitionProperty || !transformProperty ) {
+  // if did not move or transitions/transforms aren't supported, just go to layout
+  if ( isNotCSS3 || didNotMove ) {
     this.layoutPosition();
     return;
   }
