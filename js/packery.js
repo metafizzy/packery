@@ -456,27 +456,21 @@ Packery.prototype.getItemFromElement = function( elem, callback ) {
  * remove element(s) from instance and DOM
  * @param {Array or NodeList or Element} elems
  */
-
-// faux method, so we can pass in nodelist, element, or array
 Packery.prototype.remove = function( elems ) {
-  if ( elems.length ) {
-    // multiple elements, remove 'em
-    for ( var i=0, len = elems.length; i < len; i++ ) {
-      this._remove( elems[i] );
-    }
-  } else {
-    // single element, remove it
-    this._remove( elems );
-  }
-};
-
-Packery.prototype._remove = function( elem ) {
+  elems = makeArray( elems );
+  var elem;
   var _this = this;
-  this.getItemFromElement( elem, function( item, i ) {
+
+  function removeItem( remItem, j ) {
     // remove item from collection
-    item.remove();
-    _this.items.splice( i, 1 );
-  });
+    remItem.remove();
+    _this.items.splice( j, 1 );
+  }
+
+  for ( var i=0, len = elems.length; i < len; i++ ) {
+    elem = elems[i];
+    this.getItemFromElement( elem, removeItem );
+  }
 };
 
 Packery.prototype.ignore = function( elem ) {
