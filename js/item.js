@@ -36,6 +36,8 @@ function extend( a, b ) {
 // -------------------------- CSS3 support -------------------------- //
 
 var transitionProperty = getStyleProperty('transition');
+var transformProperty = getStyleProperty('transform');
+var supportsCSS3 = transitionProperty && transformProperty;
 var is3d = !!getStyleProperty('perspective');
 
 var transitionEndEvent = {
@@ -51,8 +53,6 @@ var transitionCSSProperty = {
   OTransition: '-o-transition',
   transition: 'transition'
 }[ transitionProperty ];
-
-var transformProperty = getStyleProperty('transform');
 
 var transformCSSProperty = {
   WebkitTransform: '-webkit-transform',
@@ -115,25 +115,26 @@ var translate = is3d ?
   };
 
 
-var isNotCSS3 = !transitionProperty || !transformProperty;
-
-Item.prototype.transitionPosition = function( x, y ) {
+Item.prototype._transitionPosition = function( x, y ) {
   this.getPosition();
   // get current x & y from top/left
   var curX = this.position.x;
   var curY = this.position.y;
 
-  var didNotMove = parseInt( x, 10 ) === this.position.x && parseInt( y, 10 ) === this.position.y;
+  var packerySize = this.packery.elementSize;
+  var compareX = parseInt( x, 10 ) + packerySize.paddingLeft;
+  var compareY = parseInt( y, 10 ) + packerySize.paddingTop;
+  var didNotMove = compareX === this.position.x && compareY === this.position.y;
+
   // save end position
   this.setPosition( x, y );
 
   // if did not move or transitions/transforms aren't supported, just go to layout
-  if ( isNotCSS3 || didNotMove ) {
+  if ( didNotMove ) {
     this.layoutPosition();
     return;
   }
 
-  var packerySize = this.packery.elementSize;
   var transX = ( x - curX ) + packerySize.paddingLeft;
   var transY = ( y - curY ) + packerySize.paddingTop;
 
@@ -141,8 +142,15 @@ Item.prototype.transitionPosition = function( x, y ) {
   transitionStyle[ transformCSSProperty ] = translate( transX, transY );
 
   this.transition( transitionStyle, this.layoutPosition );
-
 };
+
+Item.prototype._noTransitionPosition = function( x, y ) {
+  this.setPosition( x, y );
+  this.layoutPosition();
+};
+
+Item.prototype.transitionPosition = supportsCSS3 ?
+  Item.prototype._transitionPosition : Item.prototype._noTransitionPosition;
 
 Item.prototype.setPosition = function( x, y ) {
   this.position.x = parseInt( x, 10 );
@@ -277,6 +285,7 @@ Item.prototype.reveal = !transitionProperty ? function() {} : function() {
 
 };
 
+// TODO jsDoc this
 Item.prototype.positionPlacedDragRect = function( x, y ) {
   var options = this.packery.options;
   var packerySize = this.packery.elementSize;
