@@ -105,6 +105,8 @@ Packery.defaults = {
 };
 
 Packery.prototype._create = function() {
+  this.layoutCount = 0;
+
   this.reloadItems();
 
   // collection of element that don't get laid out
@@ -207,20 +209,51 @@ Packery.prototype._init = Packery.prototype.layout;
  * @param {Boolean} isStill - disable transitions for setting item position
  */
 Packery.prototype.layoutItems = function( items, isStill ) {
+  console.log('layout Items');
   var item;
+  var layoutItemCount = this._getLayoutItemCount();
+  var completedItemLayouts = 0;
+
+  var _this = this;
+  function onItemLayout( iItem ) {
+    completedItemLayouts++;
+    // console.log('completed itemLayouts', iItem._i );
+
+    if ( completedItemLayouts === layoutItemCount ) {
+      _this.layoutCount++;
+      console.log( 'layout count', _this.layoutCount );
+    }
+    // listen once
+    return true;
+  }
+
   for ( var i=0, len = items.length; i < len; i++ ) {
-    // console.log( i );
     item = items[i];
+    item._i = i;
     // ignore item
     if ( item.isIgnored ) {
       continue;
     }
+    // listen to layout events for callback
+    item.on( 'layout', onItemLayout );
     this._packItem( item );
     this._layoutItem( item, isStill );
   }
 
   // set container size
   this.element.style.height = this.maxY + 'px';
+};
+
+/**
+ * get the number of un-ignored items that will be laid out
+ * @returns {Number} count
+ */
+Packery.prototype._getLayoutItemCount = function() {
+  var count = 0;
+  for ( var i=0, len = this.items.length; i < len; i++ ) {
+    count += this.items[i].isIgnored ? 0 : 1;
+  }
+  return count;
 };
 
 /**
@@ -486,15 +519,23 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
   item._dragTimeout = setTimeout( delayed, 40 );
 };
 
+function onDragStoppedItemLayout( item ) {
+  console.log('item was laid out');
+  // do it once
+  item.off( 'layout', onDragStoppedItemLayout );
+}
+
 Packery.prototype.itemDragStop = function( elem ) {
   var item = this.getItemFromElement( elem );
   // position item in grid
   if ( item && ( this.options.columnWidth || this.options.rowHeight ) ) {
     item.transitionPosition( item.placedRect.x, item.placedRect.y );
+    item.on( 'layout', onDragStoppedItemLayout );
   }
 
   this.layout();
 
+  // TODO, trigger all of this in callback after layout transitioning is complete
   var _this = this;
   setTimeout( function() {
     _this.unignore( elem );

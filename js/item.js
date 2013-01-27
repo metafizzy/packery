@@ -10,6 +10,7 @@
 var Packery = window.Packery;
 var Rect = Packery.Rect;
 var getStyleProperty = window.getStyleProperty;
+var EventEmitter = window.EventEmitter;
 
 // ----- get style ----- //
 
@@ -66,6 +67,9 @@ function Item( element, packery ) {
   // style initial style
   this.element.style.position = 'absolute';
 }
+
+// inherit EventEmittere
+Item.prototype = new EventEmitter();
 
 Item.prototype.handleEvent = function( event ) {
   var method = event.type + 'Handler';
@@ -144,6 +148,7 @@ Item.prototype.layoutPosition = function() {
     left: ( this.position.x + packerySize.paddingLeft ) + 'px',
     top : ( this.position.y + packerySize.paddingTop ) + 'px'
   });
+  this.emitEvent( 'layout', [ this ] );
 };
 
 /**

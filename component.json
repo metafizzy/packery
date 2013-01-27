@@ -4,6 +4,7 @@
   "author": "David DeSandro / Metafizzy",
   "dependencies": {
     "draggabilly": "../draggabilly/",
+    "eventEmitter": ">=3",
     "get-size": "../get-size/",
     "get-style-property": "desandro/get-style-property",
     "matches-selector-helper": "../matches-selector-helper"
