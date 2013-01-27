@@ -16,6 +16,7 @@ var Packer = _Packery.Packer;
 var Item = _Packery.Item;
 
 // dependencies
+var classie = window.classie;
 var EventEmitter = window.EventEmitter;
 var getSize = window.getSize;
 var matchesSelector = window.matchesSelector;
@@ -118,9 +119,7 @@ Packery.prototype._create = function() {
   }
 
   var containerStyle = this.options.containerStyle;
-  for ( var prop in containerStyle ) {
-    this.element.style[ prop ] = containerStyle[ prop ];
-  }
+  extend( this.element.style, containerStyle );
 
   // bind resize method
   if ( this.options.isResizable ) {
@@ -540,12 +539,20 @@ Packery.prototype.itemDragStop = function( elem ) {
     if ( !isItemLaidOut || !isPackeryLaidOut ) {
       return;
     }
+    if ( item ) {
+      classie.remove( item.element, 'is-positioning-post-drag' );
+    }
+
     _this.unignore( elem );
     _this.unplace( elem );
-    // do not sort when item never moved
+    // TODO do not sort when item never moved
     // if ( instance.position.x !== instance.startPosition.x || instance.position.y !== instance.startPosition.y ) {
     _this.sortItemsByPosition();
     // }
+  }
+
+  if ( item ) {
+    classie.add( item.element, 'is-positioning-post-drag' );
   }
 
   if ( isItemGridded ) {

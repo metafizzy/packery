@@ -36,18 +36,21 @@
   padding: 10px 20px 30px 40px;
 }
 
-#ex6 .item {
-  border: 1px solid;
-  background: #ACE;
+.is-dragging,
+.is-positioning-post-drag {
+  z-index: 10;
+  background: orange;
 }
 
+
 .is-dragging {
-  z-index: 10;
   -webkit-transition-duration: 0s !important;
      -moz-transition-duration: 0s !important;
        -o-transition-duration: 0s !important;
           transition-duration: 0s !important;
 }
+
+
 
 </style>
 
@@ -146,22 +149,22 @@ window.onload = function() {
   var packery4 = new Packery( ex4, {
     columnWidth: 50,
     rowHeight: 50,
-    transitionDuration: '2.0s'
+    transitionDuration: '0.8s'
   });
 
   packery4.on( 'layoutComplete', function( packery ) {
     console.log( 'completed layouts', packery.layoutCount );
   });
 
-  // var ex6 = document.getElementById('ex6');
-  // appendRandomSizedItems( ex6 );
-  // var packery6 = new Packery( ex6, {
-  //   itemSelector: '.item'
-  // });
+  var ex6 = document.getElementById('ex6');
+  appendRandomSizedItems( ex6 );
+  var packery6 = new Packery( ex6, {
+    itemSelector: '.item'
+  });
 
 
   bindDraggies( packery4 );
-  // bindDraggies( packery6 );
+  bindDraggies( packery6 );
 
 };
 </script>
