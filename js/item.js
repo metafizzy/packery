@@ -309,6 +309,7 @@ Item.prototype.destroy = function() {
 Item.prototype.dragStart = function() {
   this.getPosition();
   this.getSize();
+  this.positionPlacedRect( this.position.x, this.position.y );
   this.didDragMove = false;
 };
 
@@ -319,7 +320,10 @@ Item.prototype.dragStart = function() {
  */
 Item.prototype.dragMove = function( x, y ) {
   this.didDragMove = true;
+  this.positionPlacedRect( x, y );
+};
 
+Item.prototype.positionPlacedRect = function( x, y ) {
   var options = this.packery.options;
   var packerySize = this.packery.elementSize;
   // position a rect that will occupy space in the packer

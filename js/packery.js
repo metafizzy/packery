@@ -561,7 +561,7 @@ Packery.prototype.itemDragStop = function( elem ) {
 
     _this.unignore( elem );
     _this.unplace( elem );
-    // sort when item moved
+    // TODO only sort when item moved
     if ( item && item.didDragMove ) {
       _this.sortItemsByPosition();
     }
