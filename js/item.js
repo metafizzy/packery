@@ -296,6 +296,16 @@ Item.prototype.reveal = !transitionProperty ? function() {} : function() {
 
 };
 
+Item.prototype.destroy = function() {
+  this.css({
+    position: '',
+    left: '',
+    top: ''
+  });
+};
+
+// -------------------------- drag -------------------------- //
+
 Item.prototype.dragStart = function() {
   this.getPosition();
   this.getSize();
@@ -308,7 +318,6 @@ Item.prototype.dragStart = function() {
  * @param {Number} y - vertical position of dragged item
  */
 Item.prototype.dragMove = function( x, y ) {
-  console.log( this.position.x, this.position.y, x, y );
   this.didDragMove = true;
 
   var options = this.packery.options;
@@ -335,14 +344,15 @@ Item.prototype.dragMove = function( x, y ) {
   this.placedRect.y = rectY;
 };
 
-
-
-Item.prototype.destroy = function() {
-  this.css({
-    position: '',
-    left: '',
-    top: ''
-  });
+Item.prototype.dragStop = function() {
+  this.getPosition();
+  var packerySize = this.packery.elementSize;
+  var isDiffX = this.position.x !== this.placedRect.x + packerySize.paddingLeft;
+  var isDiffY = this.position.y !== this.placedRect.y + packerySize.paddingTop;
+  // set post-drag positioning flag
+  this.needsPositioning = isDiffX || isDiffY;
+  // reset flag
+  this.didDragMove = false;
 };
 
 // --------------------------  -------------------------- //

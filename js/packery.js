@@ -542,10 +542,8 @@ Packery.prototype.itemDragStop = function( elem ) {
   // check if item's current position matches placed rect position
   var isPositioningItem = false;
   if ( item ) {
-    item.getPosition();
-    var isDiffX = item.position.x !== item.placedRect.x + this.elementSize.paddingLeft;
-    var isDiffY = item.position.y !== item.placedRect.y + this.elementSize.paddingTop;
-    isPositioningItem = isDiffX || isDiffY;
+    item.dragStop();
+    isPositioningItem = item.needsPositioning;
   }
 
   var isItemPositioned = !isPositioningItem;
@@ -569,10 +567,11 @@ Packery.prototype.itemDragStop = function( elem ) {
     }
   }
 
-  // TODO
-  if ( isPositioningItem ) {
+  if ( item ) {
     classie.add( item.element, 'is-positioning-post-drag' );
+  }
 
+  if ( isPositioningItem ) {
     item.on( 'layout', function onItemLayout( iItem ) {
       isItemPositioned = true;
       onLayoutComplete();
