@@ -9,6 +9,7 @@
 // dependencies
 var Packery = window.Packery;
 var Rect = Packery.Rect;
+var getSize = window.getSize;
 var getStyleProperty = window.getStyleProperty;
 var EventEmitter = window.EventEmitter;
 
@@ -73,6 +74,9 @@ function Item( element, packery ) {
 
   this.rect = new Rect();
 
+  // used for dragging
+  this.placedRect = new Rect();
+
   // style initial style
   this.element.style.position = 'absolute';
 }
@@ -85,6 +89,10 @@ Item.prototype.handleEvent = function( event ) {
   if ( this[ method ] ) {
     this[ method ]( event );
   }
+};
+
+Item.prototype.getSize = function() {
+  this.size = getSize( this.element );
 };
 
 Item.prototype.css = function( style ) {
@@ -288,11 +296,24 @@ Item.prototype.reveal = !transitionProperty ? function() {} : function() {
 
 };
 
-// TODO jsDoc this
-Item.prototype.positionPlacedDragRect = function( x, y ) {
+Item.prototype.dragStart = function() {
+  this.getPosition();
+  this.getSize();
+  this.didDragMove = false;
+};
+
+/**
+ * handle item when it is dragged
+ * @param {Number} x - horizontal position of dragged item
+ * @param {Number} y - vertical position of dragged item
+ */
+Item.prototype.dragMove = function( x, y ) {
+  console.log( this.position.x, this.position.y, x, y );
+  this.didDragMove = true;
+
   var options = this.packery.options;
   var packerySize = this.packery.elementSize;
-
+  // position a rect that will occupy space in the packer
   var rectX = x - packerySize.paddingLeft;
   var rectY = y - packerySize.paddingTop;
   // apply grid
@@ -304,9 +325,12 @@ Item.prototype.positionPlacedDragRect = function( x, y ) {
   if ( rowHeight ) {
     rectY = Math.round( rectY / rowHeight ) * rowHeight;
   }
+  // contain to size of of packery
+  var packeryHeight = Math.max( packerySize.innerHeight, this.packery.maxY );
+  rectX = Math.max( 0, Math.min( rectX, packerySize.innerWidth - this.size.width ) );
+  rectY = Math.max( 0, Math.min( rectY, packeryHeight - this.size.height ) );
 
   // keep track of rect
-  this.placedRect = this.placedRect || new Rect();
   this.placedRect.x = rectX;
   this.placedRect.y = rectY;
 };

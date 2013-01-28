@@ -210,7 +210,7 @@ Packery.prototype._init = Packery.prototype.layout;
  * @param {Boolean} isStill - disable transitions for setting item position
  */
 Packery.prototype.layoutItems = function( items, isStill ) {
-  console.log('layout Items');
+  // console.log('layout Items');
   var item;
   var layoutItemCount = this._getLayoutItemCount();
   var completedItemLayouts = 0;
@@ -502,12 +502,16 @@ Packery.prototype.sortItemsByPosition = function() {
 Packery.prototype.itemDragStart = function( elem ) {
   this.ignore( elem );
   this.place( elem );
+  var item = this.getItemFromElement( elem );
+  if ( item ) {
+    item.dragStart();
+  }
 };
 
 Packery.prototype.itemDragMove = function( elem, x, y ) {
   var item = this.getItemFromElement( elem );
   if ( item ) {
-    item.positionPlacedDragRect( x, y );
+    item.dragMove( x, y );
   }
 
   // debounce

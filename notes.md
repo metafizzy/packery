@@ -1,19 +1,19 @@
 
 ## To do
 
-animation callback
+<!-- animation callback -->
 
 gridded draggable, release item and catch it before placement transition has ended
 
-on resize, don't trigger layout if size hasn't changed
+<!-- on resize, don't trigger layout if size hasn't changed -->
 
-placed draggable item should be on top when released
+<!-- placed draggable item should be on top when released -->
 
 jQuery plugin-ability (bridget?)
 
-animation
+<!-- animation
 1. set transform to new destination
-2. once element reaches destination, remove transform, set top/left
+2. once element reaches destination, remove transform, set top/left -->
 
 ## options
 
