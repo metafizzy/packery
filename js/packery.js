@@ -126,13 +126,26 @@ Packery.prototype._create = function() {
     addEvent( window, 'resize', this );
   }
 
+  // create drag handlers
+  var _this = this;
+  this.handleDraggabilly = {
+    start: function handleDraggabillyStart( event, pointer, draggie ) {
+      _this.itemDragStart( draggie.element );
+    },
+    drag: function handleDraggabillyDrag( event, pointer, draggie ) {
+      _this.itemDragMove( draggie.element, draggie.position.x, draggie.position.y );
+    },
+    stop: function handleDraggabillyStop( event, pointer, draggie ) {
+      _this.itemDragStop( draggie.element );
+    }
+  };
 };
 
 // goes through all children again and gets bricks in proper order
 Packery.prototype.reloadItems = function() {
   // collection of item elements
   this.items = this._getItems( this.element.children );
-},
+};
 
 
 /**
@@ -530,12 +543,6 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
   timer._dragTimeout = setTimeout( delayed, 40 );
 };
 
-function onDragStoppedItemLayout( item ) {
-  console.log('item was laid out');
-  // do it once
-  item.off( 'layout', onDragStoppedItemLayout );
-}
-
 Packery.prototype.itemDragStop = function( elem ) {
   var item = this.getItemFromElement( elem );
 
@@ -561,7 +568,7 @@ Packery.prototype.itemDragStop = function( elem ) {
 
     _this.unignore( elem );
     _this.unplace( elem );
-    // TODO only sort when item moved
+    // only sort when item moved
     if ( item && item.didDragMove ) {
       _this.sortItemsByPosition();
     }
