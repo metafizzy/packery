@@ -224,8 +224,6 @@ Item.prototype.otransitionendHandler = function( event ) {
   this.transitionendHandler( event );
 };
 
-console.log( transitionEndEvent );
-
 Item.prototype.transitionendHandler = function( event ) {
   // console.log('transition end');
   // disregard bubbled events from children

@@ -83,8 +83,6 @@ function Packery( element, options ) {
   this.element = element;
 
   // options
-  this.options = {};
-  extend( this.options, Packery.defaults );
   extend( this.options, options );
 
   // initial properties
@@ -99,7 +97,8 @@ function Packery( element, options ) {
 // inherit EventEmitter
 extend( Packery.prototype, EventEmitter.prototype );
 
-Packery.defaults = {
+// default options
+Packery.prototype.options = {
   containerStyle: {
     position: 'relative'
   },
@@ -396,12 +395,11 @@ Packery.prototype.resizeHandler = function( event ) {
     return;
   }
 
-  var _this = this;
-
   if ( this.resizeTimeout ) {
     clearTimeout( this.resizeTimeout );
   }
 
+  var _this = this;
   function delayed() {
     _this.resize();
   }
@@ -443,8 +441,9 @@ Packery.prototype.appended = function( elems ) {
   this.layoutItems( items, true );
 
   // reveal new items
+  var item;
   for ( var i=0, len = items.length; i < len; i++ ) {
-    var item = items[i];
+    item = items[i];
     item.reveal();
   }
 };

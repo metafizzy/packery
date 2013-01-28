@@ -60,3 +60,33 @@ drop
   transition item to end place
   sort items by position
 
+
+
+## libby microlibrary
+
+getStyleProperty
+getSize (getElementSize)
+addEvent
+removeEvent
+hasClass
+addClass
+removeClass
+isElement
+matchesSelector?
+requestAnimationFrame?
+
+
+## event micro lib
+
+eventchly.add
+eventi
+evento
+eevent
+evenevent
+evevent
+efent
+evvent
+eveent
+evenchly
+eventie
+eventually.add
