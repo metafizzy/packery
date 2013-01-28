@@ -316,6 +316,10 @@ Item.prototype.dragMove = function( x, y ) {
   // position a rect that will occupy space in the packer
   var rectX = x - packerySize.paddingLeft;
   var rectY = y - packerySize.paddingTop;
+  // contain to size of of packery
+  var packeryHeight = Math.max( packerySize.innerHeight, this.packery.maxY );
+  rectX = Math.max( 0, Math.min( rectX, packerySize.innerWidth - this.size.width ) );
+  rectY = Math.max( 0, Math.min( rectY, packeryHeight - this.size.height ) );
   // apply grid
   var columnWidth = options.columnWidth;
   var rowHeight = options.rowHeight;
@@ -325,10 +329,6 @@ Item.prototype.dragMove = function( x, y ) {
   if ( rowHeight ) {
     rectY = Math.round( rectY / rowHeight ) * rowHeight;
   }
-  // contain to size of of packery
-  var packeryHeight = Math.max( packerySize.innerHeight, this.packery.maxY );
-  rectX = Math.max( 0, Math.min( rectX, packerySize.innerWidth - this.size.width ) );
-  rectY = Math.max( 0, Math.min( rectY, packeryHeight - this.size.height ) );
 
   // keep track of rect
   this.placedRect.x = rectX;
