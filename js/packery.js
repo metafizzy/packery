@@ -83,6 +83,7 @@ function Packery( element, options ) {
   this.element = element;
 
   // options
+  this.options = extend( {}, this.options );
   extend( this.options, options );
 
   // initial properties
