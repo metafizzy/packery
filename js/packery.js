@@ -538,15 +538,23 @@ function onDragStoppedItemLayout( item ) {
 
 Packery.prototype.itemDragStop = function( elem ) {
   var item = this.getItemFromElement( elem );
-  // position item in grid
-  var isItemGridded = item && item.placedRect && ( this.options.columnWidth || this.options.rowHeight );
-  var isItemLaidOut = !isItemGridded;
+
+  // check if item's current position matches placed rect position
+  var isPositioningItem = false;
+  if ( item ) {
+    item.getPosition();
+    var isDiffX = item.position.x !== item.placedRect.x + this.elementSize.paddingLeft;
+    var isDiffY = item.position.y !== item.placedRect.y + this.elementSize.paddingTop;
+    isPositioningItem = isDiffX || isDiffY;
+  }
+
+  var isItemPositioned = !isPositioningItem;
   var isPackeryLaidOut = false;
   var _this = this;
   function onLayoutComplete() {
     // only trigger when both are laid out
     // console.log('completeing clayout', isItemLaidOut, isPackeryLaidOut );
-    if ( !isItemLaidOut || !isPackeryLaidOut ) {
+    if ( !isItemPositioned || !isPackeryLaidOut ) {
       return;
     }
     if ( item ) {
@@ -555,20 +563,18 @@ Packery.prototype.itemDragStop = function( elem ) {
 
     _this.unignore( elem );
     _this.unplace( elem );
-    // TODO do not sort when item never moved
-    // if ( item && item.placedRect ) {
-    _this.sortItemsByPosition();
-    // }
-  }
-
-  if ( item ) {
-    classie.add( item.element, 'is-positioning-post-drag' );
+    // sort when item moved
+    if ( item && item.didDragMove ) {
+      _this.sortItemsByPosition();
+    }
   }
 
   // TODO
-  if ( isItemGridded && item.placedRect ) {
-     item.on( 'layout', function onItemLayout( iItem ) {
-      isItemLaidOut = true;
+  if ( isPositioningItem ) {
+    classie.add( item.element, 'is-positioning-post-drag' );
+
+    item.on( 'layout', function onItemLayout( iItem ) {
+      isItemPositioned = true;
       onLayoutComplete();
       // listen once
       return true;
