@@ -308,7 +308,7 @@ Item.prototype.dragStart = function() {
   this.getPosition();
   this.getSize();
   this.positionPlacedRect( this.position.x, this.position.y );
-  this.didDragMove = false;
+  this.didDrag = false;
 };
 
 /**
@@ -317,7 +317,7 @@ Item.prototype.dragStart = function() {
  * @param {Number} y - vertical position of dragged item
  */
 Item.prototype.dragMove = function( x, y ) {
-  this.didDragMove = true;
+  this.didDrag = true;
   this.positionPlacedRect( x, y );
 };
 
@@ -354,7 +354,7 @@ Item.prototype.dragStop = function() {
   // set post-drag positioning flag
   this.needsPositioning = isDiffX || isDiffY;
   // reset flag
-  this.didDragMove = false;
+  this.didDrag = false;
 };
 
 // --------------------------  -------------------------- //

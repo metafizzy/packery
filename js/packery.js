@@ -573,7 +573,9 @@ Packery.prototype.itemDragStop = function( elem ) {
 
   // check if item's current position matches placed rect position
   var isPositioningItem = false;
+  var didItemDrag;
   if ( item ) {
+    didItemDrag = item.didDrag;
     item.dragStop();
     isPositioningItem = item.needsPositioning;
   }
@@ -594,7 +596,7 @@ Packery.prototype.itemDragStop = function( elem ) {
     _this.unignore( elem );
     _this.unplace( elem );
     // only sort when item moved
-    if ( item && item.didDragMove ) {
+    if ( didItemDrag ) {
       _this.sortItemsByPosition();
     }
   }
