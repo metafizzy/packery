@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>UI Draggable Packery</title>
+  <title>Packery</title>
 
 <style>
 .container {
@@ -37,8 +37,7 @@
 }
 
 .is-dragging,
-.is-positioning-post-drag,
-.ui-draggable-dragging {
+.is-positioning-post-drag {
   z-index: 10;
   background: orange;
 }
@@ -94,8 +93,7 @@
 <script src="components/get-style-property/get-style-property.js"></script>
 <script src="components/classie/classie.js"></script>
 <script src="components/eventEmitter/EventEmitter.js"></script>
-<script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
-<script src="components/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.min.js"></script>
+<script src="components/draggabilly/draggabilly.js"></script>
 <script src="js/rect.js"></script>
 <script src="js/packer.js"></script>
 <script src="js/item.js"></script>
@@ -117,6 +115,34 @@ function appendRandomSizedItems( container ) {
   container.appendChild( frag );
 }
 
+function bindDraggies( packery ) {
+  var draggies = [];
+  var item, draggie;
+
+  // function onDragStart( event, pointer, instance ) {
+  //   packery.itemDragStart( instance.element )
+  // }
+  // 
+  // function onDragMove( event, pointer, instance ) {
+  //   packery.itemDragMove( instance.element, instance.position.x, instance.position.y );
+  // }
+  // 
+  // function onDragStop( event, pointer, instance ) {
+  //   packery.itemDragStop( instance.element );
+  // }
+
+  for ( var i=0, len = packery.items.length; i < len; i++ ) {
+    item = packery.items[i].element;
+    draggie = new Draggabilly( item );
+    draggie.on( 'start', packery.handleDraggabilly.start );
+    draggie.on( 'drag', packery.handleDraggabilly.drag );
+    draggie.on( 'stop', packery.handleDraggabilly.stop );
+    draggies.push( draggie );
+  }
+
+}
+
+
 window.onload = function() {
 
   var ex4 = document.getElementById('ex4');
@@ -136,20 +162,9 @@ window.onload = function() {
     itemSelector: '.item'
   });
 
-  var itemElems = packery4.getItemElements();
 
-  // bind jQuery UI Draggable
-  $( itemElems ).draggable()
-    .on( 'dragstart', packery4.handleUIDraggable.start )
-    .on( 'drag', packery4.handleUIDraggable.drag )
-    .on( 'dragstop', packery4.handleUIDraggable.stop );
-
-  itemElems = packery6.getItemElements();
-
-  $( itemElems ).draggable()
-    .on( 'dragstart', packery6.handleUIDraggable.start )
-    .on( 'drag', packery6.handleUIDraggable.drag )
-    .on( 'dragstop', packery6.handleUIDraggable.stop );
+  bindDraggies( packery4 );
+  bindDraggies( packery6 );
 
 };
 </script>

@@ -139,6 +139,19 @@ Packery.prototype._create = function() {
       _this.itemDragStop( draggie.element );
     }
   };
+
+  this.handleUIDraggable = {
+    start: function handleUIDraggableStart( event, ui ) {
+      _this.itemDragStart( event.currentTarget );
+    },
+    drag: function handleUIDraggableDrag( event, ui ) {
+      _this.itemDragMove( event.currentTarget, ui.position.left, ui.position.top );
+    },
+    stop: function handleUIDraggableStop( event, ui ) {
+      _this.itemDragStop( event.currentTarget );
+    }
+  };
+
 };
 
 // goes through all children again and gets bricks in proper order
@@ -193,6 +206,18 @@ Packery.prototype._getItems = function( elems ) {
 
 Packery.prototype.getSize = function() {
 
+};
+
+/**
+ * getter method for getting item elements
+ * @returns {Array} elems - collection of item elements
+ */
+Packery.prototype.getItemElements = function() {
+  var elems = [];
+  for ( var i=0, len = this.items.length; i < len; i++ ) {
+    elems.push( this.items[i].element );
+  }
+  return elems;
 };
 
 // ----- init & layout ----- //
