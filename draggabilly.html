@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>Packery</title>
+  <title>Draggabilly Packery</title>
 
 <style>
 .container {
@@ -119,24 +119,10 @@ function bindDraggies( packery ) {
   var draggies = [];
   var item, draggie;
 
-  // function onDragStart( event, pointer, instance ) {
-  //   packery.itemDragStart( instance.element )
-  // }
-  // 
-  // function onDragMove( event, pointer, instance ) {
-  //   packery.itemDragMove( instance.element, instance.position.x, instance.position.y );
-  // }
-  // 
-  // function onDragStop( event, pointer, instance ) {
-  //   packery.itemDragStop( instance.element );
-  // }
-
   for ( var i=0, len = packery.items.length; i < len; i++ ) {
     item = packery.items[i].element;
     draggie = new Draggabilly( item );
-    draggie.on( 'start', packery.handleDraggabilly.start );
-    draggie.on( 'drag', packery.handleDraggabilly.drag );
-    draggie.on( 'stop', packery.handleDraggabilly.stop );
+    packery.bindDraggabillyEvents( draggie );
     draggies.push( draggie );
   }
 

@@ -136,20 +136,14 @@ window.onload = function() {
     itemSelector: '.item'
   });
 
-  var itemElems = packery4.getItemElements();
-
   // bind jQuery UI Draggable
-  $( itemElems ).draggable()
-    .on( 'dragstart', packery4.handleUIDraggable.start )
-    .on( 'drag', packery4.handleUIDraggable.drag )
-    .on( 'dragstop', packery4.handleUIDraggable.stop );
+  var itemElems = packery4.getItemElements();
+  var $itemElems = $( itemElems ).draggable();
+  packery4.bindUIDraggableEvents( $itemElems );
 
   itemElems = packery6.getItemElements();
-
-  $( itemElems ).draggable()
-    .on( 'dragstart', packery6.handleUIDraggable.start )
-    .on( 'drag', packery6.handleUIDraggable.drag )
-    .on( 'dragstop', packery6.handleUIDraggable.stop );
+  $itemElems = $( itemElems ).draggable();
+  packery6.bindUIDraggableEvents( $itemElems );
 
 };
 </script>

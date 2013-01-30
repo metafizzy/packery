@@ -626,6 +626,27 @@ Packery.prototype.itemDragStop = function( elem ) {
 
 };
 
+/**
+ * binds Draggabilly events
+ * @param draggie {Draggabilly}
+ */
+Packery.prototype.bindDraggabillyEvents = function( draggie ) {
+  draggie.on( 'start', this.handleDraggabilly.start );
+  draggie.on( 'drag', this.handleDraggabilly.drag );
+  draggie.on( 'stop', this.handleDraggabilly.stop );
+};
+
+/**
+ * binds jQuery UI Draggable events
+ * @param {jQuery} $elems
+ */
+Packery.prototype.bindUIDraggableEvents = function( $elems ) {
+  $elems
+    .on( 'dragstart', this.handleUIDraggable.start )
+    .on( 'drag', this.handleUIDraggable.drag )
+    .on( 'dragstop', this.handleUIDraggable.stop );
+};
+
 // ----- destroy ----- //
 
 // remove and disable Packery instance

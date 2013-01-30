@@ -66,12 +66,16 @@ drop
 
 getStyleProperty
 getSize (getElementSize)
+
 addEvent
 removeEvent
+
 hasClass
 addClass
 removeClass
+
 isElement
+
 matchesSelector?
 requestAnimationFrame?
 
