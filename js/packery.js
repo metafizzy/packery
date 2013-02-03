@@ -379,7 +379,6 @@ Packery.prototype.spacePlacedElements = function() {
 // makes space for element
 Packery.prototype.spacePlaced = function( elem ) {
   var size = getSize( elem );
-  var x, y;
   var rect;
 
   var item = this.getItemFromElement( elem );
