@@ -552,6 +552,7 @@ Packery.prototype.itemDragStop = function( elem ) {
     didItemDrag = item.didDrag;
     item.dragStop();
     isPositioningItem = item.needsPositioning;
+    classie.add( item.element, 'is-positioning-post-drag' );
   }
 
   var isItemPositioned = !isPositioningItem;
@@ -573,10 +574,6 @@ Packery.prototype.itemDragStop = function( elem ) {
     if ( didItemDrag ) {
       _this.sortItemsByPosition();
     }
-  }
-
-  if ( item ) {
-    classie.add( item.element, 'is-positioning-post-drag' );
   }
 
   if ( isPositioningItem ) {
