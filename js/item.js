@@ -231,18 +231,16 @@ Item.prototype.transitionendHandler = function( event ) {
     return;
   }
 
+  // trigger callback
   if ( this.onTransitionEnd ) {
     this.onTransitionEnd();
     delete this.onTransitionEnd;
   }
 
+  this.removeTransitionStyles();
   // clean up transition styles
   var elemStyle = this.element.style;
   var cleanStyle = {};
-  // remove transition
-  cleanStyle[ transitionProperty + 'Property' ] = '';
-  cleanStyle[ transitionProperty + 'Duration' ] = '';
-
   for ( var prop in this.transitionStyle ) {
     cleanStyle[ prop ] = '';
   }
@@ -254,6 +252,15 @@ Item.prototype.transitionendHandler = function( event ) {
   delete this.transitionStyle;
 
   this.isTransitioning = false;
+
+};
+
+Item.prototype.removeTransitionStyles = function() {
+  var noTransStyle = {};
+  // remove transition
+  noTransStyle[ transitionProperty + 'Property' ] = '';
+  noTransStyle[ transitionProperty + 'Duration' ] = '';
+  this.css( noTransStyle );
 };
 
 Item.prototype.remove = function() {
@@ -306,6 +313,7 @@ Item.prototype.destroy = function() {
 
 Item.prototype.dragStart = function() {
   this.getPosition();
+  this.removeTransitionStyles();
   this.getSize();
   this.positionPlacedRect( this.position.x, this.position.y );
   this.didDrag = false;
