@@ -335,10 +335,16 @@ Item.prototype.positionPlacedRect = function( x, y ) {
   var columnWidth = options.columnWidth;
   var rowHeight = options.rowHeight;
   if ( columnWidth ) {
-    rectX = Math.round( rectX / columnWidth ) * columnWidth;
+    rectX = Math.round( rectX / columnWidth );
+    // contain to outer bound
+    var maxCols = Math.floor( ( packerySize.innerWidth - this.size.width ) / columnWidth );
+    rectX = Math.min( rectX, maxCols ) * columnWidth;
   }
   if ( rowHeight ) {
-    rectY = Math.round( rectY / rowHeight ) * rowHeight;
+    rectY = Math.round( rectY / rowHeight );
+    // contain to outer bound
+    var maxRows = Math.floor( ( packerySize.innerHeight - this.size.height ) / rowHeight );
+    rectY = Math.min( rectY, maxRows ) * rowHeight;
   }
 
   // keep track of rect
