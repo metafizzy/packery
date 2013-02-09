@@ -8,6 +8,8 @@
     "eventie": "desandro/eventie",
     "get-size": "desandro/get-size",
     "get-style-property": "desandro/get-style-property",
-    "matches-selector-helper": "../matches-selector-helper"
+    "matches-selector": "desandro/matches-selector"
+  },
+  "devDependencies": {
   }
 }
