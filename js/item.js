@@ -343,7 +343,7 @@ Item.prototype.positionPlacedRect = function( x, y ) {
   if ( rowHeight ) {
     rectY = Math.round( rectY / rowHeight );
     // contain to outer bound
-    var maxRows = Math.floor( ( packerySize.innerHeight - this.size.height ) / rowHeight );
+    var maxRows = Math.floor( ( packeryHeight - this.size.height ) / rowHeight );
     rectY = Math.min( rectY, maxRows ) * rowHeight;
   }
 
