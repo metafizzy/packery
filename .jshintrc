@@ -3,6 +3,7 @@
   "devel": true,
   "strict": true,
   "undef": true,
+  "unused": true,
   "predef": {
     "Packery": true,
 

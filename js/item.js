@@ -48,13 +48,6 @@ var transitionEndEvent = {
   transition: 'transitionend'
 }[ transitionProperty ];
 
-var transitionCSSProperty = {
-  WebkitTransition: '-webkit-transition',
-  MozTransition: '-moz-transition',
-  OTransition: '-o-transition',
-  transition: 'transition'
-}[ transitionProperty ];
-
 var transformCSSProperty = {
   WebkitTransform: '-webkit-transform',
   MozTransform: '-moz-transform',
@@ -239,7 +232,6 @@ Item.prototype.transitionendHandler = function( event ) {
 
   this.removeTransitionStyles();
   // clean up transition styles
-  var elemStyle = this.element.style;
   var cleanStyle = {};
   for ( var prop in this.transitionStyle ) {
     cleanStyle[ prop ] = '';
@@ -298,7 +290,8 @@ Item.prototype.reveal = !transitionProperty ? function() {} : function() {
   };
   visibleStyle[ transformCSSProperty ] = 'scale(1)';
   this.transition( visibleStyle );
-
+  // hack for JSHint to hush about unused var
+  h = null;
 };
 
 Item.prototype.destroy = function() {
