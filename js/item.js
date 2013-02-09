@@ -354,6 +354,10 @@ Item.prototype.positionPlacedRect = function( x, y ) {
 };
 
 Item.prototype.dragStop = function() {
+  // don't have to do stuff if drag didn't happen
+  if ( !this.didDrag ) {
+    return;
+  }
   this.getPosition();
   var packerySize = this.packery.elementSize;
   var isDiffX = this.position.x !== this.placedRect.x + packerySize.paddingLeft;

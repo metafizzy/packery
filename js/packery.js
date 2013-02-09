@@ -552,6 +552,16 @@ Packery.prototype.itemDragStop = function( elem ) {
     didItemDrag = item.didDrag;
     item.dragStop();
     isPositioningItem = item.needsPositioning;
+  }
+
+  // if elem didn't move, unignore and unplace and call it a day
+  if ( !didItemDrag ) {
+    this.unignore( elem );
+    this.unplace( elem );
+    return;
+  }
+
+  if ( item ) {
     classie.add( item.element, 'is-positioning-post-drag' );
   }
 
@@ -571,9 +581,7 @@ Packery.prototype.itemDragStop = function( elem ) {
     _this.unignore( elem );
     _this.unplace( elem );
     // only sort when item moved
-    if ( didItemDrag ) {
-      _this.sortItemsByPosition();
-    }
+    _this.sortItemsByPosition();
   }
 
   if ( isPositioningItem ) {
