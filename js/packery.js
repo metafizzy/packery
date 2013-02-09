@@ -18,6 +18,7 @@ var Item = _Packery.Item;
 // dependencies
 var classie = window.classie;
 var EventEmitter = window.EventEmitter;
+var eventie = window.eventie;
 var getSize = window.getSize;
 var matchesSelector = window.matchesSelector;
 
@@ -44,32 +45,6 @@ function makeArray( obj ) {
     ary.push( obj );
   }
   return ary;
-}
-
-// -------------------------- addEvent / removeEvent -------------------------- //
-
-// by John Resig - http://ejohn.org/projects/flexible-javascript-events/
-
-function addEvent( obj, type, fn ) {
-  if ( obj.addEventListener ) {
-    obj.addEventListener( type, fn, false );
-  } else if ( obj.attachEvent ) {
-    obj[ 'e' + type + fn ] = fn;
-    obj[ type + fn ] = function() {
-      obj[ 'e' + type + fn ]( window.event );
-    };
-    obj.attachEvent( "on" + type, obj[ type + fn ] );
-  }
-}
-
-function removeEvent( obj, type, fn ) {
-  if ( obj.removeEventListener ) {
-    obj.removeEventListener( type, fn, false );
-  } else if ( obj.detachEvent ) {
-    obj.detachEvent( "on" + type, obj[ type + fn ] );
-    delete obj[ type + fn ];
-    delete obj[ 'e' + type + fn ];
-  }
 }
 
 // -------------------------- Packery -------------------------- //
@@ -123,7 +98,7 @@ Packery.prototype._create = function() {
 
   // bind resize method
   if ( this.options.isResizable ) {
-    addEvent( window, 'resize', this );
+    eventie.bind( window, 'resize', this );
   }
 
   // create drag handlers
@@ -660,7 +635,7 @@ Packery.prototype.destroy = function() {
     item.destroy();
   }
 
-  removeEvent( window, 'resize', this );
+  eventie.unbind( window, 'resize', this );
 };
 
 // -----  ----- //
