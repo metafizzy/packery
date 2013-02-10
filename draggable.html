@@ -44,15 +44,6 @@
 }
 
 
-.is-dragging {
-  -webkit-transition-duration: 0s !important;
-     -moz-transition-duration: 0s !important;
-       -o-transition-duration: 0s !important;
-          transition-duration: 0s !important;
-}
-
-
-
 </style>
 
 </head>
@@ -94,6 +85,7 @@
 <script src="components/matches-selector/matches-selector.js"></script>
 <script src="components/classie/classie.js"></script>
 <script src="components/eventEmitter/EventEmitter.js"></script>
+<script src="components/eventie/eventie.js"></script>
 <script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>
 <script src="jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.min.js"></script>
 <script src="js/rect.js"></script>
@@ -126,9 +118,9 @@ window.onload = function() {
     transitionDuration: '0.6s'
   });
 
-  packery4.on( 'layoutComplete', function( packery ) {
-    console.log( 'completed layouts', packery.layoutCount );
-  });
+  // packery4.on( 'layoutComplete', function( packery ) {
+  //   console.log( 'completed layouts', packery.layoutCount );
+  // });
 
   var ex6 = document.getElementById('ex6');
   appendRandomSizedItems( ex6 );
