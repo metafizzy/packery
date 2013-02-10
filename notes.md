@@ -18,7 +18,7 @@ jQuery plugin-ability (bridget?)
 ## Bugs
 
 you can drag an item on to a previous dragged item while that previous dragged item is still transitioning
-Drag one item then another will set crazy offsets
+<!-- Drag one item then another will set crazy offsets -->
 
 
 
