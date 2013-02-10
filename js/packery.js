@@ -501,9 +501,6 @@ Packery.prototype.unignore = function( elem ) {
 
 Packery.prototype.sortItemsByPosition = function() {
   // console.log('sortItemsByPosition');
-  for ( var i=0, len = this.items.length; i < len; i++ ) {
-    this.items[i].getPosition();
-  }
   this.items.sort( function( a, b ) {
     return a.position.y - b.position.y || a.position.x - b.position.x;
   });
