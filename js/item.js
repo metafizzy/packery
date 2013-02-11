@@ -307,8 +307,13 @@ Item.prototype.destroy = function() {
 Item.prototype.dragStart = function() {
   this.getPosition();
   this.removeTransitionStyles();
+  // remove transform property from transition
+  if ( this.isTransitioning && transformProperty ) {
+    this.element.style[ transformProperty ] = 'none';
+  }
   this.getSize();
   this.positionPlacedRect( this.position.x, this.position.y );
+  this.isTransitioning = false;
   this.didDrag = false;
 };
 
