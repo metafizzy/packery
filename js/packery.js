@@ -8,7 +8,6 @@
 
 'use strict';
 
-var document = window.document;
 // Packery classes
 var _Packery = window.Packery;
 var Rect = _Packery.Rect;
@@ -116,13 +115,13 @@ Packery.prototype._create = function() {
   };
 
   this.handleUIDraggable = {
-    start: function handleUIDraggableStart( event, ui ) {
+    start: function handleUIDraggableStart( event ) {
       _this.itemDragStart( event.currentTarget );
     },
     drag: function handleUIDraggableDrag( event, ui ) {
       _this.itemDragMove( event.currentTarget, ui.position.left, ui.position.top );
     },
-    stop: function handleUIDraggableStop( event, ui ) {
+    stop: function handleUIDraggableStop( event ) {
       _this.itemDragStop( event.currentTarget );
     }
   };
@@ -229,10 +228,9 @@ Packery.prototype.layoutItems = function( items, isStill ) {
   var completedItemLayouts = 0;
 
   var _this = this;
-  function onItemLayout( iItem ) {
+  function onItemLayout() {
     completedItemLayouts++;
     // console.log('completed itemLayouts', iItem._i );
-
     if ( completedItemLayouts === layoutItemCount ) {
       _this.layoutCount++;
       _this.emitEvent( 'layoutComplete', [ _this ] );
@@ -582,7 +580,7 @@ Packery.prototype.itemDragStop = function( elem ) {
   }
 
   if ( isPositioningItem ) {
-    item.on( 'layout', function onItemLayout( iItem ) {
+    item.on( 'layout', function onItemLayout() {
       isItemPositioned = true;
       onLayoutComplete();
       // listen once
@@ -592,7 +590,7 @@ Packery.prototype.itemDragStop = function( elem ) {
     item.transitionPosition( item.placedRect.x, item.placedRect.y );
   }
 
-  this.on( 'layoutComplete', function onPackeryLayoutComplete( packery ) {
+  this.on( 'layoutComplete', function onPackeryLayoutComplete() {
     isPackeryLaidOut = true;
     onLayoutComplete();
     // listen once
