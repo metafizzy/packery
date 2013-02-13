@@ -46,7 +46,7 @@ add
 
 ## Maybe, idunno
 
-remove .layoutCount
+event for drag item position ended
 
 better naming of methods for Draggabilly
 dragStart

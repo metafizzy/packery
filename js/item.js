@@ -88,6 +88,10 @@ Item.prototype.getSize = function() {
   this.size = getSize( this.element );
 };
 
+/**
+ * apply CSS styles to element
+ * @param {Object} style
+ */
 Item.prototype.css = function( style ) {
   var elemStyle = this.element.style;
   for ( var prop in style ) {
@@ -95,6 +99,7 @@ Item.prototype.css = function( style ) {
   }
 };
 
+ // measure position, and sets it
 Item.prototype.getPosition = function() {
   var style = getStyle( this.element );
 
@@ -102,8 +107,15 @@ Item.prototype.getPosition = function() {
   var y = parseInt( style.top, 10 );
 
   // clean up 'auto' or other non-integer values
-  this.position.x = isNaN( x ) ? 0 : x;
-  this.position.y = isNaN( y ) ? 0 : y;
+  x = isNaN( x ) ? 0 : x;
+  y = isNaN( y ) ? 0 : y;
+  // remove padding from measurement
+  var packerySize = this.packery.elementSize;
+  x -= packerySize.paddingLeft;
+  y -= packerySize.paddingTop;
+
+  this.position.x = x;
+  this.position.y = y;
 };
 
 // transform translate function
@@ -122,9 +134,8 @@ Item.prototype._transitionTo = function( x, y ) {
   var curX = this.position.x;
   var curY = this.position.y;
 
-  var packerySize = this.packery.elementSize;
-  var compareX = parseInt( x, 10 ) + packerySize.paddingLeft;
-  var compareY = parseInt( y, 10 ) + packerySize.paddingTop;
+  var compareX = parseInt( x, 10 );
+  var compareY = parseInt( y, 10 );
   var didNotMove = compareX === this.position.x && compareY === this.position.y;
 
   // save end position
@@ -136,9 +147,8 @@ Item.prototype._transitionTo = function( x, y ) {
     return;
   }
 
-  var transX = ( x - curX ) + packerySize.paddingLeft;
-  var transY = ( y - curY ) + packerySize.paddingTop;
-
+  var transX = x - curX;
+  var transY = y - curY;
   var transitionStyle = {};
   transitionStyle[ transformCSSProperty ] = translate( transX, transY );
 
@@ -163,7 +173,7 @@ Item.prototype.setPosition = function( x, y ) {
 Item.prototype.layoutPosition = function() {
   var packerySize = this.packery.elementSize;
   this.css({
-    // set settled position
+    // set settled position, apply padding
     left: ( this.position.x + packerySize.paddingLeft ) + 'px',
     top : ( this.position.y + packerySize.paddingTop ) + 'px'
   });
@@ -364,9 +374,8 @@ Item.prototype.dragStop = function() {
     return;
   }
   this.getPosition();
-  var packerySize = this.packery.elementSize;
-  var isDiffX = this.position.x !== this.placedRect.x + packerySize.paddingLeft;
-  var isDiffY = this.position.y !== this.placedRect.y + packerySize.paddingTop;
+  var isDiffX = this.position.x !== this.placedRect.x;
+  var isDiffY = this.position.y !== this.placedRect.y;
   // set post-drag positioning flag
   this.needsPositioning = isDiffX || isDiffY;
   // reset flag
