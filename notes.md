@@ -46,7 +46,7 @@ add
 
 ## Maybe, idunno
 
-
+remove .layoutCount
 
 better naming of methods for Draggabilly
 dragStart
@@ -62,53 +62,14 @@ infinite scroll
 
 ## Test
 
+check how filterFind works
+array of elements
+nodeList
+single element
+
 .add( )
 
 pass in array of elements
 pass in parent element, with child elements
 
 
-## Drag flow
-
-drag item
-debounce drag
-  layout around item
-
-drop
-  transition item to end place
-  sort items by position
-
-
-
-## libby microlibrary
-
-getStyleProperty
-getSize (getElementSize)
-
-addEvent
-removeEvent
-
-hasClass
-addClass
-removeClass
-
-isElement
-
-matchesSelector?
-requestAnimationFrame?
-
-
-## event micro lib
-
-eventchly.add
-eventi
-evento
-eevent
-evenevent
-evevent
-efent
-evvent
-eveent
-evenchly
-eventie
-eventually.add

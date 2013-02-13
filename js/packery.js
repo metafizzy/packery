@@ -138,48 +138,57 @@ Packery.prototype.reloadItems = function() {
 /**
  * get item elements to be used in layout
  * @param {Array or NodeList or HTMLElement} elems
- * @returns {Array} items - item elements
+ * @returns {Array} items - collection of new Packery Items
  */
 Packery.prototype._getItems = function( elems ) {
 
-  // make array of elems
-  var potentials = makeArray( elems );
+  var itemElems = this._filterFindItemElements( elems );
 
-  var itemElems = [];
-  var itemSelector = this.options.itemSelector;
-
-  if ( itemSelector ) {
-    // filter & find items if we have an item selector
-    for ( var j=0, jLen = potentials.length; j < jLen; j++ ) {
-      var potential = potentials[j];
-      // filter
-      if ( matchesSelector( potential, itemSelector ) ) {
-        itemElems.push( potential );
-      }
-      // find
-      var recentlyFound = potential.querySelectorAll( itemSelector );
-      // concat recentlyFound to filterFound array
-      for ( var k=0, kLen = recentlyFound.length; k < kLen; k++ ) {
-        itemElems.push( recentlyFound[k] );
-      }
-    }
-  } else {
-    itemElems = potentials;
-  }
-
-  // style items
+  // create new Packery Items for collection
   var items = [];
+  var elem, item;
   for ( var l=0, lLen = itemElems.length; l < lLen; l++ ) {
-    var elem = itemElems[l];
-    var item = new Item( elem, this );
+    elem = itemElems[l];
+    item = new Item( elem, this );
     items.push( item );
   }
 
   return items;
-},
+};
 
-Packery.prototype.getSize = function() {
+/**
+ * get item elements to be used in layout
+ * @param {Array or NodeList or HTMLElement} elems
+ * @returns {Array} items - item elements
+ */
+Packery.prototype._filterFindItemElements = function( elems ) {
+  // make array of elems
+  elems = makeArray( elems );
+  var itemSelector = this.options.itemSelector;
 
+  if ( !itemSelector ) {
+    return elems;
+  }
+
+  var itemElems = [];
+
+  // filter & find items if we have an item selector
+  var elem;
+  for ( var i=0, len = elems.length; i < len; i++ ) {
+    elem = elems[i];
+    // filter siblings
+    if ( matchesSelector( elem, itemSelector ) ) {
+      itemElems.push( elem );
+    }
+    // find children
+    var childElems = elem.querySelectorAll( itemSelector );
+    // concat childElems to filterFound array
+    for ( var j=0, jLen = childElems.length; j < jLen; j++ ) {
+      itemElems.push( childElems[j] );
+    }
+  }
+
+  return itemElems;
 };
 
 /**
@@ -231,6 +240,7 @@ Packery.prototype.layoutItems = function( items, isStill ) {
   function onItemLayout() {
     completedItemLayouts++;
     // console.log('completed itemLayouts', iItem._i );
+    // trigger callback
     if ( completedItemLayouts === layoutItemCount ) {
       _this.layoutCount++;
       _this.emitEvent( 'layoutComplete', [ _this ] );
