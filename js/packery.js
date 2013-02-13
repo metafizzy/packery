@@ -308,10 +308,9 @@ Packery.prototype._layoutItem = function( item, isStill ) {
   var rect = item.rect;
   if ( isStill ) {
     // if not transition, just set CSS
-    item.setPosition( rect.x, rect.y );
-    item.layoutPosition();
+    item.goTo( rect.x, rect.y );
   } else {
-    item.transitionPosition( rect.x, rect.y );
+    item.moveTo( rect.x, rect.y );
   }
 
 };
@@ -633,7 +632,7 @@ Packery.prototype.itemDragStop = function( elem ) {
       return true;
     });
 
-    item.transitionPosition( item.placedRect.x, item.placedRect.y );
+    item.moveTo( item.placedRect.x, item.placedRect.y );
   }
 
   this.on( 'layoutComplete', function onPackeryLayoutComplete() {

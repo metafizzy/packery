@@ -116,7 +116,7 @@ var translate = is3d ?
   };
 
 
-Item.prototype._transitionPosition = function( x, y ) {
+Item.prototype._transitionTo = function( x, y ) {
   this.getPosition();
   // get current x & y from top/left
   var curX = this.position.x;
@@ -146,14 +146,14 @@ Item.prototype._transitionPosition = function( x, y ) {
 };
 
 // non transition + transform support
-Item.prototype._noTransitionPosition = function( x, y ) {
+Item.prototype.goTo = function( x, y ) {
   this.setPosition( x, y );
   this.layoutPosition();
 };
 
 // use transition and transforms if supported
-Item.prototype.transitionPosition = supportsCSS3 ?
-  Item.prototype._transitionPosition : Item.prototype._noTransitionPosition;
+Item.prototype.moveTo = supportsCSS3 ?
+  Item.prototype._transitionTo : Item.prototype.goTo;
 
 Item.prototype.setPosition = function( x, y ) {
   this.position.x = parseInt( x, 10 );
