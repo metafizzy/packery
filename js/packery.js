@@ -224,7 +224,7 @@ Packery.prototype._init = Packery.prototype.layout;
 
 /**
  * layout a collection of item elements
- * @param {Array} items - array of elements
+ * @param {Array} items - array of Packery.Items
  * @param {Boolean} isStill - disable transitions for setting item position
  */
 Packery.prototype.layoutItems = function( items, isStill ) {
@@ -271,7 +271,7 @@ Packery.prototype._getLayoutItems = function( items ) {
     }
   }
   return layoutItems;
-}
+};
 
 /**
  * layout item in packer
@@ -330,6 +330,10 @@ Packery.prototype.place = function( elems ) {
   this.placedElements.push.apply( this.placedElements, elems );
 };
 
+/**
+ * removes elements to placedElements
+ * @param {NodeList, Array, or Element} elems
+ */
 Packery.prototype.unplace = function( elems ) {
   if ( !elems ){
     return;
@@ -363,7 +367,10 @@ Packery.prototype.spacePlacedElements = function() {
   }
 };
 
-// makes space for element
+/**
+ * makes space for element
+ * @param {Element} elem
+ */
 Packery.prototype.spacePlaced = function( elem ) {
   var size = getSize( elem );
   var rect;
@@ -459,6 +466,11 @@ Packery.prototype.appended = function( elems ) {
   }
 };
 
+/**
+ * get Packery.Item, given an Element
+ * @param {Element} elem
+ * @param {Function} callback
+ */
 Packery.prototype.getItemFromElement = function( elem, callback ) {
   // loop through items to get the one that matches
   for ( var i=0, len = this.items.length; i < len; i++ ) {
@@ -525,6 +537,10 @@ Packery.prototype.sortItemsByPosition = function() {
 
 // -------------------------- drag -------------------------- //
 
+/**
+ * handle an item drag start event
+ * @param {Element} elem
+ */
 Packery.prototype.itemDragStart = function( elem ) {
   this.ignore( elem );
   this.place( elem );
@@ -534,6 +550,12 @@ Packery.prototype.itemDragStart = function( elem ) {
   }
 };
 
+/**
+ * handle an item drag move event
+ * @param {Element} elem
+ * @param {Number} x - horizontal change in position
+ * @param {Number} y - vertical change in position
+ */
 Packery.prototype.itemDragMove = function( elem, x, y ) {
   var item = this.getItemFromElement( elem );
   if ( item ) {
@@ -557,6 +579,10 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
   timer._dragTimeout = setTimeout( delayed, 40 );
 };
 
+/**
+ * handle an item drag end event
+ * @param {Element} elem
+ */
 Packery.prototype.itemDragStop = function( elem ) {
   var item = this.getItemFromElement( elem );
 
@@ -622,7 +648,7 @@ Packery.prototype.itemDragStop = function( elem ) {
 
 /**
  * binds Draggabilly events
- * @param draggie {Draggabilly}
+ * @param {Draggabilly} draggie
  */
 Packery.prototype.bindDraggabillyEvents = function( draggie ) {
   draggie.on( 'start', this.handleDraggabilly.start );
