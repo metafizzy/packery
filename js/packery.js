@@ -229,7 +229,8 @@ Packery.prototype._init = Packery.prototype.layout;
  */
 Packery.prototype.layoutItems = function( items, isStill ) {
   // console.log('layout Items');
-  var layoutItemCount = this._getLayoutItemCount();
+  var layoutItems = this._getLayoutItems( items );
+  var layoutItemCount = layoutItems.length;
   var completedItemLayouts = 0;
 
   var _this = this;
@@ -244,12 +245,8 @@ Packery.prototype.layoutItems = function( items, isStill ) {
     return true;
   }
 
-  for ( var i=0, len = items.length; i < len; i++ ) {
-    var item = items[i];
-    // ignore item
-    if ( item.isIgnored ) {
-      continue;
-    }
+  for ( var i=0, len = layoutItems.length; i < len; i++ ) {
+    var item = layoutItems[i];
     // listen to layout events for callback
     item.on( 'layout', onItemLayout );
     this._packItem( item );
@@ -261,16 +258,20 @@ Packery.prototype.layoutItems = function( items, isStill ) {
 };
 
 /**
- * get the number of un-ignored items that will be laid out
- * @returns {Number} count
+ * filters items for non-ignored items
+ * @param {Array} items
+ * @returns {Array} layoutItems
  */
-Packery.prototype._getLayoutItemCount = function() {
-  var count = 0;
-  for ( var i=0, len = this.items.length; i < len; i++ ) {
-    count += this.items[i].isIgnored ? 0 : 1;
+Packery.prototype._getLayoutItems = function( items ) {
+  var layoutItems = [];
+  for ( var i=0, len = items.length; i < len; i++ ) {
+    var item = items[i];
+    if ( !item.isIgnored ) {
+      layoutItems.push( item );
+    }
   }
-  return count;
-};
+  return layoutItems;
+}
 
 /**
  * layout item in packer

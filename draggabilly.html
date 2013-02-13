@@ -139,8 +139,10 @@ window.onload = function() {
     transitionDuration: '1.6s'
   });
 
+  var layoutCount4 = 0;
+
   packery4.on( 'layoutComplete', function( packery ) {
-    console.log( 'completed layouts', packery.layoutCount );
+    console.log( 'completed layouts', ++layoutCount4 );
   });
 
   var ex6 = document.getElementById('ex6');
