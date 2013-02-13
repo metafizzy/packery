@@ -9,6 +9,10 @@
 
 module('Packery');
 
+test( 'basics', function() {
+  equal( typeof Packery === 'function', true, 'Packery is a function' );
+});
+
 test( 'getItems', function() {
   var ex1 = document.getElementById('ex1');
   var pack1 = new Packery( ex1, {
