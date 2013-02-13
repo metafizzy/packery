@@ -146,10 +146,9 @@ Packery.prototype._getItems = function( elems ) {
 
   // create new Packery Items for collection
   var items = [];
-  var elem, item;
   for ( var l=0, lLen = itemElems.length; l < lLen; l++ ) {
-    elem = itemElems[l];
-    item = new Item( elem, this );
+    var elem = itemElems[l];
+    var item = new Item( elem, this );
     items.push( item );
   }
 
@@ -173,9 +172,8 @@ Packery.prototype._filterFindItemElements = function( elems ) {
   var itemElems = [];
 
   // filter & find items if we have an item selector
-  var elem;
   for ( var i=0, len = elems.length; i < len; i++ ) {
-    elem = elems[i];
+    var elem = elems[i];
     // filter siblings
     if ( matchesSelector( elem, itemSelector ) ) {
       itemElems.push( elem );
@@ -233,7 +231,6 @@ Packery.prototype._init = Packery.prototype.layout;
  */
 Packery.prototype.layoutItems = function( items, isStill ) {
   // console.log('layout Items');
-  var item;
   var layoutItemCount = this._getLayoutItemCount();
   var completedItemLayouts = 0;
 
@@ -251,7 +248,7 @@ Packery.prototype.layoutItems = function( items, isStill ) {
   }
 
   for ( var i=0, len = items.length; i < len; i++ ) {
-    item = items[i];
+    var item = items[i];
     // ignore item
     if ( item.isIgnored ) {
       continue;
@@ -338,10 +335,9 @@ Packery.prototype.place = function( elems ) {
 Packery.prototype.unplace = function( elems ) {
   elems = makeArray( elems );
   var revised = [];
-  var placedElem;
   // filter out removed place elements
   for ( var i=0, len = this.placedElements.length; i < len; i++ ) {
-    placedElem = this.placedElements[i];
+    var placedElem = this.placedElements[i];
     if ( elems.indexOf( placedElem ) === -1 ) {
       revised.push( placedElem );
     }
@@ -456,18 +452,16 @@ Packery.prototype.appended = function( elems ) {
   this.layoutItems( items, true );
 
   // reveal new items
-  var item;
   for ( var i=0, len = items.length; i < len; i++ ) {
-    item = items[i];
+    var item = items[i];
     item.reveal();
   }
 };
 
 Packery.prototype.getItemFromElement = function( elem, callback ) {
   // loop through items to get the one that matches
-  var item;
   for ( var i=0, len = this.items.length; i < len; i++ ) {
-    item = this.items[i];
+    var item = this.items[i];
     if ( item.element === elem ) {
       // trigger callback
       if ( callback ) {
@@ -485,7 +479,6 @@ Packery.prototype.getItemFromElement = function( elem, callback ) {
  */
 Packery.prototype.remove = function( elems ) {
   elems = makeArray( elems );
-  var elem;
   var _this = this;
 
   function removeItem( remItem, j ) {
@@ -495,7 +488,7 @@ Packery.prototype.remove = function( elems ) {
   }
 
   for ( var i=0, len = elems.length; i < len; i++ ) {
-    elem = elems[i];
+    var elem = elems[i];
     this.getItemFromElement( elem, removeItem );
   }
 };
