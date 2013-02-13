@@ -216,6 +216,7 @@ Packery.prototype.layout = function() {
   // layout
   this.maxY = 0;
   this.spacePlacedElements();
+  // don't animate first layout
   this.layoutItems( this.items, !this._isInited );
 
   // flag for initalized
@@ -251,7 +252,6 @@ Packery.prototype.layoutItems = function( items, isStill ) {
 
   for ( var i=0, len = items.length; i < len; i++ ) {
     item = items[i];
-    item._i = i;
     // ignore item
     if ( item.isIgnored ) {
       continue;
@@ -323,9 +323,16 @@ Packery.prototype._layoutItem = function( item, isStill ) {
 
 // -------------------------- place -------------------------- //
 
+/**
+ * adds elements to placedElements
+ * @param {NodeList, Array, or Element} elems
+ */
 Packery.prototype.place = function( elems ) {
+  if ( !elems ) {
+    return;
+  }
   elems = makeArray( elems );
-  this.placedElements = this.placedElements.concat( elems );
+  this.placedElements.push.apply( this.placedElements, elems );
 };
 
 Packery.prototype.unplace = function( elems ) {
@@ -345,16 +352,16 @@ Packery.prototype.unplace = function( elems ) {
 
 // make spaces for placed elements
 Packery.prototype.spacePlacedElements = function() {
-  var placedElems = this.placedElements;
-  if ( !placedElems ) {
+  if ( !this.placedElements || !this.placedElements.length ) {
     return;
   }
-
+  // get bounding rect for container element
   var elementBoundingRect = this.element.getBoundingClientRect();
   this._boundingLeft = elementBoundingRect.left + this.elementSize.paddingLeft;
   this._boundingTop  = elementBoundingRect.top  + this.elementSize.paddingTop;
-  for ( var i=0, len = placedElems.length; i < len; i++ ) {
-    var elem = placedElems[i];
+
+  for ( var i=0, len = this.placedElements.length; i < len; i++ ) {
+    var elem = this.placedElements[i];
     this.spacePlaced( elem );
   }
 };
