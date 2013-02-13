@@ -333,6 +333,9 @@ Packery.prototype.place = function( elems ) {
 };
 
 Packery.prototype.unplace = function( elems ) {
+  if ( !elems ){
+    return;
+  }
   elems = makeArray( elems );
   var revised = [];
   // filter out removed place elements
@@ -446,7 +449,7 @@ Packery.prototype.appended = function( elems ) {
   }
 
   // add items to collection
-  this.items = this.items.concat( items );
+  this.items = this.items.push.apply( this.items, items );
 
   // layout just the new items
   this.layoutItems( items, true );

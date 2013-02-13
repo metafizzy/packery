@@ -56,7 +56,11 @@ Packer.prototype.placed = function( rect ) {
     var space = this.spaces[i];
     var newSpaces = space.getMaximalFreeRects( rect );
     // add either the original space or the new spaces to the revised spaces
-    revisedSpaces = revisedSpaces.concat( newSpaces || space );
+    if ( newSpaces ) {
+      revisedSpaces.push.apply( revisedSpaces, newSpaces );
+    } else {
+      revisedSpaces.push( space );
+    }
   }
 
   this.spaces = revisedSpaces;
