@@ -82,8 +82,6 @@ Packery.prototype.options = {
 };
 
 Packery.prototype._create = function() {
-  this.layoutCount = 0;
-
   this.reloadItems();
 
   // collection of element that don't get laid out
@@ -237,10 +235,9 @@ Packery.prototype.layoutItems = function( items, isStill ) {
   var _this = this;
   function onItemLayout() {
     completedItemLayouts++;
-    // console.log('completed itemLayouts', iItem._i );
-    // trigger callback
+    // console.log('completed itemLayouts');
+    // emit event
     if ( completedItemLayouts === layoutItemCount ) {
-      _this.layoutCount++;
       _this.emitEvent( 'layoutComplete', [ _this ] );
     }
     // listen once
@@ -496,6 +493,10 @@ Packery.prototype.remove = function( elems ) {
   }
 };
 
+/**
+ * keep item in collection, but do not lay it out
+ * @param {Element} elem
+ */
 Packery.prototype.ignore = function( elem ) {
   var item = this.getItemFromElement( elem );
   if ( item ) {
@@ -503,6 +504,10 @@ Packery.prototype.ignore = function( elem ) {
   }
 };
 
+/**
+ * return item to layout collection
+ * @param {Element} elem
+ */
 Packery.prototype.unignore = function( elem ) {
   var item = this.getItemFromElement( elem );
   if ( item ) {
@@ -538,6 +543,7 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
   var _this = this;
   // use item for timer, or fall back to this
   var timer = item || this;
+  // debounce triggering layout
   function delayed() {
     _this.layout();
     delete timer._dragTimeout;
