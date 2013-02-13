@@ -1,6 +1,8 @@
 
 ## To do
 
+gutter
+
 <!-- animation callback -->
 
 <!-- gridded draggable, release item and catch it before placement transition has ended -->
@@ -41,6 +43,15 @@ prepend
 <!-- layout -->
 add
 <!-- remove -->
+
+## Maybe, idunno
+
+
+
+better naming of methods for Draggabilly
+dragStart
+dragMove
+dragStop
 
 ## Future features
 
