@@ -34,7 +34,7 @@ function extend( a, b ) {
 // turn element or nodeList into an array
 function makeArray( obj ) {
   var ary = [];
-  if ( obj.length ) {
+  if ( typeof obj.length === 'number' ) {
     // convert nodeList to array
     for ( var i=0, len = obj.length; i < len; i++ ) {
       ary.push( obj[i] );
@@ -144,8 +144,8 @@ Packery.prototype._getItems = function( elems ) {
 
   // create new Packery Items for collection
   var items = [];
-  for ( var l=0, lLen = itemElems.length; l < lLen; l++ ) {
-    var elem = itemElems[l];
+  for ( var i=0, len = itemElems.length; i < len; i++ ) {
+    var elem = itemElems[i];
     var item = new Item( elem, this );
     items.push( item );
   }
