@@ -469,6 +469,7 @@ Packery.prototype.appended = function( elems ) {
  * get Packery.Item, given an Element
  * @param {Element} elem
  * @param {Function} callback
+ * @returns {Packery.Item} item
  */
 Packery.prototype.getItemFromElement = function( elem, callback ) {
   // loop through items to get the one that matches
@@ -486,22 +487,58 @@ Packery.prototype.getItemFromElement = function( elem, callback ) {
 };
 
 /**
+ * get collection of Packery.Items, given Elements
+ * @param {Array} elems
+ * @returns {Array} items - Packery.Items
+ */
+Packery.prototype.getItemsFromElements = function( elems ) {
+  if ( !elems || !elems.length ) {
+    return;
+  }
+  var items = [];
+  for ( var i=0, len = elems.length; i < len; i++ ) {
+    var elem = elems[i];
+    var item = this.getItemFromElement( elem );
+    if ( item ) {
+      items.push( item );
+    }
+  }
+
+  return items;
+};
+
+
+/**
  * remove element(s) from instance and DOM
  * @param {Array or NodeList or Element} elems
  */
 Packery.prototype.remove = function( elems ) {
   elems = makeArray( elems );
-  var _this = this;
 
-  function removeItem( remItem, j ) {
-    // remove item from collection
-    remItem.remove();
-    _this.items.splice( j, 1 );
+  var removeItems = this.getItemsFromElements( elems );
+  var itemsCount = removeItems.length;
+  var removedCount = 0;
+
+  // removeComplete event
+  var _this = this;
+  function onItemRemove() {
+    removedCount++;
+    // console.log('completed remove', removedCount);
+    // emit event
+    if ( removedCount === itemsCount ) {
+      _this.emitEvent( 'removeComplete', [ _this ] );
+    }
+    // listen once
+    return true;
   }
 
-  for ( var i=0, len = elems.length; i < len; i++ ) {
-    var elem = elems[i];
-    this.getItemFromElement( elem, removeItem );
+  for ( var i=0; i < itemsCount; i++ ) {
+    var item = removeItems[i];
+    item.on( 'remove', onItemRemove );
+    item.remove();
+    // remove item from collection
+    var index = this.items.indexOf( item );
+    this.items.splice( index, 1 );
   }
 };
 

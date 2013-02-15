@@ -283,6 +283,7 @@ Item.prototype.remove = function() {
 Item.prototype.removeElem = function() {
   console.log('removing elem');
   this.element.parentNode.removeChild( this.element );
+  this.emitEvent( 'remove', [ this ] );
 };
 
 Item.prototype.reveal = !transitionProperty ? function() {} : function() {

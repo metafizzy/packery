@@ -42,6 +42,24 @@ window.onload = function onDocReady() {
 
   });
 
+  test( 'remove', function() {
+    var container = document.querySelector('#add-remove');
+    // packery starts with 4 items
+    var pckry = new Packery( container, {
+      itemSelector: '.item'
+    });
+    // remove two items
+    pckry.on( 'removeComplete', function( obj ) {
+      equal( true, true, 'removeComplete event did fire' );
+      equal( obj, pckry, 'event-emitted argument matches Packery instance' );
+      equal( container.children.length, 2, 'elements removed from DOM' );
+      start();
+    });
+    pckry.remove( container.querySelectorAll('.w2') );
+    equal( pckry.items.length, 2, 'items removed from Packery instance' );
+
+    stop();
+  });
 
 };
 
