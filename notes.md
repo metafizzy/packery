@@ -3,6 +3,10 @@
 
 gutter
 
+declarative mode
+
+    <div class="container js-packery" data-packery-options=""></div>
+
 <!-- animation callback -->
 
 <!-- gridded draggable, release item and catch it before placement transition has ended -->
@@ -73,3 +77,4 @@ pass in array of elements
 pass in parent element, with child elements
 
 
+.remove() removes correct item
