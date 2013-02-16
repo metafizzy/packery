@@ -652,15 +652,16 @@ Packery.prototype.itemDragStop = function( elem ) {
 
   classie.add( item.element, 'is-positioning-post-drag' );
 
-  var isItemPositioned = !item.needsPositioning;
-  var isPackeryLaidOut = false;
+  var asyncCount = item.needsPositioning ? 2 : 1;
+  var completeCount = 0;
   var _this = this;
   function onLayoutComplete() {
-    // only trigger when both are laid out
-    // console.log('completeing clayout', isItemLaidOut, isPackeryLaidOut );
-    if ( !isItemPositioned || !isPackeryLaidOut ) {
-      return;
+    completeCount++;
+    // don't proceed if not complete
+    if ( completeCount !== asyncCount ) {
+      return true;
     }
+
     if ( item ) {
       classie.remove( item.element, 'is-positioning-post-drag' );
       delete item.dragRect;
@@ -669,25 +670,16 @@ Packery.prototype.itemDragStop = function( elem ) {
     _this.unplace( elem );
     // only sort when item moved
     _this.sortItemsByPosition();
+    // listen once
+    return true;
   }
 
   if ( item.needsPositioning ) {
-    item.on( 'layout', function onItemLayout() {
-      isItemPositioned = true;
-      onLayoutComplete();
-      // listen once
-      return true;
-    });
-
+    item.on( 'layout', onLayoutComplete );
     item.moveTo( dropX, dropY );
   }
 
-  this.on( 'layoutComplete', function onPackeryLayoutComplete() {
-    isPackeryLaidOut = true;
-    onLayoutComplete();
-    // listen once
-    return true;
-  });
+  this.on( 'layoutComplete', onLayoutComplete );
   this.layout();
 
 };
