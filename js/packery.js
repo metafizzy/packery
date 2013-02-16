@@ -325,6 +325,11 @@ Packery.prototype.place = function( elems ) {
   }
   elems = makeArray( elems );
   this.placedElements.push.apply( this.placedElements, elems );
+  // ignore
+  for ( var i=0, len = elems.length; i < len; i++ ) {
+    var elem = elems[i];
+    this.ignore( elem );
+  }
 };
 
 /**
@@ -373,8 +378,8 @@ Packery.prototype.spacePlaced = function( elem ) {
   var rect;
 
   var item = this.getItemFromElement( elem );
-  if ( item && item.placedRect ) {
-    rect = item.placedRect;
+  if ( item && item.dragRect ) {
+    rect = item.dragRect;
   } else {
     var boundingRect = elem.getBoundingClientRect();
     rect = new Rect({
@@ -382,7 +387,7 @@ Packery.prototype.spacePlaced = function( elem ) {
       y: boundingRect.top - this._boundingTop
     });
   }
-
+  // set size
   rect.width = size.outerWidth;
   rect.height = size.outerHeight;
 
@@ -581,7 +586,6 @@ Packery.prototype.sortItemsByPosition = function() {
  * @param {Element} elem
  */
 Packery.prototype.itemDragStart = function( elem ) {
-  this.ignore( elem );
   this.place( elem );
   var item = this.getItemFromElement( elem );
   if ( item ) {
@@ -627,9 +631,14 @@ Packery.prototype.itemDragStop = function( elem ) {
 
   // check if item's current position matches placed rect position
   var isPositioningItem = false;
-  var didItemDrag;
+  var didItemDrag, dropPosition;
   if ( item ) {
     didItemDrag = item.didDrag;
+    // copy dragRect position
+    dropPosition = {
+      x: item.dragRect.x,
+      y: item.dragRect.y
+    };
     item.dragStop();
     isPositioningItem = item.needsPositioning;
   }
@@ -643,6 +652,7 @@ Packery.prototype.itemDragStop = function( elem ) {
 
   if ( item ) {
     classie.add( item.element, 'is-positioning-post-drag' );
+    delete item.dragRect;
   }
 
   var isItemPositioned = !isPositioningItem;
@@ -672,7 +682,7 @@ Packery.prototype.itemDragStop = function( elem ) {
       return true;
     });
 
-    item.moveTo( item.placedRect.x, item.placedRect.y );
+    item.moveTo( dropPosition.x, dropPosition.y );
   }
 
   this.on( 'layoutComplete', function onPackeryLayoutComplete() {

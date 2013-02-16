@@ -32,12 +32,15 @@
     }
 
     .stamp {
-      position: absolute;
       background: red;
     }
 
-    #placed1 {
+    .has-placed {
       position: relative;
+    }
+
+    #placed1 .stamp {
+      position: absolute;
     }
 
     #placed1 .stamp1 {
@@ -52,6 +55,18 @@
       height: 45px;
       left: 3px;
       top: 30px;
+    }
+
+    #placed2 .stamp1 {
+      position: relative;
+      left: 8px;
+      top: 8px;
+    }
+
+    #placed2 .stamp2 {
+      position: absolute;
+      right: 8px;
+      top: 23px;
     }
   </style>
 
@@ -93,7 +108,7 @@
     <div class="item"></div>
   </div>
 
-  <div id="placed1" class="container">
+  <div id="placed1" class="container has-placed">
     <div class="item"></div>
     <div class="item"></div>
     <div class="item"></div>
@@ -101,6 +116,18 @@
     <div class="item"></div>
     <div class="item"></div>
     <div class="stamp stamp2"></div>
+    <div class="item"></div>
+  </div>
+
+  <div id="placed2" class="container has-placed">
+    <div class="item stamp stamp1"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item stamp stamp2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
     <div class="item"></div>
   </div>
 

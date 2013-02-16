@@ -67,9 +67,6 @@ function Item( element, packery ) {
 
   this.rect = new Rect();
 
-  // used for dragging
-  this.placedRect = new Rect();
-
   // style initial style
   this.element.style.position = 'absolute';
 }
@@ -323,7 +320,9 @@ Item.prototype.dragStart = function() {
     this.element.style[ transformProperty ] = 'none';
   }
   this.getSize();
-  this.positionPlacedRect( this.position.x, this.position.y );
+  // create drag rect, used for position when dropped
+  this.dragRect = new Rect();
+  this.positionDragRect( this.position.x, this.position.y );
   this.isTransitioning = false;
   this.didDrag = false;
 };
@@ -335,10 +334,10 @@ Item.prototype.dragStart = function() {
  */
 Item.prototype.dragMove = function( x, y ) {
   this.didDrag = true;
-  this.positionPlacedRect( x, y );
+  this.positionDragRect( x, y );
 };
 
-Item.prototype.positionPlacedRect = function( x, y ) {
+Item.prototype.positionDragRect = function( x, y ) {
   var options = this.packery.options;
   var packerySize = this.packery.elementSize;
   // position a rect that will occupy space in the packer
@@ -365,8 +364,10 @@ Item.prototype.positionPlacedRect = function( x, y ) {
   }
 
   // keep track of rect
-  this.placedRect.x = rectX;
-  this.placedRect.y = rectY;
+  this.dragRect.x = rectX;
+  this.dragRect.y = rectY;
+
+  console.log( rectY, rectX );
 };
 
 Item.prototype.dragStop = function() {
@@ -375,8 +376,8 @@ Item.prototype.dragStop = function() {
     return;
   }
   this.getPosition();
-  var isDiffX = this.position.x !== this.placedRect.x;
-  var isDiffY = this.position.y !== this.placedRect.y;
+  var isDiffX = this.position.x !== this.dragRect.x;
+  var isDiffY = this.position.y !== this.dragRect.y;
   // set post-drag positioning flag
   this.needsPositioning = isDiffX || isDiffY;
   // reset flag

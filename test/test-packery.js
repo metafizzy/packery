@@ -131,7 +131,7 @@ window.onload = function onDocReady() {
     stop();
   });
 
-  test( 'placed', function() {
+  test( 'placed1', function() {
     var container = document.querySelector('#placed1');
     var stamps = container.querySelectorAll('.stamp');
     var pckry = new Packery( container, {
@@ -154,6 +154,29 @@ window.onload = function onDocReady() {
     equal( elem3.style.top, '35px', '4th item top' );
 
     equal( container.style.height, '75px', 'container height' );
+  });
+
+  test( 'placed2, items are placed', function() {
+    var container = document.querySelector('#placed2');
+    var stamps = container.querySelectorAll('.stamp');
+    var pckry = new Packery( container, {
+      itemSelector: '.item',
+      placedElements: stamps
+    });
+
+    var layoutItems = pckry._getLayoutItems( pckry.items );
+
+    equal( layoutItems.length, 7, '7 layout items' );
+    var elem0 = layoutItems[0].element;
+    equal( elem0.style.left, '29px', '1st item left' );
+    equal( elem0.style.top, '0px', '1st item top' );
+    var elem3 = layoutItems[3].element;
+    equal( elem3.style.left, '0px', '4th item left' );
+    equal( elem3.style.top, '29px', '4th item top' );
+    var elem4 = layoutItems[4].element;
+    equal( elem4.style.left, '20px', '5th item left' );
+    equal( elem4.style.top, '40px', '5th item top' );
+
   });
 
 };
