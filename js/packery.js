@@ -634,32 +634,23 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
  */
 Packery.prototype.itemDragStop = function( elem ) {
   var item = this.getItemFromElement( elem );
-
-  // check if item's current position matches placed rect position
-  var isPositioningItem = false;
-  var didItemDrag, dropPosition;
+  var dropX, dropY;
   if ( item ) {
-    didItemDrag = item.didDrag;
     // copy dragRect position
-    dropPosition = {
-      x: item.dragRect.x,
-      y: item.dragRect.y
-    };
+    dropX = item.dragRect.x;
+    dropY = item.dragRect.y;
     item.dragStop();
-    isPositioningItem = item.needsPositioning;
   }
-
   // if elem didn't move, unignore and unplace and call it a day
-  if ( !didItemDrag ) {
+  if ( !item || !item.needsPositioning ) {
     this.unplace( elem );
     return;
   }
+  // procced with dragged item
 
-  if ( item ) {
-    classie.add( item.element, 'is-positioning-post-drag' );
-  }
+  classie.add( item.element, 'is-positioning-post-drag' );
 
-  var isItemPositioned = !isPositioningItem;
+  var isItemPositioned = !item.needsPositioning;
   var isPackeryLaidOut = false;
   var _this = this;
   function onLayoutComplete() {
@@ -678,7 +669,7 @@ Packery.prototype.itemDragStop = function( elem ) {
     _this.sortItemsByPosition();
   }
 
-  if ( isPositioningItem ) {
+  if ( item.needsPositioning ) {
     item.on( 'layout', function onItemLayout() {
       isItemPositioned = true;
       onLayoutComplete();
@@ -686,7 +677,7 @@ Packery.prototype.itemDragStop = function( elem ) {
       return true;
     });
 
-    item.moveTo( dropPosition.x, dropPosition.y );
+    item.moveTo( dropX, dropY );
   }
 
   this.on( 'layoutComplete', function onPackeryLayoutComplete() {

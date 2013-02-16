@@ -84,3 +84,13 @@ pass in parent element, with child elements
 .remove() removes correct item
 
 placeElements
+
+
+1. drag element with columnWidth/rowHeight
+2. pull out of grid
+3. release
+4. Stop transition by clicking on item
+5. do not move item
+6. release
+
+Item should transition to it destination

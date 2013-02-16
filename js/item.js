@@ -322,7 +322,11 @@ Item.prototype.dragStart = function() {
   this.getSize();
   // create drag rect, used for position when dropped
   this.dragRect = new Rect();
-  this.positionDragRect( this.position.x, this.position.y );
+  this.needsPositioning = false;
+  var packerySize = this.packery.elementSize;
+  var dragX = this.position.x + packerySize.paddingLeft;
+  var dragY = this.position.y + packerySize.paddingTop;
+  this.positionDragRect( dragX, dragY );
   this.isTransitioning = false;
   this.didDrag = false;
 };
@@ -371,10 +375,6 @@ Item.prototype.positionDragRect = function( x, y ) {
 };
 
 Item.prototype.dragStop = function() {
-  // don't have to do stuff if drag didn't happen
-  if ( !this.didDrag ) {
-    return;
-  }
   this.getPosition();
   var isDiffX = this.position.x !== this.dragRect.x;
   var isDiffY = this.position.y !== this.dragRect.y;
