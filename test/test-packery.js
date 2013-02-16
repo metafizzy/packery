@@ -177,6 +177,26 @@ window.onload = function onDocReady() {
     equal( elem4.style.left, '20px', '5th item left' );
     equal( elem4.style.top, '40px', '5th item top' );
 
+    // unplacing
+    pckry.unplace( stamps );
+    layoutItems = pckry._getLayoutItems( pckry.items );
+    equal( layoutItems.length, 9, '9 layout items' );
+    equal( pckry.placedElements.length, 0, '0 placedElements items' );
+
+    pckry.on( 'layoutComplete', function() {
+      var elem0 = pckry.items[0].element;
+      equal( elem0.style.left, '0px', '1st item left' );
+      equal( elem0.style.top, '0px', '1st item top' );
+      var elem4 = pckry.items[4].element;
+      equal( elem4.style.left, '0px', '5th item left' );
+      equal( elem4.style.top, '20px', '5th item top' );
+      start();
+    });
+
+    pckry.layout();
+    stop();
+
+
   });
 
 };
