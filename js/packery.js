@@ -634,15 +634,17 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
  */
 Packery.prototype.itemDragStop = function( elem ) {
   var item = this.getItemFromElement( elem );
-  var dropX, dropY;
+  var dropX, dropY, itemDidDrag;
   if ( item ) {
-    // copy dragRect position
+    // copy over vars, they're reset by dragStop
     dropX = item.dragRect.x;
     dropY = item.dragRect.y;
+    itemDidDrag = item.didDrag;
     item.dragStop();
   }
-  // if elem didn't move, unignore and unplace and call it a day
-  if ( !item || !item.needsPositioning ) {
+  // if elem didn't move, or if it doesn't need positioning
+  // unignore and unplace and call it a day
+  if ( !item || ( !itemDidDrag && !item.needsPositioning ) ) {
     this.unplace( elem );
     return;
   }

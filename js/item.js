@@ -370,8 +370,6 @@ Item.prototype.positionDragRect = function( x, y ) {
   // keep track of rect
   this.dragRect.x = rectX;
   this.dragRect.y = rectY;
-
-  console.log( rectY, rectX );
 };
 
 Item.prototype.dragStop = function() {
