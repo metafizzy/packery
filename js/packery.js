@@ -478,15 +478,11 @@ Packery.prototype.appended = function( elems ) {
  * @param {Function} callback
  * @returns {Packery.Item} item
  */
-Packery.prototype.getItemFromElement = function( elem, callback ) {
+Packery.prototype.getItemFromElement = function( elem ) {
   // loop through items to get the one that matches
   for ( var i=0, len = this.items.length; i < len; i++ ) {
     var item = this.items[i];
     if ( item.element === elem ) {
-      // trigger callback
-      if ( callback ) {
-        callback( item, i );
-      }
       // return item
       return item;
     }
