@@ -86,9 +86,7 @@ Packery.prototype._create = function() {
 
   // collection of element that don't get laid out
   this.placedElements = [];
-  if ( this.options.placedElements ) {
-    this.place( this.options.placedElements );
-  }
+  this.place( this.options.placedElements );
 
   var containerStyle = this.options.containerStyle;
   extend( this.element.style, containerStyle );
