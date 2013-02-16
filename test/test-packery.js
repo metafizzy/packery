@@ -23,6 +23,7 @@ window.onload = function onDocReady() {
     var pckry = new Packery( document.querySelector('#empty') );
     deepEqual( pckry.options, Packery.prototype.options, 'default options match prototype' );
     equal( pckry.items.length, 0, 'zero items' );
+    equal( pckry.placedElements.length, 0, 'zero placed elements' );
   });
 
   var ex1 = document.getElementById('ex1');
@@ -51,9 +52,11 @@ window.onload = function onDocReady() {
     equal( elem1.style.top, '0px', '2nd item top' );
     equal( elem2.style.left, '0px', '3rd item, left' );
     equal( elem2.style.top, '20px', '3rd item, 2nd row' );
+    equal( ex1.style.height, '60px', 'height set' );
 
-    // make elem smaller to change layout
+    // change size of elems to change layout
     elem0.style.width = '18px';
+    pack1.items[3].element.style.height = '58px';
     pack1.on( 'layoutComplete', function( obj ) {
       equal( true, true, 'layoutComplete event did fire' );
       equal( obj, pack1, 'event-emitted argument matches Packery instance' );
@@ -61,6 +64,7 @@ window.onload = function onDocReady() {
       equal( elem1.style.top, '0px', '2nd item left' );
       equal( elem2.style.left, '40px', '3rd item, 3rd column' );
       equal( elem2.style.top, '0px', '3rd item top' );
+      equal( ex1.style.height, '80px', 'height set' );
       start();
     });
 
@@ -92,6 +96,9 @@ window.onload = function onDocReady() {
       columnWidth: 20,
       rowHeight: 20
     });
+
+    equal( pckry.options.columnWidth, 20, 'columnWidth option is set' );
+    equal( pckry.options.rowHeight, 20, 'rowHeight option is set' );
 
     for ( var i=0, len = pckry.items.length; i < len; i++ ) {
       var elem = pckry.items[i].element;

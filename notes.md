@@ -80,3 +80,5 @@ pass in parent element, with child elements
 
 
 .remove() removes correct item
+
+placeElements
