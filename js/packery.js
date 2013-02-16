@@ -351,6 +351,12 @@ Packery.prototype.unplace = function( elems ) {
   }
 
   this.placedElements = revised;
+
+  // unignore
+  for ( var j=0, jLen = elems.length; j < jLen; j++ ) {
+    var elem = elems[j];
+    this.unignore( elem );
+  }
 };
 
 // make spaces for placed elements
@@ -645,7 +651,6 @@ Packery.prototype.itemDragStop = function( elem ) {
 
   // if elem didn't move, unignore and unplace and call it a day
   if ( !didItemDrag ) {
-    this.unignore( elem );
     this.unplace( elem );
     return;
   }
@@ -668,7 +673,6 @@ Packery.prototype.itemDragStop = function( elem ) {
       delete item.dragRect;
     }
 
-    _this.unignore( elem );
     _this.unplace( elem );
     // only sort when item moved
     _this.sortItemsByPosition();
