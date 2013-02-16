@@ -46,10 +46,19 @@ function makeArray( obj ) {
   return ary;
 }
 
+// http://stackoverflow.com/a/384380/182183
+function isElement(o){
+  return (
+    typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
+    o && typeof o === "object" && o.nodeType === 1 && typeof o.nodeName==="string"
+  );
+}
+
 // -------------------------- Packery -------------------------- //
 
 function Packery( element, options ) {
-  if ( !element ) {
+  // bail out if not proper element
+  if ( !element || !isElement( element ) ) {
     console.error( element + ' Packery element' );
     return;
   }
