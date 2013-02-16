@@ -131,6 +131,31 @@ window.onload = function onDocReady() {
     stop();
   });
 
+  test( 'placed', function() {
+    var container = document.querySelector('#placed1');
+    var stamps = container.querySelectorAll('.stamp');
+    var pckry = new Packery( container, {
+      itemSelector: '.item',
+      placedElements: stamps
+    });
+
+    equal( pckry.placedElements.length, 2, '2 placed elements' );
+    var elem0 = pckry.items[0].element;
+    equal( elem0.style.left, '0px', '1st item left' );
+    equal( elem0.style.top, '0px', '1st item top' );
+    var elem1 = pckry.items[1].element;
+    equal( elem1.style.left, '52px', '2nd item left' );
+    equal( elem1.style.top, '0px', '2nd item top' );
+    var elem2 = pckry.items[2].element;
+    equal( elem2.style.left, '52px', '3rd item left' );
+    equal( elem2.style.top, '20px', '3rd item top' );
+    var elem3 = pckry.items[3].element;
+    equal( elem3.style.left, '13px', '4th item left' );
+    equal( elem3.style.top, '35px', '4th item top' );
+
+    equal( container.style.height, '75px', 'container height' );
+  });
+
 };
 
 
