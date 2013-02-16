@@ -1,9 +1,14 @@
 {
   "name": "packery",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "David DeSandro / Metafizzy",
+  "main": [
+    "./js/rect.js",
+    "./js/packer.js",
+    "./js/item.js",
+    "./js/packery.js"
+  ],
   "dependencies": {
-    "draggabilly": "../draggabilly/",
     "eventEmitter": ">=3",
     "eventie": "desandro/eventie",
     "get-size": "desandro/get-size",
@@ -11,6 +16,10 @@
     "matches-selector": "desandro/matches-selector"
   },
   "devDependencies": {
+    "draggabilly": "../draggabilly/",
     "qunit": "~1"
-  }
+  },
+  "ignore": [
+    "test/"
+  ]
 }

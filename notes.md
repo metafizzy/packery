@@ -94,3 +94,10 @@ placeElements
 6. release
 
 Item should transition to it destination
+
+
+## debate
+
+Automatically reveal appended items?
+
+Automatically remove elements from DOM after hiding?
