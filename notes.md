@@ -3,6 +3,8 @@
 
 gutter
 
+set element for columnWidth/rowHeight, gutter
+
 declarative mode
 
     <div class="container js-packery" data-packery-options=""></div>
