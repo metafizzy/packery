@@ -69,6 +69,41 @@ window.onload = function onDocReady() {
 
   });
 
+  function appendRandomSizedItems( container ) {
+    var frag = document.createDocumentFragment();
+    for ( var i=0; i < 10; i++ ) {
+      var item = document.createElement('div');
+      item.className = 'item';
+      var w = Math.floor( Math.random() * Math.random() * 70 ) + 10;
+      var h = Math.floor( Math.random() * Math.random() * 70 ) + 10;
+      item.style.width  = w + 'px';
+      item.style.height = h + 'px';
+      frag.appendChild( item );
+    }
+
+    container.appendChild( frag );
+  }
+
+  var gridded = document.querySelector('#gridded');
+  appendRandomSizedItems( gridded );
+
+  test( 'layout with columnWidth and rowHeight', function() {
+    var pckry = new Packery( gridded, {
+      columnWidth: 20,
+      rowHeight: 20
+    });
+
+    for ( var i=0, len = pckry.items.length; i < len; i++ ) {
+      var elem = pckry.items[i].element;
+      var x = parseInt( elem.style.left, 10 );
+      var y = parseInt( elem.style.top, 10 );
+      equal( x % pckry.options.columnWidth, 0, 'item ' + i + ' x position is multiple of columnWidth' );
+      equal( y % pckry.options.rowHeight, 0, 'item ' + i + ' y position is multiple of rowHeight' );
+    }
+
+  });
+
+
   test( 'remove', function() {
     var container = document.querySelector('#add-remove');
     // packery starts with 4 items
