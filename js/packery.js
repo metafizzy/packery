@@ -439,23 +439,32 @@ Packery.prototype.resize = function() {
 
 // -------------------------- methods -------------------------- //
 
+/**
+ * add items to Packery instance
+ * @param {Array or NodeList or Element} elems
+ * @returns {Array} items - Packery.Items
+**/
+Packery.prototype.addItems = function( elems ) {
+  var items = this._getItems( elems );
+  if ( !items.length ) {
+    return;
+  }
+  // add items to collection
+  this.items.push.apply( this.items, items );
+  return items;
+};
 
 /**
  * Layout newly-appended item elements
  * @param {Array or NodeList or Element} elems
  */
 Packery.prototype.appended = function( elems ) {
-  var items = this._getItems( elems );
+  var items = this.addItems( elems );
   if ( !items.length ) {
     return;
   }
-
-  // add items to collection
-  this.items.push.apply( this.items, items );
-
   // layout just the new items
   this.layoutItems( items, true );
-
   // reveal new items
   for ( var i=0, len = items.length; i < len; i++ ) {
     var item = items[i];
