@@ -57,6 +57,8 @@ dragStart
 dragMove
 dragStop
 
+refactor onItemLayout and onItemRemove
+
 ## Future features
 
 infinite scroll

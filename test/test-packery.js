@@ -25,20 +25,47 @@ window.onload = function onDocReady() {
     equal( pckry.items.length, 0, 'zero items' );
   });
 
+  var ex1 = document.getElementById('ex1');
+  var pack1 = new Packery( ex1, {
+    itemSelector: '.item'
+  });
+
+  var ex2 = document.getElementById('ex2');
+  var pack2 = new Packery( ex2, {
+    itemSelector: '.item'
+  });
+
+
   test( 'getItems', function() {
-    var ex1 = document.getElementById('ex1');
-    var pack1 = new Packery( ex1, {
-      itemSelector: '.item'
-    });
-
     equal( pack1.items.length, 6, 'filtered, itemSelector = .item, not all children' );
+    equal( pack2.items.length, 4, 'found itemSelector = .item, querySelectoring' );
+  });
 
-    var ex2 = document.getElementById('ex2');
-    var pack2 = new Packery( ex2, {
-      itemSelector: '.item'
+  test( 'layout', function() {
+    var elem0 = pack1.items[0].element;
+    var elem1 = pack1.items[1].element;
+    var elem2 = pack1.items[2].element;
+    equal( elem0.style.left, '0px', 'first item left' );
+    equal( elem0.style.top, '0px', 'first item left' );
+    equal( elem1.style.left, '40px', '2nd item, 2nd column' );
+    equal( elem1.style.top, '0px', '2nd item top' );
+    equal( elem2.style.left, '0px', '3rd item, left' );
+    equal( elem2.style.top, '20px', '3rd item, 2nd row' );
+
+    // make elem smaller to change layout
+    elem0.style.width = '18px';
+    pack1.on( 'layoutComplete', function( obj ) {
+      equal( true, true, 'layoutComplete event did fire' );
+      equal( obj, pack1, 'event-emitted argument matches Packery instance' );
+      equal( elem1.style.left, '20px', '2nd item, 2nd column' );
+      equal( elem1.style.top, '0px', '2nd item left' );
+      equal( elem2.style.left, '40px', '3rd item, 3rd column' );
+      equal( elem2.style.top, '0px', '3rd item top' );
+      start();
     });
 
-    equal( pack2.items.length, 4, 'found itemSelector = .item, querySelectoring' );
+    stop();
+    pack1.layout();
 
   });
 
@@ -53,6 +80,7 @@ window.onload = function onDocReady() {
       equal( true, true, 'removeComplete event did fire' );
       equal( obj, pckry, 'event-emitted argument matches Packery instance' );
       equal( container.children.length, 2, 'elements removed from DOM' );
+      equal( container.querySelectorAll('.w2').length, 0, 'matched elements were removed' );
       start();
     });
     pckry.remove( container.querySelectorAll('.w2') );
