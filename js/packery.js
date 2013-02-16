@@ -727,6 +727,7 @@ Packery.prototype.destroy = function() {
 // back in global
 Packery.Rect = Rect;
 Packery.Packer = Packer;
+Packery.Item = Item;
 window.Packery = Packery;
 
 })( window );
