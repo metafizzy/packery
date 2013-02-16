@@ -451,7 +451,7 @@ Packery.prototype.appended = function( elems ) {
   }
 
   // add items to collection
-  this.items = this.items.push.apply( this.items, items );
+  this.items.push.apply( this.items, items );
 
   // layout just the new items
   this.layoutItems( items, true );
