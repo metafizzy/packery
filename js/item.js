@@ -349,21 +349,21 @@ Item.prototype.positionDragRect = function( x, y ) {
   var rectY = y - packerySize.paddingTop;
   // contain to size of of packery
   var packeryHeight = Math.max( packerySize.innerHeight, this.packery.maxY );
-  rectX = Math.max( 0, Math.min( rectX, packerySize.innerWidth - this.size.width ) );
-  rectY = Math.max( 0, Math.min( rectY, packeryHeight - this.size.height ) );
+  rectX = Math.max( 0, Math.min( rectX, packerySize.innerWidth - this.size.outerWidth ) );
+  rectY = Math.max( 0, Math.min( rectY, packeryHeight - this.size.outerHeight ) );
   // apply grid
   var columnWidth = options.columnWidth;
   var rowHeight = options.rowHeight;
   if ( columnWidth ) {
     rectX = Math.round( rectX / columnWidth );
     // contain to outer bound
-    var maxCols = Math.floor( ( packerySize.innerWidth - this.size.width ) / columnWidth );
+    var maxCols = Math.floor( ( packerySize.innerWidth - this.size.outerWidth ) / columnWidth );
     rectX = Math.min( rectX, maxCols ) * columnWidth;
   }
   if ( rowHeight ) {
     rectY = Math.round( rectY / rowHeight );
     // contain to outer bound
-    var maxRows = Math.floor( ( packeryHeight - this.size.height ) / rowHeight );
+    var maxRows = Math.floor( ( packeryHeight - this.size.outerHeight ) / rowHeight );
     rectY = Math.min( rectY, maxRows ) * rowHeight;
   }
 
