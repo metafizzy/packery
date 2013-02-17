@@ -59,6 +59,10 @@ dragStart
 dragMove
 dragStop
 
+dragStart
+dragMove
+dragEnd
+
 <!-- refactor onItemLayout and onItemRemove -->
 
 ## Future features

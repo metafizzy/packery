@@ -14,6 +14,11 @@
       background: #EEE;
     }
 
+    .container:after {
+      content: '';
+      display: table;
+    }
+
     .item {
       float: left;
       width:  18px;
@@ -67,6 +72,10 @@
       position: absolute;
       right: 8px;
       top: 23px;
+    }
+
+    .dragger {
+      background: green;
     }
   </style>
 
@@ -136,11 +145,23 @@
     <div class="item"></div>
   </div>
 
+  <div id="drag1" class="container">
+    <div class="item i0"></div>
+    <div class="item i1"></div>
+    <div class="item i2"></div>
+    <div class="item i3 dragger"></div>
+    <div class="item i4"></div>
+    <div class="item i5"></div>
+    <div class="item i6"></div>
+    <div class="item i7"></div>
+  </div>
+
 <script src="../components/get-style-property/get-style-property.js"></script>
 <script src="../components/get-size/get-size.js"></script>
 <script src="../components/matches-selector/matches-selector.js"></script>
 <script src="../components/eventEmitter/EventEmitter.js"></script>
 <script src="../components/eventie/eventie.js"></script>
+<script src="../components/classie/classie.js"></script>
 <script src="../js/rect.js"></script>
 <script src="../js/packer.js"></script>
 <script src="../js/item.js"></script>

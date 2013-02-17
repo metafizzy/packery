@@ -685,11 +685,11 @@ Packery.prototype.itemDragStop = function( elem ) {
   }
 
   if ( item.needsPositioning ) {
-    item.on( 'layout', onLayoutComplete );
     item.on( 'layout', function() {
       _this.emitEvent( 'dragItemPositioned', [ _this, item ] );
       return true;
     });
+    item.on( 'layout', onLayoutComplete );
     item.moveTo( dropX, dropY );
   }
 

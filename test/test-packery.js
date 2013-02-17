@@ -238,6 +238,66 @@ window.onload = function onDocReady() {
 
   });
 
+  function simulateDrag( elem, packery, x, y ) {
+    packery.itemDragStart( elem );
+    elem.style.left = x + 'px';
+    elem.style.top  = y + 'px';
+    packery.itemDragMove( elem, x, y );
+    packery.itemDragStop( elem );
+  }
+
+  test( 'draggabilly 1', function() {
+    var container = document.querySelector('#drag1');
+    var pckry = new Packery( container );
+    var dragElem = container.querySelector('.dragger');
+
+    // simulate drag to middle
+    pckry.on( 'layoutComplete', function() {
+      equal( true, true, 'layout complete did trigger' );
+      var itemElems = container.querySelectorAll('.item');
+      equal( itemElems[1].style.left, '55px', '2nd item x' );
+      equal( itemElems[1].style.top, '0px', '2nd item y' );
+      equal( itemElems[2].style.left, '0px', '3rd item x' );
+      equal( itemElems[2].style.top, '20px', '3rd item y' );
+      equal( dragElem.style.left, '35px', 'dragged 3rd item x' );
+      equal( dragElem.style.top, '15px', 'dragged 3rd item y' );
+      equal( pckry.items[2].element, dragElem, 'dragged elem in now 3rd in items' );
+      start();
+      // trigger the next thing
+      dragOutside();
+      return true; // bind once
+    });
+    simulateDrag( dragElem, pckry, 35, 15 );
+    stop();
+
+    function dragOutside() {
+      pckry.on( 'dragItemPositioned', function() {
+        equal( true, true, 'dragItemPositioned event did trigger' );
+        equal( dragElem.style.left, '60px', 'dragged 3rd item x, aligned inside container' );
+        equal( dragElem.style.top, '0px', 'dragged 3rd item y, aligned inside container' );
+        equal( pckry.items[3].element, dragElem, 'dragged elem in now 4th in items' );
+        start();
+        setTimeout( dragWithGrid, 20 );
+        stop();
+        return true; // bind once
+      });
+      simulateDrag( dragElem, pckry, 300, -30 );
+      stop();
+    }
+
+    function dragWithGrid() {
+      pckry.options.columnWidth = 20;
+      pckry.options.rowHeight = 20;
+      pckry.on( 'dragItemPositioned', function() {
+        equal( dragElem.style.left, '40px', 'dragged 3rd item x, aligned to grid' );
+        equal( dragElem.style.top, '20px', 'dragged 3rd item y, aligned to grid' );
+        start();
+      });
+      simulateDrag( dragElem, pckry, 35, 15 );
+    }
+
+  });
+
 };
 
 
