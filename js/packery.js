@@ -274,8 +274,28 @@ Packery.prototype._getLayoutItems = function( items ) {
  * @param {Packery.Item} item
  */
 Packery.prototype._packItem = function( item ) {
-  // console.log( item );
-  var size = getSize( item.element );
+  this._setRectSize( item.element, item.rect );
+  // pack the rect in the packer
+  this.packer.pack( item.rect );
+  this._setMaxY( item.rect );
+};
+
+/**
+ * set max Y value, for height of container
+ * @param {Packery.Rect} rect
+ * @private
+ */
+Packery.prototype._setMaxY = function( rect ) {
+  this.maxY = Math.max( rect.y + rect.height, this.maxY );
+};
+
+/**
+ * set the width and height of a rect, applying columnWidth and rowHeight
+ * @param {Element} elem
+ * @param {Packery.Rect} rect
+ */
+Packery.prototype._setRectSize = function( elem, rect ) {
+  var size = getSize( elem );
   var w = size.outerWidth;
   var h = size.outerHeight;
   // size for columnWidth and rowHeight, if available
@@ -283,14 +303,8 @@ Packery.prototype._packItem = function( item ) {
   var rowH = this.options.rowHeight;
   w = colW ? Math.ceil( w / colW ) * colW : w;
   h = rowH ? Math.ceil( h / rowH ) * rowH : h;
-
-  var rect = item.rect;
   rect.width = w;
   rect.height = h;
-  // pack the rect in the packer
-  this.packer.pack( rect );
-
-  this.maxY = Math.max( rect.y + rect.height, this.maxY );
 };
 
 /**
@@ -403,10 +417,8 @@ Packery.prototype.spacePlacedElements = function() {
  * @param {Element} elem
  */
 Packery.prototype.spacePlaced = function( elem ) {
-  var size = getSize( elem );
-  var rect;
-
   var item = this.getItemFromElement( elem );
+  var rect;
   if ( item && item.dragRect ) {
     rect = item.dragRect;
   } else {
@@ -416,14 +428,11 @@ Packery.prototype.spacePlaced = function( elem ) {
       y: boundingRect.top - this._boundingTop
     });
   }
-  // set size
-  rect.width = size.outerWidth;
-  rect.height = size.outerHeight;
 
+  this._setRectSize( elem, rect );
   // save its space in the packer
   this.packer.placed( rect );
-
-  this.maxY = Math.max( rect.y + rect.height, this.maxY );
+  this._setMaxY( rect );
 };
 
 // -------------------------- resize -------------------------- //

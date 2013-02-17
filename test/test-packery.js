@@ -286,14 +286,14 @@ window.onload = function onDocReady() {
     }
 
     function dragWithGrid() {
-      pckry.options.columnWidth = 20;
-      pckry.options.rowHeight = 20;
+      pckry.options.columnWidth = 25;
+      pckry.options.rowHeight = 25;
       pckry.on( 'dragItemPositioned', function() {
-        equal( dragElem.style.left, '40px', 'dragged 3rd item x, aligned to grid' );
-        equal( dragElem.style.top, '20px', 'dragged 3rd item y, aligned to grid' );
+        equal( dragElem.style.left, '25px', 'dragged 3rd item x, aligned to grid' );
+        equal( dragElem.style.top, '25px', 'dragged 3rd item y, aligned to grid' );
         start();
       });
-      simulateDrag( dragElem, pckry, 35, 15 );
+      simulateDrag( dragElem, pckry, 35, 160 );
     }
 
   });
