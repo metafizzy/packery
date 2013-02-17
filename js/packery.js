@@ -237,25 +237,14 @@ Packery.prototype._init = Packery.prototype.layout;
 Packery.prototype.layoutItems = function( items, isStill ) {
   // console.log('layout Items');
   var layoutItems = this._getLayoutItems( items );
-  var layoutItemCount = layoutItems.length;
-  var completedItemLayouts = 0;
 
-  var _this = this;
-  function onItemLayout() {
-    completedItemLayouts++;
-    // console.log('completed itemLayouts');
-    // emit event
-    if ( completedItemLayouts === layoutItemCount ) {
-      _this.emitEvent( 'layoutComplete', [ _this ] );
-    }
-    // listen once
-    return true;
-  }
+  this._itemsOn( layoutItems, 'layout', function () {
+    this.emitEvent( 'layoutComplete', [ this ] );
+  });
 
   for ( var i=0, len = layoutItems.length; i < len; i++ ) {
     var item = layoutItems[i];
     // listen to layout events for callback
-    item.on( 'layout', onItemLayout );
     this._packItem( item );
     this._layoutItem( item, isStill );
   }
@@ -320,6 +309,31 @@ Packery.prototype._layoutItem = function( item, isStill ) {
     item.moveTo( rect.x, rect.y );
   }
 
+};
+
+/**
+ * trigger a callback for a collection of items events
+ * @param {Array} items - Packery.Items
+ * @param {String} eventName
+ * @param {Function} callback
+ */
+Packery.prototype._itemsOn = function( items, eventName, callback ) {
+  var doneCount = 0;
+  var count = items.length;
+  // event callback
+  var _this = this;
+  function tick() {
+    doneCount++;
+    if ( doneCount === count ) {
+      callback.call( _this );
+    }
+    return true; // bind once
+  }
+  // bind callback
+  for ( var i=0, len = items.length; i < len; i++ ) {
+    var item = items[i];
+    item.on( eventName, tick );
+  }
 };
 
 // -------------------------- place -------------------------- //
@@ -530,7 +544,6 @@ Packery.prototype.getItemsFromElements = function( elems ) {
   return items;
 };
 
-
 /**
  * remove element(s) from instance and DOM
  * @param {Array or NodeList or Element} elems
@@ -539,25 +552,13 @@ Packery.prototype.remove = function( elems ) {
   elems = makeArray( elems );
 
   var removeItems = this.getItemsFromElements( elems );
-  var itemsCount = removeItems.length;
-  var removedCount = 0;
 
-  // removeComplete event
-  var _this = this;
-  function onItemRemove() {
-    removedCount++;
-    // console.log('completed remove', removedCount);
-    // emit event
-    if ( removedCount === itemsCount ) {
-      _this.emitEvent( 'removeComplete', [ _this ] );
-    }
-    // listen once
-    return true;
-  }
+  this._itemsOn( removeItems, 'remove', function () {
+    this.emitEvent( 'removeComplete', [ this ] );
+  });
 
-  for ( var i=0; i < itemsCount; i++ ) {
+  for ( var i=0, len = removeItems.length; i < len; i++ ) {
     var item = removeItems[i];
-    item.on( 'remove', onItemRemove );
     item.remove();
     // remove item from collection
     var index = this.items.indexOf( item );
