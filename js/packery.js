@@ -212,11 +212,12 @@ Packery.prototype.layout = function() {
   // reset packer
   this.elementSize = getSize( this.element );
 
-  this.packer.width = this.elementSize.innerWidth;
+  this._getMeasurements();
+
+  this.packer.width = this.elementSize.innerWidth + this.gutter;
   this.packer.height = Number.POSITIVE_INFINITY;
   this.packer.reset();
 
-  this._getMeasurements();
 
   // layout
   this.maxY = 0;
@@ -250,11 +251,9 @@ Packery.prototype._getMeasurements = function() {
  */
 Packery.prototype._getMeasurement = function( measurement, size ) {
   var option = this.options[ measurement ];
-  if ( option ) {
-    this[ measurement ] = isElement( option ) ? getSize( option )[ size ] : option;
-  } else {
-    delete this[ measurement ];
-  }
+  this[ measurement ] = !option ? 0 : // default to 0
+    // use size of element, if element
+    isElement( option ) ? getSize( option )[ size ] : option;
 };
 
 /**
@@ -327,10 +326,10 @@ Packery.prototype._setRectSize = function( elem, rect ) {
   var w = size.outerWidth;
   var h = size.outerHeight;
   // size for columnWidth and rowHeight, if available
-  var colW = this.columnWidth;
-  var rowH = this.rowHeight;
-  w = colW ? Math.ceil( w / colW ) * colW : w;
-  h = rowH ? Math.ceil( h / rowH ) * rowH : h;
+  var colW = this.columnWidth + this.gutter;
+  var rowH = this.rowHeight + this.gutter;
+  w = colW ? Math.ceil( w / colW ) * colW : w + this.gutter;
+  h = rowH ? Math.ceil( h / rowH ) * rowH : h + this.gutter;
   rect.width = w;
   rect.height = h;
 };

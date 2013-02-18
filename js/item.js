@@ -352,8 +352,10 @@ Item.prototype.positionDragRect = function( x, y ) {
   // apply grid constraints
   var columnWidth = this.packery.columnWidth;
   var rowHeight = this.packery.rowHeight;
+  var gutter = this.packery.gutter;
 
   if ( columnWidth ) {
+    columnWidth += gutter;
     rectX = Math.round( rectX / columnWidth );
     // contain to outer bound
     var maxCols = Math.ceil( packerySize.innerWidth / columnWidth ) - 1;
@@ -364,6 +366,7 @@ Item.prototype.positionDragRect = function( x, y ) {
   }
 
   if ( rowHeight ) {
+    rowHeight += gutter;
     rectY = Math.round( rectY / rowHeight );
     // contain to outer bound
     var maxRows = Math.ceil( packeryHeight / rowHeight );
