@@ -314,6 +314,7 @@ Item.prototype.destroy = function() {
 
 Item.prototype.dragStart = function() {
   this.getPosition();
+  this.packery._getMeasurements();
   this.removeTransitionStyles();
   // remove transform property from transition
   if ( this.isTransitioning && transformProperty ) {
@@ -342,7 +343,6 @@ Item.prototype.dragMove = function( x, y ) {
 };
 
 Item.prototype.positionDragRect = function( x, y ) {
-  var options = this.packery.options;
   var packerySize = this.packery.elementSize;
   // position a rect that will occupy space in the packer
   var rectX = x - packerySize.paddingLeft;
@@ -351,8 +351,8 @@ Item.prototype.positionDragRect = function( x, y ) {
 
   // contain to size of of packery
   // apply grid constraints
-  var columnWidth = options.columnWidth;
-  var rowHeight = options.rowHeight;
+  var columnWidth = this.packery.columnWidth;
+  var rowHeight = this.packery.rowHeight;
 
   if ( columnWidth ) {
     rectX = Math.round( rectX / columnWidth );

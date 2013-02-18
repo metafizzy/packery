@@ -93,19 +93,21 @@ window.onload = function onDocReady() {
 
   test( 'layout with columnWidth and rowHeight', function() {
     var pckry = new Packery( gridded, {
-      columnWidth: 20,
-      rowHeight: 20
+      columnWidth: 25,
+      rowHeight: 30
     });
 
-    equal( pckry.options.columnWidth, 20, 'columnWidth option is set' );
-    equal( pckry.options.rowHeight, 20, 'rowHeight option is set' );
+    equal( pckry.options.columnWidth, 25, 'columnWidth option is set' );
+    equal( pckry.options.rowHeight, 30, 'rowHeight option is set' );
+    equal( pckry.columnWidth, 25, 'columnWidth is set' );
+    equal( pckry.rowHeight, 30, 'rowHeight is set' );
 
     for ( var i=0, len = pckry.items.length; i < len; i++ ) {
       var elem = pckry.items[i].element;
       var x = parseInt( elem.style.left, 10 );
       var y = parseInt( elem.style.top, 10 );
-      equal( x % pckry.options.columnWidth, 0, 'item ' + i + ' x position is multiple of columnWidth' );
-      equal( y % pckry.options.rowHeight, 0, 'item ' + i + ' y position is multiple of rowHeight' );
+      equal( x % pckry.columnWidth, 0, 'item ' + i + ' x position is multiple of columnWidth' );
+      equal( y % pckry.rowHeight, 0, 'item ' + i + ' y position is multiple of rowHeight' );
     }
 
   });
@@ -307,7 +309,6 @@ window.onload = function onDocReady() {
         return true; // bind once
       });
       simulateDrag( dragElem, pckry, 300, -30 );
-      stop();
     }
 
   });

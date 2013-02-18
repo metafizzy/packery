@@ -216,6 +216,8 @@ Packery.prototype.layout = function() {
   this.packer.height = Number.POSITIVE_INFINITY;
   this.packer.reset();
 
+  this._getMeasurements();
+
   // layout
   this.maxY = 0;
   this.spacePlacedElements();
@@ -228,6 +230,32 @@ Packery.prototype.layout = function() {
 
 // _init is alias for layout
 Packery.prototype._init = Packery.prototype.layout;
+
+/**
+ * update columnWidth, rowHeight, & gutter
+ * @private
+ */
+Packery.prototype._getMeasurements = function() {
+  this._getMeasurement( 'columnWidth', 'width' );
+  this._getMeasurement( 'rowHeight', 'height' );
+  this._getMeasurement( 'gutter', 'width' );
+};
+
+/**
+ * get measurement from option, or size of option if element
+ * for columnWidth, rowHeight, gutter
+ * @param {String} measurement
+ * @param {String} size - width or height
+ * @private
+ */
+Packery.prototype._getMeasurement = function( measurement, size ) {
+  var option = this.options[ measurement ];
+  if ( option ) {
+    this[ measurement ] = isElement( option ) ? getSize( option )[ size ] : option;
+  } else {
+    delete this[ measurement ];
+  }
+};
 
 /**
  * layout a collection of item elements
@@ -299,8 +327,8 @@ Packery.prototype._setRectSize = function( elem, rect ) {
   var w = size.outerWidth;
   var h = size.outerHeight;
   // size for columnWidth and rowHeight, if available
-  var colW = this.options.columnWidth;
-  var rowH = this.options.rowHeight;
+  var colW = this.columnWidth;
+  var rowH = this.rowHeight;
   w = colW ? Math.ceil( w / colW ) * colW : w;
   h = rowH ? Math.ceil( h / rowH ) * rowH : h;
   rect.width = w;
