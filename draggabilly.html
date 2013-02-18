@@ -140,7 +140,8 @@ window.onload = function() {
   var packery4 = new Packery( ex4, {
     columnWidth: 50,
     rowHeight: 50,
-    transitionDuration: '1.6s'
+    transitionDuration: '0.6s',
+    gutter: 15
   });
 
   var layoutCount4 = 0;
@@ -153,7 +154,8 @@ window.onload = function() {
   appendRandomSizedItems( ex6 );
   var packery6 = new Packery( ex6, {
     itemSelector: '.item',
-    transitionDuration: '1.6s'
+    transitionDuration: '0.6s',
+    gutter: 10
   });
 
   window.packery4 = packery4;

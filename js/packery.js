@@ -328,8 +328,8 @@ Packery.prototype._setRectSize = function( elem, rect ) {
   // size for columnWidth and rowHeight, if available
   var colW = this.columnWidth + this.gutter;
   var rowH = this.rowHeight + this.gutter;
-  w = colW ? Math.ceil( w / colW ) * colW : w + this.gutter;
-  h = rowH ? Math.ceil( h / rowH ) * rowH : h + this.gutter;
+  w = this.columnWidth ? Math.ceil( w / colW ) * colW : w + this.gutter;
+  h = this.rowHeight ? Math.ceil( h / rowH ) * rowH : h + this.gutter;
   // rect must fit in packer
   rect.width = Math.min( w, this.packer.width );
   rect.height = h;
