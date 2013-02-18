@@ -107,3 +107,5 @@ Item should transition to it destination
 Automatically reveal appended items?
 
 Automatically remove elements from DOM after hiding?
+
+Separate option for gutterWidth and gutterHeight
