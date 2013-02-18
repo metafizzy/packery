@@ -52,7 +52,7 @@ add
 
 ## Maybe, idunno
 
-event for drag item position ended
+<!-- event for drag item position ended -->
 
 better naming of methods for Draggabilly
 dragStart
@@ -64,6 +64,8 @@ dragMove
 dragEnd
 
 <!-- refactor onItemLayout and onItemRemove -->
+
+janky option setter for columnWidth and rowHeight. You have to trigger `_getMeasurements` instead :(
 
 ## Future features
 

@@ -290,6 +290,7 @@ window.onload = function onDocReady() {
     function dragWithGrid() {
       pckry.options.columnWidth = 25;
       pckry.options.rowHeight = 25;
+      pckry._getMeasurements();
       pckry.on( 'dragItemPositioned', function() {
         equal( dragElem.style.left, '25px', 'dragged 3rd item x, aligned to grid' );
         equal( dragElem.style.top, '25px', 'dragged 3rd item y, aligned to grid' );

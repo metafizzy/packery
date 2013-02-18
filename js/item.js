@@ -314,7 +314,6 @@ Item.prototype.destroy = function() {
 
 Item.prototype.dragStart = function() {
   this.getPosition();
-  this.packery._getMeasurements();
   this.removeTransitionStyles();
   // remove transform property from transition
   if ( this.isTransitioning && transformProperty ) {
