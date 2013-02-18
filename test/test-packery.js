@@ -88,11 +88,22 @@ window.onload = function onDocReady() {
     container.appendChild( frag );
   }
 
-  var gridded = document.querySelector('#gridded');
-  appendRandomSizedItems( gridded );
+  function checkPackeryGrid( pckry ) {
+    for ( var i=0, len = pckry.items.length; i < len; i++ ) {
+      var elem = pckry.items[i].element;
+      var x = parseInt( elem.style.left, 10 );
+      var y = parseInt( elem.style.top, 10 );
+      equal( x % pckry.columnWidth, 0, 'item ' + i + ' x position is multiple of columnWidth' );
+      equal( y % pckry.rowHeight, 0, 'item ' + i + ' y position is multiple of rowHeight' );
+    }
+  }
 
   test( 'layout with columnWidth and rowHeight', function() {
-    var pckry = new Packery( gridded, {
+    var container = document.querySelector('#gridded');
+    appendRandomSizedItems( container );
+
+    var pckry = new Packery( container, {
+      itemSelector: '.item',
       columnWidth: 25,
       rowHeight: 30
     });
@@ -101,13 +112,31 @@ window.onload = function onDocReady() {
     equal( pckry.options.rowHeight, 30, 'rowHeight option is set' );
     equal( pckry.columnWidth, 25, 'columnWidth is set' );
     equal( pckry.rowHeight, 30, 'rowHeight is set' );
+    checkPackeryGrid( pckry );
 
-    for ( var i=0, len = pckry.items.length; i < len; i++ ) {
-      var elem = pckry.items[i].element;
-      var x = parseInt( elem.style.left, 10 );
-      var y = parseInt( elem.style.top, 10 );
-      equal( x % pckry.columnWidth, 0, 'item ' + i + ' x position is multiple of columnWidth' );
-      equal( y % pckry.rowHeight, 0, 'item ' + i + ' y position is multiple of rowHeight' );
+    var gridSizer = container.querySelector('.grid-sizer');
+
+    pckry.options.columnWidth = gridSizer;
+    pckry.options.rowHeight = gridSizer;
+    pckry.on( 'layoutComplete', function() {
+      checkPackeryGrid( pckry );
+      setTimeout( setPercentageGrid, 20 );
+      return true; // bind one
+    });
+    pckry.layout();
+    equal( pckry.columnWidth, 30, 'columnWidth is set from element width, in px' );
+    equal( pckry.rowHeight, 25, 'rowHeight is set from element height, in px' );
+    stop();
+
+    function setPercentageGrid() {
+      gridSizer.style.width = '40%';
+      pckry.on( 'layoutComplete', function() {
+        checkPackeryGrid( pckry );
+        start();
+        return true; // bind one
+      });
+      pckry.layout();
+      equal( pckry.columnWidth, 32, 'columnWidth is set from element width, in percentage' );
     }
 
   });

@@ -3,7 +3,7 @@
 
 gutter
 
-set element for columnWidth/rowHeight, gutter
+<!-- set element for columnWidth/rowHeight, gutter -->
 
 declarative mode
 
