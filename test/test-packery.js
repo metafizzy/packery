@@ -75,8 +75,9 @@ window.onload = function onDocReady() {
 
   function appendRandomSizedItems( container ) {
     var frag = document.createDocumentFragment();
-    for ( var i=0; i < 10; i++ ) {
-      var item = document.createElement('div');
+    var item;
+    for ( var i=0; i < 9; i++ ) {
+      item = document.createElement('div');
       item.className = 'item';
       var w = Math.floor( Math.random() * Math.random() * 70 ) + 10;
       var h = Math.floor( Math.random() * Math.random() * 70 ) + 10;
@@ -84,6 +85,14 @@ window.onload = function onDocReady() {
       item.style.height = h + 'px';
       frag.appendChild( item );
     }
+
+    // last one isn't random, but is needed for checking
+    // bigger than colum width and stuff
+    item = document.createElement('div');
+    item.className = 'item';
+    item.style.width  = '72px';
+    item.style.height = '25px';
+    frag.appendChild( item );
 
     container.appendChild( frag );
   }
