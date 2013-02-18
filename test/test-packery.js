@@ -292,8 +292,22 @@ window.onload = function onDocReady() {
         equal( dragElem.style.left, '25px', 'dragged 3rd item x, aligned to grid' );
         equal( dragElem.style.top, '25px', 'dragged 3rd item y, aligned to grid' );
         start();
+        setTimeout( dragOutsideWithGrid, 20 );
+        stop();
+        return true; // bind one
       });
       simulateDrag( dragElem, pckry, 35, 160 );
+    }
+
+    function dragOutsideWithGrid() {
+      pckry.on( 'dragItemPositioned', function() {
+        equal( dragElem.style.left, '50px', 'dragged 3rd item x, aligned inside container, with grid' );
+        equal( dragElem.style.top, '0px', 'dragged 3rd item y, aligned inside container' );
+        start();
+        return true; // bind once
+      });
+      simulateDrag( dragElem, pckry, 300, -30 );
+      stop();
     }
 
   });

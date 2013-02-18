@@ -347,25 +347,35 @@ Item.prototype.positionDragRect = function( x, y ) {
   // position a rect that will occupy space in the packer
   var rectX = x - packerySize.paddingLeft;
   var rectY = y - packerySize.paddingTop;
-  // contain to size of of packery
   var packeryHeight = Math.max( packerySize.innerHeight, this.packery.maxY );
-  rectX = Math.max( 0, Math.min( rectX, packerySize.innerWidth - this.size.outerWidth ) );
-  rectY = Math.max( 0, Math.min( rectY, packeryHeight - this.size.outerHeight ) );
-  // apply grid
+
+  // contain to size of of packery
+  // apply grid constraints
   var columnWidth = options.columnWidth;
   var rowHeight = options.rowHeight;
+
   if ( columnWidth ) {
     rectX = Math.round( rectX / columnWidth );
     // contain to outer bound
-    var maxCols = Math.floor( ( packerySize.innerWidth - this.size.outerWidth ) / columnWidth );
+    var maxCols = Math.ceil( packerySize.innerWidth / columnWidth ) - 1;
+    maxCols -= Math.ceil( this.size.outerWidth / columnWidth );
     rectX = Math.min( rectX, maxCols ) * columnWidth;
+  } else {
+    rectX = Math.min( rectX, packerySize.innerWidth - this.size.outerWidth );
   }
+
   if ( rowHeight ) {
     rectY = Math.round( rectY / rowHeight );
     // contain to outer bound
-    var maxRows = Math.floor( ( packeryHeight - this.size.outerHeight ) / rowHeight );
+    var maxRows = Math.ceil( packeryHeight / rowHeight );
+    maxRows -= Math.ceil( this.size.outerHeight / rowHeight );
     rectY = Math.min( rectY, maxRows ) * rowHeight;
+  } else {
+    rectY = Math.min( rectY, packeryHeight - this.size.outerHeight );
   }
+
+  rectX = Math.max( 0, rectX );
+  rectY = Math.max( 0, rectY );
 
   // keep track of rect
   this.dragRect.x = rectX;
