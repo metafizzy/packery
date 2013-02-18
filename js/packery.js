@@ -266,7 +266,7 @@ Packery.prototype.layoutItems = function( items, isStill ) {
   // console.log('layout Items');
   var layoutItems = this._getLayoutItems( items );
 
-  this._itemsOn( layoutItems, 'layout', function() {
+  this._itemsOn( layoutItems, 'layout', function onItemsLayout() {
     this.emitEvent( 'layoutComplete', [ this ] );
   });
 
