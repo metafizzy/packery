@@ -17,6 +17,8 @@
   },
   "devDependencies": {
     "draggabilly": "../draggabilly/",
+    "jquery": "~1",
+    "jquery-ui-draggable": "git://gist.github.com/4985610.git",
     "qunit": "~1"
   },
   "ignore": [
