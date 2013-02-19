@@ -9,6 +9,8 @@
     "./js/packery.js"
   ],
   "dependencies": {
+    "classie": "desandro/classie",
+    "doc-listener": "desandro/doc-listener",
     "eventEmitter": ">=3",
     "eventie": "desandro/eventie",
     "get-size": "desandro/get-size",

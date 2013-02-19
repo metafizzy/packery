@@ -16,6 +16,7 @@ var Item = _Packery.Item;
 
 // dependencies
 var classie = window.classie;
+var docListener = window.docListener;
 var EventEmitter = window.EventEmitter;
 var eventie = window.eventie;
 var getSize = window.getSize;
@@ -56,6 +57,10 @@ function isElement(o){
 
 // -------------------------- Packery -------------------------- //
 
+var GUID = 0;
+// internal store of all Packery intances
+var packeries = {};
+
 function Packery( element, options ) {
   // bail out if not proper element
   if ( !element || !isElement( element ) ) {
@@ -64,6 +69,11 @@ function Packery( element, options ) {
   }
 
   this.element = element;
+
+  //
+  var id = GUID++
+  this.element.packeryGUID = id;
+  packeries[ id ] = this;
 
   // options
   this.options = extend( {}, this.options );
@@ -773,7 +783,31 @@ Packery.prototype.destroy = function() {
   eventie.unbind( window, 'resize', this );
 };
 
-// -----  ----- //
+// -------------------------- declarative -------------------------- //
+
+/**
+ * allow user to initialize Packery via .js-packery class
+ * options are parsed from data-packery-option attribute
+ */
+docListener.on( 'ready', function() {
+  var elems = document.querySelectorAll('.js-packery');
+
+  for ( var i=0, len = elems.length; i < len; i++ ) {
+    var elem = elems[i];
+    var attr = elem.getAttribute('data-packery-options');
+    var options = attr ? JSON.parse( attr ) : {};
+    new Packery( elem, options );
+  }
+});
+
+// --------------------------  -------------------------- //
+
+Packery.getFromElement = function( elem ) {
+  var id = elem.packeryGUID;
+  return id && packeries[ id ];
+};
+
+// -------------------------- transport -------------------------- //
 
 // back in global
 Packery.Rect = Rect;
