@@ -18,7 +18,7 @@
     "matches-selector": "desandro/matches-selector"
   },
   "devDependencies": {
-    "draggabilly": "../draggabilly/",
+    "draggabilly": "desandro/draggabilly#>=0.0.2",
     "jquery": "~1",
     "jquery-ui-draggable": "git://gist.github.com/4985610.git",
     "qunit": "~1"
