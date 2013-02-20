@@ -57,6 +57,7 @@ function isElement(o){
 
 // -------------------------- Packery -------------------------- //
 
+// globally unique identifiers
 var GUID = 0;
 // internal store of all Packery intances
 var packeries = {};
@@ -70,11 +71,6 @@ function Packery( element, options ) {
 
   this.element = element;
 
-  //
-  var id = GUID++
-  this.element.packeryGUID = id;
-  packeries[ id ] = this;
-
   // options
   this.options = extend( {}, this.options );
   extend( this.options, options );
@@ -82,10 +78,14 @@ function Packery( element, options ) {
   // initial properties
   this.packer = new Packer();
 
+  // add id for Packery.getFromElement
+  var id = ++GUID;
+  this.element.packeryGUID = id; // expando
+  packeries[ id ] = this; // associate via id
+
   // kick it off
   this._create();
   this.layout();
-
 }
 
 // inherit EventEmitter
@@ -773,6 +773,7 @@ Packery.prototype.destroy = function() {
   // reset element styles
   this.element.style.position = '';
   this.element.style.height = '';
+  delete this.element.packeryGUID;
 
   // destroy items
   for ( var i=0, len = this.items.length; i < len; i++ ) {
@@ -781,6 +782,18 @@ Packery.prototype.destroy = function() {
   }
 
   eventie.unbind( window, 'resize', this );
+};
+
+// -------------------------- data -------------------------- //
+
+/**
+ * get Packery instance from element
+ * @param {Element} elem
+ * @returns {Packery}
+ */
+Packery.data = function( elem ) {
+  var id = elem.packeryGUID;
+  return id && packeries[ id ];
 };
 
 // -------------------------- declarative -------------------------- //
@@ -795,17 +808,20 @@ docListener.on( 'ready', function() {
   for ( var i=0, len = elems.length; i < len; i++ ) {
     var elem = elems[i];
     var attr = elem.getAttribute('data-packery-options');
-    var options = attr ? JSON.parse( attr ) : {};
+    var options;
+    try {
+      options = attr && JSON.parse( attr );
+    } catch ( error ) {
+      // log error, but proceed
+      console.error( 'Error parsing data-packery-options on ' +
+        elem.nodeName.toLowerCase() + ( elem.id ? '#' + elem.id : '' ) + ': ' +
+        error );
+      continue;
+    }
+    console.log('new packery from declarative');
     new Packery( elem, options );
   }
 });
-
-// --------------------------  -------------------------- //
-
-Packery.getFromElement = function( elem ) {
-  var id = elem.packeryGUID;
-  return id && packeries[ id ];
-};
 
 // -------------------------- transport -------------------------- //
 
