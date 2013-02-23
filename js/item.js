@@ -341,47 +341,40 @@ Item.prototype.dragMove = function( x, y ) {
   this.positionDragRect( x, y );
 };
 
+// position a rect that will occupy space in the packer
 Item.prototype.positionDragRect = function( x, y ) {
   var packerySize = this.packery.elementSize;
-  // position a rect that will occupy space in the packer
-  var rectX = x - packerySize.paddingLeft;
-  var rectY = y - packerySize.paddingTop;
+  x -= packerySize.paddingLeft;
+  y -= packerySize.paddingTop;
   var packeryHeight = Math.max( packerySize.innerHeight, this.packery.maxY );
 
-  // contain to size of of packery
-  // apply grid constraints
-  var columnWidth = this.packery.columnWidth;
-  var rowHeight = this.packery.rowHeight;
-  var gutter = this.packery.gutter;
+  this.dragRect.x = this.getDragRectCoord( x, this.size.outerWidth, packerySize.innerWidth, this.packery.columnWidth );
+  this.dragRect.y = this.getDragRectCoord( y, this.size.outerHeight, packeryHeight, this.packery.rowHeight );
+};
 
-  if ( columnWidth ) {
-    columnWidth += gutter;
-    rectX = Math.round( rectX / columnWidth );
+/**
+ * get x/y coordinate for drag rect
+ * @param {Number} coord - x or y
+ * @param {Number} size - size of item
+ * @param {Number} parentsize - size of parent packery
+ * @param {Number} segment - size of columnWidth or rowHeight
+ * @returns {Number} coord - processed x or y
+ */
+Item.prototype.getDragRectCoord = function( coord, size, parentSize, segment ) {
+  var max; // outer bound
+  if ( segment ) {
+    segment += this.packery.gutter;
+    // snap to closest segment
+    coord = Math.round( coord / segment ) * segment;
     // contain to outer bound
-    var maxCols = Math.ceil( packerySize.innerWidth / columnWidth ) - 1;
-    maxCols -= Math.ceil( this.size.outerWidth / columnWidth );
-    rectX = Math.min( rectX, maxCols ) * columnWidth;
+    var maxSegments = Math.ceil( parentSize / segment ) - 1;
+    maxSegments -= Math.ceil( size / segment );
+    max = maxSegments * segment;
   } else {
-    rectX = Math.min( rectX, packerySize.innerWidth - this.size.outerWidth );
+    max = parentSize - size;
   }
-
-  if ( rowHeight ) {
-    rowHeight += gutter;
-    rectY = Math.round( rectY / rowHeight );
-    // contain to outer bound
-    var maxRows = Math.ceil( packeryHeight / rowHeight );
-    maxRows -= Math.ceil( this.size.outerHeight / rowHeight );
-    rectY = Math.min( rectY, maxRows ) * rowHeight;
-  } else {
-    rectY = Math.min( rectY, packeryHeight - this.size.outerHeight );
-  }
-
-  rectX = Math.max( 0, rectX );
-  rectY = Math.max( 0, rectY );
-
-  // keep track of rect
-  this.dragRect.x = rectX;
-  this.dragRect.y = rectY;
+  // must be between 0 and outer bound
+  return Math.max( 0, Math.min( coord, max ) );
 };
 
 Item.prototype.dragStop = function() {
