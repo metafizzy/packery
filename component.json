@@ -15,7 +15,7 @@
     "eventie": "desandro/eventie",
     "get-size": "desandro/get-size",
     "get-style-property": "desandro/get-style-property",
-    "matches-selector": "desandro/matches-selector"
+    "matches-selector": "desandro/matches-selector#>=0.2.0"
   },
   "devDependencies": {
     "draggabilly": "desandro/draggabilly#>=0.0.2",
