@@ -352,33 +352,35 @@ Item.prototype.positionDragRect = function( x, y ) {
     packeryHeight -= this.packery.gutter;
   }
 
-  this.dragRect.x = this.getDragRectCoord( x, this.size.outerWidth, packerySize.innerWidth, this.packery.columnWidth );
-  this.dragRect.y = this.getDragRectCoord( y, this.size.outerHeight, packeryHeight, this.packery.rowHeight );
+  this.dragRect.x = this.getDragRectCoord( x, true, packerySize.innerWidth );
+  this.dragRect.y = this.getDragRectCoord( y, false, packeryHeight );
 };
 
 /**
  * get x/y coordinate for drag rect
  * @param {Number} coord - x or y
- * @param {Number} size - size of item
+ * @param {Boolean} isX
  * @param {Number} parentsize - size of parent packery
- * @param {Number} segment - size of columnWidth or rowHeight
  * @returns {Number} coord - processed x or y
  */
-Item.prototype.getDragRectCoord = function( coord, size, parentSize, segment ) {
-  var max; // outer bound
+Item.prototype.getDragRectCoord = function( coord, isX, parentSize ) {
+  var size = this.size[ isX ? 'outerWidth' : 'outerHeight' ];
+  var segment = this.packery[ isX ? 'columnWidth' : 'rowHeight' ];
+
   if ( segment ) {
     segment += this.packery.gutter;
     // snap to closest segment
-    coord = Math.round( coord / segment ) * segment;
+    coord = Math.round( coord / segment );
     // contain to outer bound
-    var maxSegments = Math.ceil( parentSize / segment ) - 1;
+    // x values must be contained, y values can grow box by 1
+    var maxSegments = Math[ isX ? 'floor' : 'ceil' ]( parentSize / segment );
     maxSegments -= Math.ceil( size / segment );
-    max = maxSegments * segment;
+    coord = Math.min( coord, maxSegments ) * segment;
   } else {
-    max = parentSize - size;
+    coord = Math.min( coord, parentSize - size );
   }
-  // must be between 0 and outer bound
-  return Math.max( 0, Math.min( coord, max ) );
+
+  return Math.max( 0, coord );
 };
 
 Item.prototype.dragStop = function() {
