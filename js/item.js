@@ -323,10 +323,7 @@ Item.prototype.dragStart = function() {
   // create drag rect, used for position when dropped
   this.dragRect = new Rect();
   this.needsPositioning = false;
-  var packerySize = this.packery.elementSize;
-  var dragX = this.position.x + packerySize.paddingLeft;
-  var dragY = this.position.y + packerySize.paddingTop;
-  this.positionDragRect( dragX, dragY );
+  this.positionDragRect( this.position.x, this.position.y );
   this.isTransitioning = false;
   this.didDrag = false;
 };
@@ -338,14 +335,15 @@ Item.prototype.dragStart = function() {
  */
 Item.prototype.dragMove = function( x, y ) {
   this.didDrag = true;
+  var packerySize = this.packery.elementSize;
+  x -= packerySize.paddingLeft;
+  y -= packerySize.paddingTop;
   this.positionDragRect( x, y );
 };
 
 // position a rect that will occupy space in the packer
 Item.prototype.positionDragRect = function( x, y ) {
   var packerySize = this.packery.elementSize;
-  x -= packerySize.paddingLeft;
-  y -= packerySize.paddingTop;
   var packeryHeight = Math.max( packerySize.innerHeight, this.packery.maxY );
   // prevent gutter from bumping up height when non-vertical grid
   if ( !this.packery.rowHeight ) {
