@@ -55,6 +55,19 @@ function isElement(o){
   );
 }
 
+// index of helper cause IE8
+var indexOf = Array.prototype.indexOf ? function( ary, obj ) {
+    return ary.indexOf( obj )
+  } : function( ary, obj ) {
+    for ( var i=0, len = ary.length; i < len; i++ ) {
+      if ( ary[i] === obj ) {
+        return i;
+      }
+    }
+    return -1;
+  };
+
+
 // -------------------------- Packery -------------------------- //
 
 // globally unique identifiers
@@ -419,7 +432,7 @@ Packery.prototype.unplace = function( elems ) {
   // filter out removed place elements
   for ( var i=0, len = this.placedElements.length; i < len; i++ ) {
     var placedElem = this.placedElements[i];
-    if ( elems.indexOf( placedElem ) === -1 ) {
+    if ( indexOf( elems, placedElem ) === -1 ) {
       revised.push( placedElem );
     }
   }
@@ -607,7 +620,7 @@ Packery.prototype.remove = function( elems ) {
     var item = removeItems[i];
     item.remove();
     // remove item from collection
-    var index = this.items.indexOf( item );
+    var index = indexOf( this.items, item );
     this.items.splice( index, 1 );
   }
 };

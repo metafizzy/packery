@@ -11,9 +11,10 @@ module('Packery');
 test( 'basics', function() {
   equal( typeof Packery === 'function', true, 'Packery is a function' );
 
-  // var pckry = new Packery();
+  var pckry = new Packery();
   // console.log( pckry, typeof pckry );
   // strictEqual( pckry, undefined, 'packery with no element returns undefined' );
+  ok( !pckry._isInited, 'packery not inited' );
 
 });
 
