@@ -75,9 +75,6 @@ function Packery( element, options ) {
   this.options = extend( {}, this.options );
   extend( this.options, options );
 
-  // initial properties
-  this.packer = new Packer();
-
   // add id for Packery.getFromElement
   var id = ++GUID;
   this.element.packeryGUID = id; // expando
@@ -101,8 +98,10 @@ Packery.prototype.options = {
 };
 
 Packery.prototype._create = function() {
+  // initial properties
+  this.packer = new Packer();
+  // get items from children
   this.reloadItems();
-
   // collection of element that don't get laid out
   this.placedElements = [];
   this.place( this.options.placedElements );
