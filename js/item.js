@@ -347,6 +347,10 @@ Item.prototype.positionDragRect = function( x, y ) {
   x -= packerySize.paddingLeft;
   y -= packerySize.paddingTop;
   var packeryHeight = Math.max( packerySize.innerHeight, this.packery.maxY );
+  // prevent gutter from bumping up height when non-vertical grid
+  if ( !this.packery.rowHeight ) {
+    packeryHeight -= this.packery.gutter;
+  }
 
   this.dragRect.x = this.getDragRectCoord( x, this.size.outerWidth, packerySize.innerWidth, this.packery.columnWidth );
   this.dragRect.y = this.getDragRectCoord( y, this.size.outerHeight, packeryHeight, this.packery.rowHeight );
