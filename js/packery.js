@@ -682,19 +682,23 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
 
   // debounce
   var _this = this;
-  // use item for timer, or fall back to this
-  var timer = item || this;
   // debounce triggering layout
   function delayed() {
     _this.layout();
-    delete timer._dragTimeout;
+    delete _this.dragTimeout;
   }
 
-  if ( timer._dragTimeout ) {
-    clearTimeout( timer._dragTimeout );
+  if ( this.dragTimeout ) {
+    clearTimeout( this.dragTimeout );
   }
 
-  timer._dragTimeout = setTimeout( delayed, 40 );
+  this.dragTimeout = setTimeout( delayed, 40 );
+};
+
+Packery.prototype.clearDragTimeout = function() {
+  if ( this.dragTimeout ) {
+    clearTimeout( this.dragTimeout );
+  }
 };
 
 /**
@@ -752,6 +756,7 @@ Packery.prototype.itemDragStop = function( elem ) {
     item.moveTo( dropX, dropY );
   }
 
+  this.clearDragTimeout();
   this.on( 'layoutComplete', onLayoutComplete );
   this.layout();
 
