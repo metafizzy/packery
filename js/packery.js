@@ -57,7 +57,7 @@ function isElement(o){
 
 // index of helper cause IE8
 var indexOf = Array.prototype.indexOf ? function( ary, obj ) {
-    return ary.indexOf( obj )
+    return ary.indexOf( obj );
   } : function( ary, obj ) {
     for ( var i=0, len = ary.length; i < len; i++ ) {
       if ( ary[i] === obj ) {
@@ -428,22 +428,17 @@ Packery.prototype.unplace = function( elems ) {
     return;
   }
   elems = makeArray( elems );
-  var revised = [];
-  // filter out removed place elements
-  for ( var i=0, len = this.placedElements.length; i < len; i++ ) {
-    var placedElem = this.placedElements[i];
-    if ( indexOf( elems, placedElem ) === -1 ) {
-      revised.push( placedElem );
+
+  for ( var i=0, len = elems.length; i < len; i++ ) {
+    var elem = elems[i];
+    // filter out removed place elements
+    var index = indexOf( this.placedElements, elem );
+    if ( index !== -1 ) {
+      this.placedElements.splice( index, 1 );
     }
-  }
-
-  this.placedElements = revised;
-
-  // unignore
-  for ( var j=0, jLen = elems.length; j < jLen; j++ ) {
-    var elem = elems[j];
     this.unignore( elem );
   }
+
 };
 
 // make spaces for placed elements

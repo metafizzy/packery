@@ -13,7 +13,6 @@ test( 'basics', function() {
 
   var pckry = new Packery();
   // console.log( pckry, typeof pckry );
-  // strictEqual( pckry, undefined, 'packery with no element returns undefined' );
   ok( !pckry._isInited, 'packery not inited' );
 
 });
@@ -196,6 +195,14 @@ window.onload = function onDocReady() {
     equal( elem3.style.top, '35px', '4th item top' );
 
     equal( container.style.height, '75px', 'container height' );
+
+    // unplace first stamp
+    pckry.unplace( stamps[1] );
+    equal( pckry.placedElements.length, 1, 'element was unplaced' );
+    // place it back
+    pckry.place( stamps[1] );
+    equal( pckry.placedElements.length, 2, 'element was placed back' );
+
   });
 
   test( 'placed2, items are placed', function() {
