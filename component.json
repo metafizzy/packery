@@ -1,6 +1,6 @@
 {
   "name": "packery",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "David DeSandro / Metafizzy",
   "main": [
     "./js/rect.js",
@@ -13,12 +13,12 @@
     "doc-listener": "desandro/doc-listener",
     "eventEmitter": ">=3",
     "eventie": "desandro/eventie",
-    "get-size": "desandro/get-size",
+    "get-size": "desandro/get-size#>=0.0.5",
     "get-style-property": "desandro/get-style-property",
     "matches-selector": "desandro/matches-selector#>=0.2.0"
   },
   "devDependencies": {
-    "draggabilly": "desandro/draggabilly#>=0.0.2",
+    "draggabilly": "desandro/draggabilly#>=0.0.3",
     "jquery": "~1",
     "jquery-ui-draggable": "git://gist.github.com/4985610.git",
     "qunit": "~1"
