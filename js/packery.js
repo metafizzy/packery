@@ -265,17 +265,30 @@ Packery.prototype._getMeasurements = function() {
 };
 
 /**
- * get measurement from option, or size of option if element
- * for columnWidth, rowHeight, gutter
+ * get measurement from option, for columnWidth, rowHeight, gutter
+ * if option is String -> get element from selector string, & get size of element
+ * if option is Element -> get size of element
+ * else use option as a number
+ *
  * @param {String} measurement
  * @param {String} size - width or height
  * @private
  */
 Packery.prototype._getMeasurement = function( measurement, size ) {
   var option = this.options[ measurement ];
-  this[ measurement ] = !option ? 0 : // default to 0
+  var elem;
+  if ( !option ) {
+    // default to 0
+    this[ measurement ] = 0;
+  } else {
+    if ( typeof option === 'string' ) {
+      elem = this.element.querySelector( option );
+    } else if ( isElement( option ) ) {
+      elem = option;
+    }
     // use size of element, if element
-    isElement( option ) ? getSize( option )[ size ] : option;
+    this[ measurement ] = elem ? getSize( elem )[ size ] : option;
+  }
 };
 
 /**

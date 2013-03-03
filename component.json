@@ -1,6 +1,6 @@
 {
   "name": "packery",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "David DeSandro / Metafizzy",
   "main": [
     "./js/rect.js",

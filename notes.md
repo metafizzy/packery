@@ -3,9 +3,9 @@
 
 <!-- gutter -->
 
-tests with gutter
+<!-- tests with gutter -->
 
-selector string for columnWidth, rowHeight, gutter
+<!-- selector string for columnWidth, rowHeight, gutter -->
 
 <!-- selector string for placedElements -->
 

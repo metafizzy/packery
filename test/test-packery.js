@@ -99,17 +99,19 @@ window.onload = function onDocReady() {
   }
 
   function checkPackeryGrid( pckry ) {
+    var colW = pckry.columnWidth + pckry.gutter;
+    var rowH = pckry.rowHeight + pckry.gutter;
     for ( var i=0, len = pckry.items.length; i < len; i++ ) {
       var elem = pckry.items[i].element;
       var x = parseInt( elem.style.left, 10 );
       var y = parseInt( elem.style.top, 10 );
-      equal( x % pckry.columnWidth, 0, 'item ' + i + ' x position is multiple of columnWidth' );
-      equal( y % pckry.rowHeight, 0, 'item ' + i + ' y position is multiple of rowHeight' );
+      equal( x % colW, 0, 'item ' + i + ' x position is multiple of columnWidth' );
+      equal( y % rowH, 0, 'item ' + i + ' y position is multiple of rowHeight' );
     }
   }
 
   test( 'layout with columnWidth and rowHeight', function() {
-    var container = document.querySelector('#gridded');
+    var container = document.querySelector('#gridded1');
     appendRandomSizedItems( container );
 
     var pckry = new Packery( container, {
@@ -130,25 +132,53 @@ window.onload = function onDocReady() {
     pckry.options.rowHeight = gridSizer;
     pckry.on( 'layoutComplete', function() {
       checkPackeryGrid( pckry );
-      setTimeout( setPercentageGrid, 20 );
-      return true; // bind one
+      setTimeout( setGutter, 20 );
+      return true; // bind once
     });
     pckry.layout();
     equal( pckry.columnWidth, 30, 'columnWidth is set from element width, in px' );
     equal( pckry.rowHeight, 25, 'rowHeight is set from element height, in px' );
     stop();
 
+    function setGutter() {
+      pckry.options.gutter = container.querySelector('.gutter-sizer');
+      pckry.on( 'layoutComplete', function() {
+        checkPackeryGrid( pckry );
+        setTimeout( setPercentageGrid, 20 );
+        return true; // bind once
+      });
+      pckry.layout();
+      equal( pckry.gutter, 10, 'gutter set from element width, in px' );
+      // stop();
+    }
+
     function setPercentageGrid() {
       gridSizer.style.width = '40%';
       pckry.on( 'layoutComplete', function() {
         checkPackeryGrid( pckry );
         start();
-        return true; // bind one
+        return true; // bind once
       });
       pckry.layout();
       equal( pckry.columnWidth, 32, 'columnWidth is set from element width, in percentage' );
     }
 
+  });
+
+  test( 'columnWidth, rowHeight, gutter via selector', function() {
+    var container = document.querySelector('#gridded2');
+    appendRandomSizedItems( container );
+
+    var pckry = new Packery( container, {
+      itemSelector: '.item',
+      columnWidth: '.grid-sizer',
+      rowHeight: '.grid-sizer',
+      gutter: '.gutter-sizer'
+    });
+
+    equal( pckry.columnWidth, 30, 'columnWidth' );
+    equal( pckry.rowHeight, 25, 'rowHeight' );
+    equal( pckry.gutter, 10, 'gutter' );
   });
 
 

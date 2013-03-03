@@ -22,9 +22,13 @@
 .item.w4 { width:  78px; }
 .item.h4 { height: 78px; }
 
-#gridded .grid-sizer {
+.gridded .grid-sizer {
   width: 30px;
   height: 25px;
+}
+
+.gridded .gutter-sizer {
+  width: 10px;
 }
 
 .stamp {
