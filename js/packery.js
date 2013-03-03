@@ -404,11 +404,15 @@ Packery.prototype._itemsOn = function( items, eventName, callback ) {
 
 /**
  * adds elements to placedElements
- * @param {NodeList, Array, or Element} elems
+ * @param {NodeList, Array, Element, or String} elems
  */
 Packery.prototype.place = function( elems ) {
   if ( !elems ) {
     return;
+  }
+  // if string, use argument as selector string
+  if ( typeof elems === 'string' ) {
+    elems = this.element.querySelectorAll( elems );
   }
   elems = makeArray( elems );
   this.placedElements.push.apply( this.placedElements, elems );
