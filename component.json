@@ -13,7 +13,7 @@
     "doc-listener": "desandro/doc-listener",
     "eventEmitter": ">=3",
     "eventie": "desandro/eventie",
-    "get-size": "desandro/get-size#>=0.0.5",
+    "get-size": "desandro/get-size#>=0.0.6",
     "get-style-property": "desandro/get-style-property",
     "matches-selector": "desandro/matches-selector#>=0.2.0"
   },

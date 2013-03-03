@@ -5,6 +5,10 @@
 
 tests with gutter
 
+selector string for columnWidth, rowHeight, gutter
+
+selector string for placedElements
+
 <!-- set element for columnWidth/rowHeight, gutter -->
 
 <!-- declarative mode -->
