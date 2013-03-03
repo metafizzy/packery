@@ -247,30 +247,37 @@ window.onload = function onDocReady() {
   });
 
   test( 'placed3, place with selector string ', function() {
-    var container = document.querySelector('#placed3');
-    var pckry = new Packery( container, {
+    var container3 = document.querySelector('#placed3');
+    var pckry3 = new Packery( container3, {
       itemSelector: '.item',
       placedElements: '.stamp'
     });
 
-    equal( pckry.placedElements.length, 2, '2 placed elements' );
+    equal( pckry3.placedElements.length, 2, '2 placed elements' );
 
-    equal( pckry.placedElements.length, 2, '2 placed elements' );
-    var elem0 = pckry.items[0].element;
+    equal( pckry3.placedElements.length, 2, '2 placed elements' );
+    var elem0 = pckry3.items[0].element;
     equal( elem0.style.left, '0px', '1st item left' );
     equal( elem0.style.top, '0px', '1st item top' );
-    var elem1 = pckry.items[1].element;
+    var elem1 = pckry3.items[1].element;
     equal( elem1.style.left, '52px', '2nd item left' );
     equal( elem1.style.top, '0px', '2nd item top' );
-    var elem2 = pckry.items[2].element;
+    var elem2 = pckry3.items[2].element;
     equal( elem2.style.left, '52px', '3rd item left' );
     equal( elem2.style.top, '20px', '3rd item top' );
-    var elem3 = pckry.items[3].element;
+    var elem3 = pckry3.items[3].element;
     equal( elem3.style.left, '13px', '4th item left' );
     equal( elem3.style.top, '35px', '4th item top' );
 
-    equal( container.style.height, '75px', 'container height' );
+    equal( container3.style.height, '75px', 'container height' );
 
+    var container4 = document.querySelector('#placed4');
+    var pckry4 = new Packery( container4, {
+      itemSelector: '.item',
+      placedElements: 'foobar'
+    });
+
+    ok( pckry4._isInited, 'bad selector didnt cause error' );
   });
 
   function gimmeAnItemElement() {
@@ -343,7 +350,7 @@ window.onload = function onDocReady() {
       start();
       stop();
       // trigger the next thing
-      setTimeout( dragOutside, 20 )
+      setTimeout( dragOutside, 20 );
       return true; // bind once
     });
     stop();

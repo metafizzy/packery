@@ -35,21 +35,18 @@
   position: relative;
 }
 
-#placed1 .stamp,
-#placed3 .stamp {
+.place-stamps .stamp {
   position: absolute;
 }
 
-#placed1 .stamp1,
-#placed3 .stamp1 {
+.place-stamps .stamp1 {
   width: 30px;
   height: 25px;
   left: 22px;
   top: 10px;
 }
 
-#placed1 .stamp2,
-#placed3 .stamp2 {
+.place-stamps .stamp2 {
   width: 10px;
   height: 45px;
   left: 3px;
