@@ -367,6 +367,8 @@ Item.prototype.getDragRectCoord = function( coord, isX, parentSize ) {
 
   if ( segment ) {
     segment += this.packery.gutter;
+    // allow for last column to reach the edge
+    parentSize += isX ? this.packery.gutter : 0;
     // snap to closest segment
     coord = Math.round( coord / segment );
     // contain to outer bound
