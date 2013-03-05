@@ -313,7 +313,7 @@ Packery.prototype.layoutItems = function( items, isStill ) {
 
   // set container size
   var elemSize = this.elementSize;
-  var elemH = this.maxY;
+  var elemH = this.maxY - this.gutter;
   // add padding and border width if border box
   if ( elemSize.isBorderBox ) {
     elemH += elemSize.paddingBottom + elemSize.paddingTop +

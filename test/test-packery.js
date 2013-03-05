@@ -194,7 +194,7 @@ window.onload = function onDocReady() {
       return true; // bind once
     });
     pckry.layout();
-    equal( container.style.height, '44px', 'height + gutter' );
+    equal( container.style.height, '40px', 'added gutter, height same' );
     stop();
 
     function addPaddingBorders() {
@@ -206,7 +206,7 @@ window.onload = function onDocReady() {
         return true; // bind once
       });
       pckry.layout();
-      equal( container.style.height, '44px', 'height + gutter, still same' );
+      equal( container.style.height, '40px', 'add padding, height same' );
     }
 
     function doBorderBox() {
@@ -218,7 +218,7 @@ window.onload = function onDocReady() {
         return true; // bind once
       });
       pckry.layout();
-      equal( container.style.height, '52px', 'border-box, height + gutter + padding + border' );
+      equal( container.style.height, '48px', 'border-box, height + padding + border' );
     }
   });
 
