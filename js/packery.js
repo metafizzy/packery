@@ -312,7 +312,14 @@ Packery.prototype.layoutItems = function( items, isStill ) {
   }
 
   // set container size
-  this.element.style.height = this.maxY + 'px';
+  var elemSize = this.elementSize;
+  var elemH = this.maxY;
+  // add padding and border width if border box
+  if ( elemSize.isBorderBox ) {
+    elemH += elemSize.paddingBottom + elemSize.paddingTop +
+      elemSize.borderTopWidth + elemSize.borderBottomWidth;
+  }
+  this.element.style.height = elemH + 'px';
 };
 
 /**

@@ -181,6 +181,46 @@ window.onload = function onDocReady() {
     equal( pckry.gutter, 10, 'gutter' );
   });
 
+  // ----- border box ----- //
+
+  test( 'container size', function() {
+    var container = document.querySelector('#container-size');
+    var pckry = new Packery( container );
+    equal( container.style.height, '40px', 'default height' );
+    pckry.options.gutter = 4;
+    pckry._getMeasurements();
+    pckry.on( 'layoutComplete', function() {
+      setTimeout( addPaddingBorders, 20 );
+      return true; // bind once
+    });
+    pckry.layout();
+    equal( container.style.height, '44px', 'height + gutter' );
+    stop();
+
+    function addPaddingBorders() {
+      container.style.padding = '1px 2px 3px 4px';
+      container.style.borderStyle = 'solid';
+      container.style.borderWidth = '1px 2px 3px 4px';
+      pckry.on( 'layoutComplete', function() {
+        setTimeout( doBorderBox, 20 );
+        return true; // bind once
+      });
+      pckry.layout();
+      equal( container.style.height, '44px', 'height + gutter, still same' );
+    }
+
+    function doBorderBox() {
+      container.style.webkitBoxSizing = 'border-box';
+      container.style.mozBoxSizing = 'border-box';
+      container.style.boxSizing = 'border-box';
+      pckry.on( 'layoutComplete', function() {
+        start();
+        return true; // bind once
+      });
+      pckry.layout();
+      equal( container.style.height, '52px', 'border-box, height + gutter + padding + border' );
+    }
+  });
 
   test( 'remove', function() {
     var container = document.querySelector('#add-remove');
