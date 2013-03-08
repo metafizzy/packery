@@ -1,5 +1,5 @@
 /**
- * Packery v0.0.1
+ * Packery v0.2.5
  * Bin-packing layout
  * by David DeSandro / Metafizzy
  */
@@ -21,6 +21,10 @@ var EventEmitter = window.EventEmitter;
 var eventie = window.eventie;
 var getSize = window.getSize;
 var matchesSelector = window.matchesSelector;
+
+// ----- vars ----- //
+
+var console = window.console;
 
 // -------------------------- helpers -------------------------- //
 
@@ -78,7 +82,9 @@ var packeries = {};
 function Packery( element, options ) {
   // bail out if not proper element
   if ( !element || !isElement( element ) ) {
-    console.error( element + ' Packery element' );
+    if ( console ) {
+      console.error( element + ' Packery element' );
+    }
     return;
   }
 
@@ -849,12 +855,13 @@ docListener.on( 'ready', function() {
       options = attr && JSON.parse( attr );
     } catch ( error ) {
       // log error, but proceed
-      console.error( 'Error parsing data-packery-options on ' +
-        elem.nodeName.toLowerCase() + ( elem.id ? '#' + elem.id : '' ) + ': ' +
-        error );
+      if ( console ) {
+        console.error( 'Error parsing data-packery-options on ' +
+          elem.nodeName.toLowerCase() + ( elem.id ? '#' + elem.id : '' ) + ': ' +
+          error );
+      }
       continue;
     }
-    console.log('new packery from declarative');
     new Packery( elem, options );
   }
 });

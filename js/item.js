@@ -263,22 +263,18 @@ Item.prototype.removeTransitionStyles = function() {
 };
 
 Item.prototype.remove = function() {
-  console.log('hiding');
   // start transition
-
   var hiddenStyle = {
     opacity: 0
   };
   hiddenStyle[ transformCSSProperty ] = 'scale(0.001)';
 
   this.transition( hiddenStyle, this.removeElem );
-
 };
 
 
 // remove element from DOM
 Item.prototype.removeElem = function() {
-  console.log('removing elem');
   this.element.parentNode.removeChild( this.element );
   this.emitEvent( 'remove', [ this ] );
 };
