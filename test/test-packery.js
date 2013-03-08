@@ -59,9 +59,14 @@ window.onload = function onDocReady() {
     // change size of elems to change layout
     elem0.style.width = '18px';
     pack1.items[3].element.style.height = '58px';
-    pack1.on( 'layoutComplete', function( obj ) {
+    var items;
+    pack1.on( 'layoutComplete', function( obj, completeItems ) {
       equal( true, true, 'layoutComplete event did fire' );
       equal( obj, pack1, 'event-emitted argument matches Packery instance' );
+      equal( completeItems.length, items.length, 'event-emitted items matches layout items length' );
+      strictEqual( completeItems[0], items[0], 'event-emitted items has same first item' );
+      var len = completeItems.length - 1;
+      strictEqual( completeItems[ len ], items[ len ], 'event-emitted items has same last item' );
       equal( elem1.style.left, '20px', '2nd item, 2nd column' );
       equal( elem1.style.top, '0px', '2nd item left' );
       equal( elem2.style.left, '40px', '3rd item, 3rd column' );
@@ -71,6 +76,7 @@ window.onload = function onDocReady() {
 
     stop();
     pack1.layout();
+    items = pack1._getLayoutItems( pack1.items );
     equal( ex1.style.height, '80px', 'height set' );
   });
 
@@ -229,15 +235,20 @@ window.onload = function onDocReady() {
       itemSelector: '.item'
     });
     // remove two items
-    pckry.on( 'removeComplete', function( obj ) {
+    var w2Elems = container.querySelectorAll('.w2');
+    pckry.on( 'removeComplete', function( obj, removedItems ) {
       equal( true, true, 'removeComplete event did fire' );
       equal( obj, pckry, 'event-emitted argument matches Packery instance' );
+      equal( removedItems.length, w2Elems.length, 'remove elems length matches 2nd argument length' );
+      for ( var i=0, len = removedItems.length; i < len; i++ ) {
+        equal( removedItems[i].element, w2Elems[i], 'removedItems element matches' );
+      }
       equal( container.children.length, 2, 'elements removed from DOM' );
       equal( container.querySelectorAll('.w2').length, 0, 'matched elements were removed' );
       start();
     });
     stop();
-    pckry.remove( container.querySelectorAll('.w2') );
+    pckry.remove( w2Elems );
     equal( pckry.items.length, 2, 'items removed from Packery instance' );
 
   });

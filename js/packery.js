@@ -301,7 +301,7 @@ Packery.prototype.layoutItems = function( items, isStill ) {
   var layoutItems = this._getLayoutItems( items );
 
   this._itemsOn( layoutItems, 'layout', function onItemsLayout() {
-    this.emitEvent( 'layoutComplete', [ this ] );
+    this.emitEvent( 'layoutComplete', [ this, layoutItems ] );
   });
 
   for ( var i=0, len = layoutItems.length; i < len; i++ ) {
@@ -632,7 +632,7 @@ Packery.prototype.remove = function( elems ) {
   var removeItems = this.getItemsFromElements( elems );
 
   this._itemsOn( removeItems, 'remove', function() {
-    this.emitEvent( 'removeComplete', [ this ] );
+    this.emitEvent( 'removeComplete', [ this, removeItems ] );
   });
 
   for ( var i=0, len = removeItems.length; i < len; i++ ) {
