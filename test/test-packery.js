@@ -28,41 +28,53 @@ window.onload = function onDocReady() {
     equal( Packery.data( empty ), pckry, 'data method returns instance' );
   });
 
-  var ex1 = document.getElementById('ex1');
-  var pack1 = new Packery( ex1, {
-    itemSelector: '.item'
-  });
-
-  var ex2 = document.getElementById('ex2');
-  var pack2 = new Packery( ex2, {
-    itemSelector: '.item'
-  });
-
-
   test( 'getItems', function() {
-    equal( pack1.items.length, 6, 'filtered, itemSelector = .item, not all children' );
-    equal( pack2.items.length, 4, 'found itemSelector = .item, querySelectoring' );
+    var defaultElem = document.querySelector('#default');
+    var defaultPckry = new Packery( defaultElem );
+
+    var filtered = document.querySelector('#filtered');
+    var filteredPckry = new Packery( filtered, {
+      itemSelector: '.item'
+    });
+
+    var found = document.querySelector('#found');
+    var foundPckry = new Packery( found, {
+      itemSelector: '.item'
+    });
+
+    var filterFound = document.querySelector('#filter-found');
+    var filterFoundPckry = new Packery( filterFound, {
+      itemSelector: '.item'
+    });
+
+    equal( defaultPckry.items.length, defaultElem.children.length, 'no itemSelector, all children' );
+    equal( filteredPckry.items.length, 6, 'filtered, itemSelector = .item, not all children' );
+    equal( foundPckry.items.length, 4, 'found itemSelector = .item, querySelectoring' );
+    equal( filterFoundPckry.items.length, 5, 'filter found' );
   });
 
   test( 'layout', function() {
-    var elem0 = pack1.items[0].element;
-    var elem1 = pack1.items[1].element;
-    var elem2 = pack1.items[2].element;
+    var container = document.querySelector('#layout');
+    var pckry = new Packery( container );
+    var elem0 = pckry.items[0].element;
+    var elem1 = pckry.items[1].element;
+    var elem2 = pckry.items[2].element;
+
     equal( elem0.style.left, '0px', 'first item left' );
     equal( elem0.style.top, '0px', 'first item left' );
     equal( elem1.style.left, '40px', '2nd item, 2nd column' );
     equal( elem1.style.top, '0px', '2nd item top' );
     equal( elem2.style.left, '0px', '3rd item, left' );
     equal( elem2.style.top, '20px', '3rd item, 2nd row' );
-    equal( ex1.style.height, '60px', 'height set' );
+    equal( container.style.height, '60px', 'height set' );
 
     // change size of elems to change layout
     elem0.style.width = '18px';
-    pack1.items[3].element.style.height = '58px';
+    pckry.items[3].element.style.height = '58px';
     var items;
-    pack1.on( 'layoutComplete', function( obj, completeItems ) {
+    pckry.on( 'layoutComplete', function( obj, completeItems ) {
       equal( true, true, 'layoutComplete event did fire' );
-      equal( obj, pack1, 'event-emitted argument matches Packery instance' );
+      equal( obj, pckry, 'event-emitted argument matches Packery instance' );
       equal( completeItems.length, items.length, 'event-emitted items matches layout items length' );
       strictEqual( completeItems[0], items[0], 'event-emitted items has same first item' );
       var len = completeItems.length - 1;
@@ -75,9 +87,9 @@ window.onload = function onDocReady() {
     });
 
     stop();
-    pack1.layout();
-    items = pack1._getLayoutItems( pack1.items );
-    equal( ex1.style.height, '80px', 'height set' );
+    pckry.layout();
+    items = pckry._getLayoutItems( pckry.items );
+    equal( container.style.height, '80px', 'height set' );
   });
 
   function appendRandomSizedItems( container ) {
