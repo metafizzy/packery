@@ -1,5 +1,5 @@
 /**
- * Packery v0.2.5
+ * Packery v0.2.6
  * Bin-packing layout
  * by David DeSandro / Metafizzy
  */
@@ -16,7 +16,7 @@ var Item = _Packery.Item;
 
 // dependencies
 var classie = window.classie;
-var docListener = window.docListener;
+var docReady = window.docReady;
 var EventEmitter = window.EventEmitter;
 var eventie = window.eventie;
 var getSize = window.getSize;
@@ -844,7 +844,7 @@ Packery.data = function( elem ) {
  * allow user to initialize Packery via .js-packery class
  * options are parsed from data-packery-option attribute
  */
-docListener.on( 'ready', function() {
+docReady( function() {
   var elems = document.querySelectorAll('.js-packery');
 
   for ( var i=0, len = elems.length; i < len; i++ ) {
@@ -854,7 +854,7 @@ docListener.on( 'ready', function() {
     try {
       options = attr && JSON.parse( attr );
     } catch ( error ) {
-      // log error, but proceed
+      // log error, do not initialize
       if ( console ) {
         console.error( 'Error parsing data-packery-options on ' +
           elem.nodeName.toLowerCase() + ( elem.id ? '#' + elem.id : '' ) + ': ' +
