@@ -512,8 +512,10 @@ Packery.prototype.spacePlaced = function( elem ) {
 
 // -------------------------- resize -------------------------- //
 
+// enable event handlers for listeners
+// i.e. resize -> onresize
 Packery.prototype.handleEvent = function( event ) {
-  var method = event.type + 'Handler';
+  var method = 'on' + event.type;
   if ( this[ method ] ) {
     this[ method ]( event );
   }
@@ -524,7 +526,7 @@ Packery.prototype.handleEvent = function( event ) {
 // http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
 
 // this fires every resize
-Packery.prototype.resizeHandler = function( event ) {
+Packery.prototype.onresize = function( event ) {
   if ( event.target !== window ) {
     return;
   }

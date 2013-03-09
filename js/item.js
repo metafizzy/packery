@@ -74,8 +74,9 @@ function Item( element, packery ) {
 // inherit EventEmitter
 extend( Item.prototype, EventEmitter.prototype );
 
+// trigger specified handler for event type
 Item.prototype.handleEvent = function( event ) {
-  var method = event.type + 'Handler';
+  var method = 'on' + event.type;
   if ( this[ method ] ) {
     this[ method ]( event );
   }
@@ -216,15 +217,15 @@ Item.prototype._transition = function( style, onTransitionEnd ) {
 
 Item.prototype.transition = Item.prototype[ transitionProperty ? '_transition' : '_nonTransition' ];
 
-Item.prototype.webkitTransitionEndHandler = function( event ) {
-  this.transitionendHandler( event );
+Item.prototype.onwebkitTransitionEnd = function( event ) {
+  this.ontransitionend( event );
 };
 
-Item.prototype.otransitionendHandler = function( event ) {
-  this.transitionendHandler( event );
+Item.prototype.onotransitionend = function( event ) {
+  this.ontransitionend( event );
 };
 
-Item.prototype.transitionendHandler = function( event ) {
+Item.prototype.ontransitionend = function( event ) {
   // console.log('transition end');
   // disregard bubbled events from children
   if ( event.target !== this.element ) {
