@@ -26,6 +26,7 @@ window.onload = function onDocReady() {
     equal( pckry.items.length, 0, 'zero items' );
     equal( pckry.placedElements.length, 0, 'zero placed elements' );
     equal( Packery.data( empty ), pckry, 'data method returns instance' );
+    ok( pckry.isResizeBound, 'isResizeBound' );
   });
 
   test( 'getItems', function() {
