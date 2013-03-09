@@ -1,5 +1,5 @@
 /**
- * Packery v0.2.6
+ * Packery v0.2.7
  * Bin-packing layout
  * by David DeSandro / Metafizzy
  */
@@ -112,7 +112,7 @@ Packery.prototype.options = {
   containerStyle: {
     position: 'relative'
   },
-  isResizable: true,
+  isResizeBound: true,
   transitionDuration: '0.4s'
 };
 
@@ -129,8 +129,8 @@ Packery.prototype._create = function() {
   extend( this.element.style, containerStyle );
 
   // bind resize method
-  if ( this.options.isResizable ) {
-    eventie.bind( window, 'resize', this );
+  if ( this.options.isResizeBound ) {
+    this.bindResize();
   }
 
   // create drag handlers
@@ -521,6 +521,25 @@ Packery.prototype.handleEvent = function( event ) {
   }
 };
 
+/**
+ * Bind layout to window resizing
+ */
+Packery.prototype.bindResize = function() {
+  // bind just one listener
+  if ( this.isResizeBound ) {
+    return;
+  }
+  eventie.bind( window, 'resize', this );
+  this.isResizeBound = true;
+};
+
+/**
+ * Unbind layout to window resizing
+ */
+Packery.prototype.unbindResize = function() {
+  eventie.unbind( window, 'resize', this );
+  this.isResizeBound = false;
+};
 
 // original debounce by John Hann
 // http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
