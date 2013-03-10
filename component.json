@@ -24,6 +24,7 @@
     "qunit": "~1"
   },
   "ignore": [
-    "test/"
+    "test/",
+    "examples/"
   ]
 }
