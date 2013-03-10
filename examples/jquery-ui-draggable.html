@@ -3,55 +3,16 @@
 <head>
   <meta charset="utf-8">
 
-  <title>UI Draggable Packery</title>
+  <title>jQuery UI Draggable Packery</title>
 
-<style>
-.container {
-  width: 500px;
-  margin-bottom: 20px;
-  background: #EEE;
-}
-
-.item {
-  float: left;
-  width: 48px;
-  height: 48px;
-/*  margin: 2px;*/
-  border: 1px solid;
-  background: #ACE;
-}
-
-.item.w2 { width:   98px; }
-.item.h2 { height:  98px; }
-.item.w4 { width:  198px; }
-.item.h4 { height: 198px; }
-
-#ex4 {
-  width: 50%;
-  padding: 10px 20px 30px 40px;
-}
-
-#ex6 {
-  width: 50%;
-  padding: 10px 20px 30px 40px;
-}
-
-.is-dragging,
-.is-positioning-post-drag,
-.ui-draggable-dragging {
-  z-index: 10;
-  background: orange;
-}
-
-
-</style>
+  <link rel="stylesheet" href="examples.css" />
 
 </head>
 <body>
 
   <h1>Packery</h1>
 
-  <div id="ex4" class="container">
+  <div id="ex4" class="container fluid has-padding">
     <div class="item w4"></div>
     <div class="item h4"></div>
     <div class="item w2"></div>
@@ -78,7 +39,7 @@
   </div>
 
 
-  <div id="ex6" class="container"></div>
+  <div id="ex6" class="container fluid has-padding"></div>
 
 <script src="../components/get-style-property/get-style-property.js"></script>
 <script src="../components/get-size/get-size.js"></script>

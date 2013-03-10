@@ -5,34 +5,9 @@
 
   <title>Packery</title>
 
+  <link rel="stylesheet" href="examples.css" />
+
 <style>
-.container {
-  width: 500px;
-  margin-bottom: 20px;
-  background: #EEE;
-}
-
-.item {
-  float: left;
-  width: 44px;
-  height: 44px;
-  margin: 3px;
-  background: #444;
-}
-
-.item.w2 { width:   94px; }
-.item.h2 { height:  94px; }
-.item.w4 { width:  194px; }
-.item.h4 { height: 194px; }
-
-#ex4 {
-  width: 50%;
-  padding: 10px 20px 30px 40px;
-}
-
-#ex5 {
-  width: 50%;
-}
 
 #ex5 .item {
   margin-left: 1%;
@@ -50,11 +25,6 @@
   #ex5 .item.w2 { width: 37.9%; }
   #ex5 .item.w4 { width: 57.9%; }
 
-}
-
-#ex6 {
-  width: 50%;
-  padding: 10px 20px 30px 40px;
 }
 
 .bogey {
@@ -115,7 +85,7 @@
   <div id="ex3" class="container">
   </div>
 
-  <div id="ex4" class="container">
+  <div id="ex4" class="container fluid has-padding">
     <div class="item w4"></div>
     <div class="item h4"></div>
     <div class="item w2"></div>
@@ -141,7 +111,7 @@
     <div class="item h2"></div>
   </div>
 
-  <div id="ex5" class="container">
+  <div id="ex5" class="container fluid">
     <div class="item w4"></div>
     <div class="item h4"></div>
     <div class="item w2"></div>
@@ -167,7 +137,7 @@
     <div class="item h2"></div>
   </div>
 
-  <div id="ex6" class="container">
+  <div id="ex6" class="container fluid has-padding">
     <div class="bogey bogey1"></div>
     <div class="bogey bogey2"></div>
   </div>
