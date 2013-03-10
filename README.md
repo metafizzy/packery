@@ -1,12 +1,24 @@
 # Packery
 
-_Uncanny layout library_
+_Bin-packing layout library_
+
+## Install
 
 Install with [Bower](https://github.com/twitter/bower).
 
 ``` bash
 bower install packery
 ```
+
+## Commercial license
+
+Packery may be used in commercial projects and applications with the one-time purchase of a commercial license. If you are paid to do your job, and part of your job is implementing Packery, a commercial license is required.
+
+Use in non-commercial, personal, or open-source applications is free.
+
+## Initialize
+
+### in JavaScript
 
 ``` js
 var container = document.querySelector('#container');
@@ -15,3 +27,16 @@ var myPackery = new Packery( container, {
 });
 ```
 
+### in HTML
+
+Add a class of `js-packery` to your element. Options can be set in JSON in `data-packery-options`.
+
+``` html
+<div class="js-packery" data-packery-options='{ "itemSelector": ".item" }'>
+  ...
+</div>
+```
+
+---
+
+Copyright (c) 2013 Metafizzy
