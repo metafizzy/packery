@@ -1,7 +1,14 @@
-/**
+/*!
  * Packery v0.2.7
- * Bin-packing layout
- * by David DeSandro / Metafizzy
+ * bin-packing layout library
+ * http://packery.metafizzy.co
+ *
+ * Commercial use requires one-time purchase of a commercial license
+ * http://packery.metafizzy.co/license.html
+ *
+ * Non-commercial use is licensed under the MIT License
+ *
+ * Copyright 2013 Metafizzy
  */
 
 ( function( window ) {
