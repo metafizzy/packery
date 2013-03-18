@@ -1,5 +1,5 @@
 /*!
- * Packery v0.2.7
+ * Packery v0.2.8
  * bin-packing layout library
  * http://packery.metafizzy.co
  *
@@ -509,6 +509,8 @@ Packery.prototype.spacePlaced = function( elem ) {
       x: boundingRect.left - this._boundingLeft,
       y: boundingRect.top - this._boundingTop
     });
+    rect.x -= this.elementSize.borderLeftWidth;
+    rect.y -= this.elementSize.borderTopWidth;
   }
 
   this._setRectSize( elem, rect );

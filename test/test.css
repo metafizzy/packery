@@ -69,6 +69,16 @@
   top: 23px;
 }
 
+#placed-borders {
+  border-left: 10px solid;
+  border-top: 15px solid;
+}
+
+#placed-borders .stamp1 {
+  width: 50px;
+  height: 30px;
+}
+
 .dragger {
   background: green;
 }

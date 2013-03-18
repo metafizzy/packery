@@ -374,6 +374,24 @@ window.onload = function onDocReady() {
     ok( pckry4._isInited, 'bad selector didnt cause error' );
   });
 
+  test( 'placed with borders', function() {
+    var container = document.querySelector('#placed-borders');
+    var pckry = new Packery( container, {
+      itemSelector: '.item',
+      placedElements: '.stamp'
+    });
+
+    var elem0 = pckry.items[0].element;
+    var elem1 = pckry.items[1].element;
+    var elem2 = pckry.items[2].element;
+
+    equal( elem0.style.left, '50px', '1st item left' );
+    equal( elem1.style.left, '50px', '2nd item left' );
+    equal( elem2.style.top, '30px', '3rd item top' );
+
+  });
+
+
   function gimmeAnItemElement() {
     var elem = document.createElement('div');
     elem.className = 'item';
