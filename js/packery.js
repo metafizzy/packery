@@ -723,17 +723,21 @@ Packery.prototype.fit = function( elem, x, y ) {
   if ( !item ) {
     return;
   }
-
+  // place item to get it out of layout
   this.place( item.element );
+  // required for positionPlaceRect
   item.getSize();
   // create place rect cause we might move
   item.placeRect = new Rect();
   // fall back to current position for fitting
   x = x === undefined ? item.rect.x : x;
   y = y === undefined ? item.rect.y : y;
+  // position it best at its destination
   item.positionPlaceRect( x, y );
   item.moveTo( item.placeRect.x, item.placeRect.y );
+  // layout everything else
   this.layout();
+  // return back to regularly scheduled programming
   this.unplace( item.element );
   this.sortItemsByPosition();
   delete item.placeRect;
