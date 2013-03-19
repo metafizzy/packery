@@ -46,6 +46,15 @@
   top: 140px;
 }
 
+#fit-demo {
+  width: 200px;
+}
+
+.item.gigante {
+  width:  150px;
+  height: 100px;
+}
+
 </style>
 
 </head>
@@ -157,12 +166,26 @@
     <div class="item w4"></div>
   </div>
 
+  <div id="fit-demo" class="container">
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item w2"></div>
+    <div class="item h2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+  </div>
+
 <script src="../components/get-style-property/get-style-property.js"></script>
 <script src="../components/get-size/get-size.js"></script>
 <script src="../components/matches-selector/matches-selector.js"></script>
 <script src="../components/eventEmitter/EventEmitter.js"></script>
 <script src="../components/eventie/eventie.js"></script>
 <script src="../components/doc-ready/doc-ready.js"></script>
+<script src="../components/classie/classie.js"></script>
 <script src="../js/rect.js"></script>
 <script src="../js/packer.js"></script>
 <script src="../js/item.js"></script>
@@ -233,6 +256,29 @@ window.onload = function() {
     packery7.layout();
 
   });
+
+  // ----- fit demo ----- //
+
+  ( function() {
+    var container = document.querySelector('#fit-demo');
+    var pckry = new Packery( container );
+
+    eventie.bind( container, 'click', function( event ) {
+      // only care about item
+      var elem = event.target;
+      if ( !classie.has( elem, 'item' ) ) {
+        return;
+      }
+
+      if ( !classie.has( elem, 'gigante') ) {
+        classie.add( elem, 'gigante' );
+        pckry.fit( elem );
+      } else {
+        classie.remove( elem, 'gigante' );
+        pckry.layout();
+      }
+    });
+  })();
 
 };
 </script>

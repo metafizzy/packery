@@ -709,6 +709,36 @@ Packery.prototype.sortItemsByPosition = function() {
   });
 };
 
+/**
+ * Fit item element in its current position
+ * Packery will position elements around it
+ * useful for expanding elements
+ *
+ * @param {Element} elem
+ * @param {Number} x - horizontal destination position, optional
+ * @param {Number} y - vertical destination position, optional
+ */
+Packery.prototype.fit = function( elem, x, y ) {
+  var item = this.getItemFromElement( elem );
+  if ( !item ) {
+    return;
+  }
+
+  this.place( item.element );
+  item.getSize();
+  // create place rect cause we might move
+  item.placeRect = new Rect();
+  // fall back to current position for fitting
+  x = x === undefined ? item.rect.x : x;
+  y = y === undefined ? item.rect.y : y;
+  item.positionPlaceRect( x, y );
+  item.moveTo( item.placeRect.x, item.placeRect.y );
+  this.layout();
+  this.unplace( item.element );
+  this.sortItemsByPosition();
+  delete item.placeRect;
+};
+
 // -------------------------- drag -------------------------- //
 
 /**
