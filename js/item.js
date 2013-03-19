@@ -317,10 +317,11 @@ Item.prototype.dragStart = function() {
     this.element.style[ transformProperty ] = 'none';
   }
   this.getSize();
-  // create drag rect, used for position when dropped
-  this.dragRect = new Rect();
+  // create place rect, used for position when dragged then dropped
+  // or when positioning
+  this.placeRect = new Rect();
   this.needsPositioning = false;
-  this.positionDragRect( this.position.x, this.position.y );
+  this.positionPlaceRect( this.position.x, this.position.y );
   this.isTransitioning = false;
   this.didDrag = false;
 };
@@ -335,32 +336,36 @@ Item.prototype.dragMove = function( x, y ) {
   var packerySize = this.packery.elementSize;
   x -= packerySize.paddingLeft;
   y -= packerySize.paddingTop;
-  this.positionDragRect( x, y );
+  this.positionPlaceRect( x, y );
 };
 
 // position a rect that will occupy space in the packer
-Item.prototype.positionDragRect = function( x, y ) {
-  var packerySize = this.packery.elementSize;
-  var packeryHeight = Math.max( packerySize.innerHeight, this.packery.maxY );
-  // prevent gutter from bumping up height when non-vertical grid
-  if ( !this.packery.rowHeight ) {
-    packeryHeight -= this.packery.gutter;
-  }
-
-  this.dragRect.x = this.getDragRectCoord( x, true, packerySize.innerWidth );
-  this.dragRect.y = this.getDragRectCoord( y, false, packeryHeight );
+Item.prototype.positionPlaceRect = function( x, y ) {
+  this.placeRect.x = this.getPlaceRectCoord( x, true );
+  this.placeRect.y = this.getPlaceRectCoord( y, false );
 };
 
 /**
- * get x/y coordinate for drag rect
+ * get x/y coordinate for place rect
  * @param {Number} coord - x or y
  * @param {Boolean} isX
  * @param {Number} parentsize - size of parent packery
  * @returns {Number} coord - processed x or y
  */
-Item.prototype.getDragRectCoord = function( coord, isX, parentSize ) {
-  var size = this.size[ isX ? 'outerWidth' : 'outerHeight' ];
+Item.prototype.getPlaceRectCoord = function( coord, isX ) {
+  var measure = isX ? 'Width' : 'Height';
+  var size = this.size[ 'outer' + measure ];
   var segment = this.packery[ isX ? 'columnWidth' : 'rowHeight' ];
+  var parentSize = this.packery.elementSize[ 'inner' + measure ];
+
+  // additional parentSize calculations for Y
+  if ( !isX ) {
+    parentSize = Math.max( parentSize, this.packery.maxY );
+    // prevent gutter from bumping up height when non-vertical grid
+    if ( !this.packery.rowHeight ) {
+      parentSize -= this.packery.gutter;
+    }
+  }
 
   if ( segment ) {
     segment += this.packery.gutter;
@@ -382,8 +387,8 @@ Item.prototype.getDragRectCoord = function( coord, isX, parentSize ) {
 
 Item.prototype.dragStop = function() {
   this.getPosition();
-  var isDiffX = this.position.x !== this.dragRect.x;
-  var isDiffY = this.position.y !== this.dragRect.y;
+  var isDiffX = this.position.x !== this.placeRect.x;
+  var isDiffY = this.position.y !== this.placeRect.y;
   // set post-drag positioning flag
   this.needsPositioning = isDiffX || isDiffY;
   // reset flag

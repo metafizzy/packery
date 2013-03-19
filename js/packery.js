@@ -501,8 +501,8 @@ Packery.prototype.spacePlacedElements = function() {
 Packery.prototype.spacePlaced = function( elem ) {
   var item = this.getItemFromElement( elem );
   var rect;
-  if ( item && item.dragRect ) {
-    rect = item.dragRect;
+  if ( item && item.placeRect ) {
+    rect = item.placeRect;
   } else {
     var boundingRect = elem.getBoundingClientRect();
     rect = new Rect({
@@ -765,8 +765,8 @@ Packery.prototype.itemDragStop = function( elem ) {
   var dropX, dropY, itemDidDrag;
   if ( item ) {
     // copy over vars, they're reset by dragStop
-    dropX = item.dragRect.x;
-    dropY = item.dragRect.y;
+    dropX = item.placeRect.x;
+    dropY = item.placeRect.y;
     itemDidDrag = item.didDrag;
     item.dragStop();
   }
@@ -792,7 +792,7 @@ Packery.prototype.itemDragStop = function( elem ) {
 
     if ( item ) {
       classie.remove( item.element, 'is-positioning-post-drag' );
-      delete item.dragRect;
+      delete item.placeRect;
     }
 
     _this.unplace( elem );
