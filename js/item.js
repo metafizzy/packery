@@ -66,6 +66,8 @@ function Item( element, packery ) {
   };
 
   this.rect = new Rect();
+  // rect used for placing, in drag or Packery.fit()
+  this.placeRect = new Rect();
 
   // style initial style
   this.element.style.position = 'absolute';
@@ -319,7 +321,7 @@ Item.prototype.dragStart = function() {
   this.getSize();
   // create place rect, used for position when dragged then dropped
   // or when positioning
-  this.placeRect = new Rect();
+  this.isPlacing = true;
   this.needsPositioning = false;
   this.positionPlaceRect( this.position.x, this.position.y );
   this.isTransitioning = false;
@@ -393,6 +395,7 @@ Item.prototype.dragStop = function() {
   this.needsPositioning = isDiffX || isDiffY;
   // reset flag
   this.didDrag = false;
+  this.isPlacing = false;
 };
 
 // --------------------------  -------------------------- //

@@ -501,7 +501,7 @@ Packery.prototype.spacePlacedElements = function() {
 Packery.prototype.spacePlaced = function( elem ) {
   var item = this.getItemFromElement( elem );
   var rect;
-  if ( item && item.placeRect ) {
+  if ( item && item.isPlacing ) {
     rect = item.placeRect;
   } else {
     var boundingRect = elem.getBoundingClientRect();
@@ -727,8 +727,8 @@ Packery.prototype.fit = function( elem, x, y ) {
   this.place( item.element );
   // required for positionPlaceRect
   item.getSize();
-  // create place rect cause we might move
-  item.placeRect = new Rect();
+  // set placing flag
+  item.isPlacing = true;
   // fall back to current position for fitting
   x = x === undefined ? item.rect.x : x;
   y = y === undefined ? item.rect.y : y;
@@ -746,7 +746,8 @@ Packery.prototype.fit = function( elem, x, y ) {
   // return back to regularly scheduled programming
   this.unplace( item.element );
   this.sortItemsByPosition();
-  delete item.placeRect;
+  // un set placing flag, back to normal
+  item.isPlacing = false;
 };
 
 // -------------------------- drag -------------------------- //
@@ -832,7 +833,6 @@ Packery.prototype.itemDragStop = function( elem ) {
 
     if ( item ) {
       classie.remove( item.element, 'is-positioning-post-drag' );
-      delete item.placeRect;
     }
 
     _this.unplace( elem );
