@@ -784,9 +784,7 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
     delete _this.dragTimeout;
   }
 
-  if ( this.dragTimeout ) {
-    clearTimeout( this.dragTimeout );
-  }
+  this.clearDragTimeout();
 
   this.dragTimeout = setTimeout( delayed, 40 );
 };
