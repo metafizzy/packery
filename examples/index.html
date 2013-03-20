@@ -50,7 +50,14 @@
   width: 200px;
 }
 
-.item.gigante {
+/*
+#fit-demo .item {
+  width: 40px;
+  height: 40px;
+}
+*/
+
+#fit-demo .item.gigante {
   width:  150px;
   height: 100px;
 }
@@ -262,6 +269,10 @@ window.onload = function() {
   ( function() {
     var container = document.querySelector('#fit-demo');
     var pckry = new Packery( container );
+
+    pckry.on( 'fitComplete', function( pckryInstance, item ) {
+      console.log('fit was completed ', item );
+    });
 
     eventie.bind( container, 'click', function( event ) {
       // only care about item

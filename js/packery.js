@@ -734,6 +734,12 @@ Packery.prototype.fit = function( elem, x, y ) {
   y = y === undefined ? item.rect.y : y;
   // position it best at its destination
   item.positionPlaceRect( x, y );
+  // emit event when item is fit/layout
+  var _this = this;
+  item.on( 'layout', function() {
+    _this.emitEvent( 'fitComplete', [ _this, item ] );
+    return true;
+  });
   item.moveTo( item.placeRect.x, item.placeRect.y );
   // layout everything else
   this.layout();
