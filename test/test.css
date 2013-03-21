@@ -83,3 +83,8 @@
 .dragger {
   background: green;
 }
+
+#fitting {
+  position: absolute;
+  top: 0;
+}

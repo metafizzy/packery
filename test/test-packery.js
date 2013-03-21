@@ -526,6 +526,97 @@ window.onload = function onDocReady() {
 
   });
 
+  // ----- fitting ----- //
+
+
+  test( '.fit()', function() {
+    var container = document.querySelector('#fitting');
+    var pckry = new Packery( container, { containerStyle: null } );
+    var elem0 = container.querySelector('.i0');
+    var elem1 = container.querySelector('.i1');
+    var elem2 = container.querySelector('.i2');
+    var elem3 = container.querySelector('.i3');
+    var item3 = pckry.getItemFromElement( elem3 );
+    // expand item3
+    elem3.style.width = '48px';
+    elem3.style.height = '28px';
+    elem3.style.background = 'blue';
+
+    // quickie async
+    var isFit = false;
+    var isLaidOut = false;
+    function ready1() {
+      if ( !isFit || !isLaidOut ) {
+        return;
+      }
+      equal( elem1.style.left, '0px', 'elem1.style.left = 0' );
+      equal( elem1.style.top, '20px', 'elem1.style.top = 20px' );
+      equal( elem2.style.left, '20px', 'elem2.style.left = 20px' );
+      equal( elem2.style.top, '30px', 'elem2.style.top = 30px' );
+      isFit = false;
+      isLaidOut = false;
+      // trigger next thing
+      fit2();
+      // setTimeout( , 20 );
+    }
+
+    pckry.on( 'fitComplete', function( pckryInstance, item ) {
+      ok( true, 'fitComplete event emitted' );
+      equal( pckryInstance, pckry, 'packery instance returned' );
+      equal( item, item3, 'item argument returned' );
+      equal( elem3.style.left, '30px', 'elem3.style.left = 30px' );
+      isFit = true;
+      ready1();
+      return true;
+    });
+
+    pckry.on( 'layoutComplete', function() {
+      ok( true, 'layoutComplete event emitted' );
+      isLaidOut = true;
+      ready1();
+      return true;
+    });
+
+    // fit it
+    stop();
+    pckry.fit( elem3 );
+
+    function ready2() {
+      if ( !isFit || !isLaidOut ) {
+        return;
+      }
+      isFit = false;
+      isLaidOut = false;
+      // trigger next thing
+      // setTimeout( fit3, 20 );
+      start();
+    }
+
+    function fit2() {
+      elem3.style.width = '18px';
+      elem3.style.height = '18px';
+
+      pckry.on( 'fitComplete', function( pckryInstance, item ) {
+        ok( true, 'fitComplete event emitted' );
+        equal( elem3.style.left, '40px', 'elem3.style.left = 40px' );
+        equal( elem3.style.top, '20px', 'elem3.style.left = 20px' );
+        isFit = true;
+        ready2();
+        return true;
+      });
+
+      pckry.on( 'layoutComplete', function() {
+        ok( true, 'layoutComplete event emitted' );
+        isLaidOut = true;
+        ready2();
+        return true;
+      });
+
+      pckry.fit( elem3, 40, 20 );
+    }
+
+  });
+
   // ----- declarative ----- //
 
   test( 'declarative', function() {
