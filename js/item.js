@@ -208,8 +208,13 @@ Item.prototype._transition = function( style, onTransitionEnd ) {
 
   this.element.addEventListener( transitionEndEvent, this, false );
 
-  // transition end callback
-  this.onTransitionEnd = onTransitionEnd;
+  // bind callback to transition end
+  if ( onTransitionEnd ) {
+    this.on( 'transitionEnd', function( _this ) {
+      onTransitionEnd.call( _this );
+      return true; // bind once
+    });
+  }
 
   // set transition styles
   this.css( style );
@@ -255,6 +260,7 @@ Item.prototype.ontransitionend = function( event ) {
 
   this.isTransitioning = false;
 
+  this.emitEvent( 'transitionEnd', [ this ] );
 };
 
 Item.prototype.removeTransitionStyles = function() {

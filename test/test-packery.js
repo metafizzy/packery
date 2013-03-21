@@ -109,6 +109,47 @@ window.onload = function onDocReady() {
     equal( elem4.style.top, '60px', '5th item top' );
   });
 
+  // ----- consecutive ----- //
+
+  test( 'consecutive', function() {
+    var container = document.querySelector('#consecutive');
+    var pckry = new Packery( container, { containerStyle: null } );
+
+    var i0 = container.querySelector('.i0');
+    var i1 = container.querySelector('.i1');
+    var i2 = container.querySelector('.i2');
+    var i3 = container.querySelector('.i3');
+    i1.style.width = '28px';
+    i1.style.height = '28px';
+    i1.style.background = 'blue';
+
+    pckry.on( 'layoutComplete', function() {
+      ok( i1 );
+
+      fit1();
+
+
+      return true;
+    });
+
+    stop();
+    pckry.layout();
+
+    function fit1() {
+      pckry.on( 'layoutComplete', function() {
+        start();
+      });
+      i0.style.width = '38px';
+      i0.style.height = '38px';
+      i0.style.background = 'orange';
+      pckry.layout();
+      // pckry.fit( i1, 10, 10 );
+    }
+
+  });
+
+  // -----  ----- //
+
   function appendRandomSizedItems( container ) {
     var frag = document.createDocumentFragment();
     var item;
