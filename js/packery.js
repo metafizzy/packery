@@ -831,6 +831,7 @@ Packery.prototype.itemDragStop = function( elem ) {
 
     if ( item ) {
       classie.remove( item.element, 'is-positioning-post-drag' );
+      item.isPlacing = false;
     }
 
     _this.unplace( elem );

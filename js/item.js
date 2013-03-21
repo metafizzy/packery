@@ -395,7 +395,6 @@ Item.prototype.dragStop = function() {
   this.needsPositioning = isDiffX || isDiffY;
   // reset flag
   this.didDrag = false;
-  this.isPlacing = false;
 };
 
 // --------------------------  -------------------------- //
