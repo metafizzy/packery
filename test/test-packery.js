@@ -10,7 +10,7 @@ module('Packery');
 
 test( 'basics', function() {
   equal( typeof Packery === 'function', true, 'Packery is a function' );
-
+  // TODO pckry should be null or something
   var pckry = new Packery();
   // console.log( pckry, typeof pckry );
   ok( !pckry._isInited, 'packery not inited' );
@@ -113,22 +113,20 @@ window.onload = function onDocReady() {
 
   test( 'consecutive', function() {
     var container = document.querySelector('#consecutive');
-    var pckry = new Packery( container, { containerStyle: null } );
+    var pckry = new Packery( container );
 
     var i0 = container.querySelector('.i0');
     var i1 = container.querySelector('.i1');
-    var i2 = container.querySelector('.i2');
     var i3 = container.querySelector('.i3');
     i1.style.width = '28px';
     i1.style.height = '28px';
     i1.style.background = 'blue';
 
     pckry.on( 'layoutComplete', function() {
-      ok( i1 );
-
+      ok( true, 'layoutComplete triggered' );
+      equal( i3.style.left, '0px', 'i3.style.left' );
+      equal( i3.style.top, '20px', 'i3.style.top' );
       fit1();
-
-
       return true;
     });
 
@@ -137,6 +135,8 @@ window.onload = function onDocReady() {
 
     function fit1() {
       pckry.on( 'layoutComplete', function() {
+        equal( i3.style.left, '60px', 'i3.style.left' );
+        equal( i3.style.top, '30px', 'i3.style.top' );
         start();
       });
       i0.style.width = '38px';
@@ -511,14 +511,29 @@ window.onload = function onDocReady() {
     stop();
     simulateDrag( dragElem, pckry, 35, 15 );
 
+    var isDragged = false;
+    var isLaidOut = false;
+
+    function ready1() {
+      if ( !isDragged || !isLaidOut ) {
+        return;
+      }
+      equal( pckry.items[3].element, dragElem, 'dragged elem in now 4th in items' );
+      dragWithGrid();
+    }
+
     function dragOutside() {
       pckry.on( 'dragItemPositioned', function() {
         equal( true, true, 'dragItemPositioned event did trigger' );
         equal( dragElem.style.left, '60px', 'dragged 3rd item x, aligned inside container' );
         equal( dragElem.style.top, '0px', 'dragged 3rd item y, aligned inside container' );
-        start();
-        stop();
-        dragWithGrid();
+        isDragged = true;
+        ready1();
+        return true; // bind once
+      });
+      pckry.on( 'layoutComplete', function() {
+        isLaidOut = true;
+        ready1();
         return true; // bind once
       });
       // stop();
@@ -526,12 +541,12 @@ window.onload = function onDocReady() {
     }
 
     function dragWithGrid() {
-      equal( pckry.items[3].element, dragElem, 'dragged elem in now 4th in items' );
       pckry.options.columnWidth = 25;
       pckry.options.rowHeight = 25;
       pckry._getMeasurements();
       pckry.on( 'dragItemPositioned', function() {
         equal( dragElem.style.left, '25px', 'dragged 3rd item x, aligned to grid' );
+        // TODO, this should be 50px
         // equal( dragElem.style.top, '25px', 'dragged 3rd item y, aligned to grid' );
         start();
         stop();
@@ -558,8 +573,8 @@ window.onload = function onDocReady() {
 
   test( '.fit()', function() {
     var container = document.querySelector('#fitting');
-    var pckry = new Packery( container, { containerStyle: null } );
-    var elem0 = container.querySelector('.i0');
+    var pckry = new Packery( container );
+
     var elem1 = container.querySelector('.i1');
     var elem2 = container.querySelector('.i2');
     var elem3 = container.querySelector('.i3');
@@ -623,7 +638,7 @@ window.onload = function onDocReady() {
       elem3.style.width = '18px';
       elem3.style.height = '18px';
 
-      pckry.on( 'fitComplete', function( pckryInstance, item ) {
+      pckry.on( 'fitComplete', function() {
         ok( true, 'fitComplete event emitted' );
         equal( elem3.style.left, '40px', 'elem3.style.left = 40px' );
         equal( elem3.style.top, '20px', 'elem3.style.left = 20px' );
