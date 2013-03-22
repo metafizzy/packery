@@ -208,7 +208,7 @@ window.onload = function onDocReady() {
     pckry.options.rowHeight = gridSizer;
     pckry.on( 'layoutComplete', function() {
       checkPackeryGrid( pckry );
-      setTimeout( setGutter, 20 );
+      setGutter();
       return true; // bind once
     });
     pckry.layout();
@@ -220,7 +220,7 @@ window.onload = function onDocReady() {
       pckry.options.gutter = container.querySelector('.gutter-sizer');
       pckry.on( 'layoutComplete', function() {
         checkPackeryGrid( pckry );
-        setTimeout( setPercentageGrid, 20 );
+        setPercentageGrid();
         return true; // bind once
       });
       pckry.layout();
@@ -263,39 +263,25 @@ window.onload = function onDocReady() {
     var container = document.querySelector('#container-size');
     var pckry = new Packery( container );
     equal( container.style.height, '40px', 'default height' );
+
     pckry.options.gutter = 4;
     pckry._getMeasurements();
-    pckry.on( 'layoutComplete', function() {
-      setTimeout( addPaddingBorders, 20 );
-      return true; // bind once
-    });
     pckry.layout();
     equal( container.style.height, '40px', 'added gutter, height same' );
-    stop();
 
-    function addPaddingBorders() {
-      container.style.padding = '1px 2px 3px 4px';
-      container.style.borderStyle = 'solid';
-      container.style.borderWidth = '1px 2px 3px 4px';
-      pckry.on( 'layoutComplete', function() {
-        setTimeout( doBorderBox, 20 );
-        return true; // bind once
-      });
-      pckry.layout();
-      equal( container.style.height, '40px', 'add padding, height same' );
-    }
+    // addPaddingBorders() {
+    container.style.padding = '1px 2px 3px 4px';
+    container.style.borderStyle = 'solid';
+    container.style.borderWidth = '1px 2px 3px 4px';
+    pckry.layout();
+    equal( container.style.height, '40px', 'add padding, height same' );
 
-    function doBorderBox() {
-      container.style.webkitBoxSizing = 'border-box';
-      container.style.mozBoxSizing = 'border-box';
-      container.style.boxSizing = 'border-box';
-      pckry.on( 'layoutComplete', function() {
-        start();
-        return true; // bind once
-      });
-      pckry.layout();
-      equal( container.style.height, '48px', 'border-box, height + padding + border' );
-    }
+    // border box
+    container.style.webkitBoxSizing = 'border-box';
+    container.style.mozBoxSizing = 'border-box';
+    container.style.boxSizing = 'border-box';
+    pckry.layout();
+    equal( container.style.height, '48px', 'border-box, height + padding + border' );
   });
 
   test( 'remove', function() {
@@ -519,7 +505,7 @@ window.onload = function onDocReady() {
       start();
       stop();
       // trigger the next thing
-      setTimeout( dragOutside, 20 );
+      dragOutside();
       return true; // bind once
     });
     stop();
@@ -532,7 +518,7 @@ window.onload = function onDocReady() {
         equal( dragElem.style.top, '0px', 'dragged 3rd item y, aligned inside container' );
         start();
         stop();
-        setTimeout( dragWithGrid, 20 );
+        dragWithGrid();
         return true; // bind once
       });
       // stop();
@@ -549,7 +535,7 @@ window.onload = function onDocReady() {
         // equal( dragElem.style.top, '25px', 'dragged 3rd item y, aligned to grid' );
         start();
         stop();
-        setTimeout( dragOutsideWithGrid, 20 );
+        dragOutsideWithGrid();
         return true; // bind one
       });
       simulateDrag( dragElem, pckry, 35, 160 );
