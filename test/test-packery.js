@@ -547,7 +547,7 @@ window.onload = function onDocReady() {
       pckry.on( 'dragItemPositioned', function() {
         equal( dragElem.style.left, '25px', 'dragged 3rd item x, aligned to grid' );
         // TODO, this should be 50px
-        // equal( dragElem.style.top, '25px', 'dragged 3rd item y, aligned to grid' );
+        equal( dragElem.style.top, '50px', 'dragged 3rd item y, aligned to grid' );
         start();
         stop();
         dragOutsideWithGrid();
@@ -569,7 +569,6 @@ window.onload = function onDocReady() {
   });
 
   // ----- fitting ----- //
-
 
   test( '.fit()', function() {
     var container = document.querySelector('#fitting');
@@ -631,7 +630,7 @@ window.onload = function onDocReady() {
       isLaidOut = false;
       // trigger next thing
       // setTimeout( fit3, 20 );
-      start();
+      fit3();
     }
 
     function fit2() {
@@ -641,7 +640,7 @@ window.onload = function onDocReady() {
       pckry.on( 'fitComplete', function() {
         ok( true, 'fitComplete event emitted' );
         equal( elem3.style.left, '40px', 'elem3.style.left = 40px' );
-        equal( elem3.style.top, '20px', 'elem3.style.left = 20px' );
+        equal( elem3.style.top, '20px', 'elem3.style.top = 20px' );
         isFit = true;
         ready2();
         return true;
@@ -655,6 +654,21 @@ window.onload = function onDocReady() {
       });
 
       pckry.fit( elem3, 40, 20 );
+    }
+
+    // fit with columnWidth and rowHeight
+    function fit3() {
+      pckry.options.columnWidth = 30;
+      pckry.options.rowHeight = 30;
+
+      pckry.on ( 'fitComplete', function() {
+        ok( true, 'fitComplete event emitted' );
+        equal( elem3.style.left, '30px', 'with columnWidth, elem3.style.left = 30px' );
+        equal( elem3.style.top, '0px', 'with rowHeight, elem3.style.top = 0px' );
+        start();
+      });
+
+      pckry.fit( elem3 );
     }
 
   });
