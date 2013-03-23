@@ -1,5 +1,5 @@
 /*!
- * Packery v0.2.9
+ * Packery v0.2.10
  * bin-packing layout library
  * http://packery.metafizzy.co
  *
@@ -32,6 +32,7 @@ var matchesSelector = window.matchesSelector;
 // ----- vars ----- //
 
 var console = window.console;
+var jQuery = window.jQuery;
 
 // -------------------------- helpers -------------------------- //
 
@@ -935,6 +936,13 @@ docReady( function() {
     new Packery( elem, options );
   }
 });
+
+// -------------------------- jQuery bridge -------------------------- //
+
+// make into jQuery plugin
+if ( jQuery && jQuery.bridget ) {
+  jQuery.bridget( 'packery', Packery );
+}
 
 // -------------------------- transport -------------------------- //
 

@@ -23,7 +23,7 @@
 
 <!-- placed draggable item should be on top when released -->
 
-jQuery plugin-ability (bridget?)
+<!-- jQuery plugin-ability (bridget?) -->
 
 <!-- animation
 1. set transform to new destination
@@ -38,6 +38,11 @@ you can drag an item on to a previous dragged item while that previous dragged i
 <!-- IE dragging, try dragging with transitions disabled -->
 
 `dragWithGrid` test for Y position
+
+<!-- getter methods don't work as jQuery plugin. -->
+
+    $('#elem).packery('getItemElements');
+    // returns $elem, not the item elements
 
 ## options
 
@@ -63,14 +68,14 @@ add
 
 <!-- event for drag item position ended -->
 
-better naming of methods for Draggabilly
+<!-- better naming of methods for Draggabilly
 dragStart
 dragMove
 dragStop
 
 dragStart
 dragMove
-dragEnd
+dragEnd -->
 
 <!-- refactor onItemLayout and onItemRemove -->
 

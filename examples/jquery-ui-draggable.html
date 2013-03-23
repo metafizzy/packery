@@ -5,7 +5,7 @@
 
   <title>jQuery UI Draggable</title>
 
-  <link rel="stylesheet" href="examples.css" />
+  <link rel="stylesheet" href="css/examples.css" />
 
 </head>
 <body>
@@ -48,46 +48,50 @@
 <script src="../components/eventEmitter/EventEmitter.js"></script>
 <script src="../components/eventie/eventie.js"></script>
 <script src="../components/doc-ready/doc-ready.js"></script>
-<script src="../components/jquery/jquery.js"></script>
+<script src="../components/jquery/jquery.min.js"></script>
 <script src="../components/jquery-ui-draggable/jquery-ui-draggable.js"></script>
+<script src="../components/jquery-bridget/jquery.bridget.js"></script>
 <script src="../js/rect.js"></script>
 <script src="../js/packer.js"></script>
 <script src="../js/item.js"></script>
 <script src="../js/packery.js"></script>
-
 <script src="examples.js"></script>
 <script>
+$( function() {
 
-window.onload = function() {
+  // ----- grid ----- //
 
-  var ex4 = document.getElementById('ex4');
-  var packery4 = new Packery( ex4, {
+  var $ex4 = $('#ex4');
+  $ex4.packery({
     columnWidth: 50,
     rowHeight: 50,
     transitionDuration: '1.6s'
   });
 
-  // packery4.on( 'layoutComplete', function( packery ) {
-  //   console.log( 'completed layouts', packery.layoutCount );
-  // });
+  // get item elements and make them draggaable
+  var itemElems = $ex4.packery('getItemElements');
+  var $itemElems = $( itemElems ).draggable();
+  $ex4.packery( 'bindUIDraggableEvents', $itemElems );
 
-  var ex6 = document.getElementById('ex6');
-  appendRandomSizedItems( ex6 );
-  var packery6 = new Packery( ex6, {
+  $ex4.packery( 'on',  'layoutComplete', function( packery ) {
+    console.log('completed layout');
+  });
+
+  // ----- random sized ----- //
+
+  var $ex6 = $('#ex6');
+  appendRandomSizedItems( $ex6[0] );
+  $ex6.packery({
     itemSelector: '.item',
     transitionDuration: '1.6s'
   });
 
-  // bind jQuery UI Draggable
-  var itemElems = packery4.getItemElements();
-  var $itemElems = $( itemElems ).draggable();
-  packery4.bindUIDraggableEvents( $itemElems );
-
-  itemElems = packery6.getItemElements();
+  // get item elements and make them draggaable
+  itemElems = $ex6.packery('getItemElements');
   $itemElems = $( itemElems ).draggable();
-  packery6.bindUIDraggableEvents( $itemElems );
+  $ex6.packery( 'bindUIDraggableEvents', $itemElems );
 
-};
+});
 </script>
 
 </body>

@@ -1,0 +1,298 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Packery</title>
+
+  <link rel="stylesheet" href="examples.css" />
+  <link rel="stylesheet" href="basics.css" />
+<style>
+
+#ex5 .item {
+  margin-left: 1%;
+  margin-right: 1%;
+  width: 7.9%;
+}
+
+#ex5 .item.w2 { width: 17.9%; }
+#ex5 .item.w4 { width: 37.9%; }
+
+@media ( max-width: 800px ) {
+  body { background: red ;}
+
+  #ex5 .item    { width: 17.9%; }
+  #ex5 .item.w2 { width: 37.9%; }
+  #ex5 .item.w4 { width: 57.9%; }
+
+}
+
+.bogey {
+  background: red;
+  position: absolute;
+}
+
+#ex6 .bogey1 {
+  width: 30%;
+  height: 140px;
+  left: 20%;
+  top: 20px;
+}
+
+#ex6 .bogey2 {
+  width: 140px;
+  height: 180px;
+  right: 20px;
+  top: 140px;
+}
+
+#fit-demo {
+  width: 200px;
+}
+
+/*
+#fit-demo .item {
+  width: 40px;
+  height: 40px;
+}
+*/
+
+#fit-demo .item.gigante {
+  width:  150px;
+  height: 100px;
+}
+
+</style>
+
+</head>
+<body>
+
+  <h1>Packery</h1>
+
+  <div id="ex1" class="container">
+    <div class="item w4"></div>
+    <div class="item h4"></div>
+    <div class="item w2"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+    <div class="item w4"></div>
+    <div class="item w2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item w2 h2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item w4"></div>
+    <div class="item"></div>
+    <div class="item w2"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+  </div>
+
+  <div id="ex2" class="container">
+  </div>
+
+  <div id="ex3" class="container">
+  </div>
+
+  <div id="ex4" class="container fluid has-padding">
+    <div class="item w4"></div>
+    <div class="item h4"></div>
+    <div class="item w2"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+    <div class="item w4"></div>
+    <div class="item w2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item w2 h2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item w4"></div>
+    <div class="item"></div>
+    <div class="item w2"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+  </div>
+
+  <div id="ex5" class="container fluid">
+    <div class="item w4"></div>
+    <div class="item h4"></div>
+    <div class="item w2"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+    <div class="item w4"></div>
+    <div class="item w2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item w2 h2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item w4"></div>
+    <div class="item"></div>
+    <div class="item w2"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+  </div>
+
+  <div id="ex6" class="container fluid has-padding">
+    <div class="bogey bogey1"></div>
+    <div class="bogey bogey2"></div>
+  </div>
+
+
+  <p><button id="add-to-7">Add items</button></p>
+
+  <div id="ex7" class="container">
+    <div class="item w2"></div>
+    <div class="item h4"></div>
+    <div class="item w2"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+    <div class="item w4"></div>
+    <div class="item w4"></div>
+    <div class="item w4"></div>
+  </div>
+
+  <div id="fit-demo" class="container">
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item w2"></div>
+    <div class="item h2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+  </div>
+
+<script src="../components/get-style-property/get-style-property.js"></script>
+<script src="../components/get-size/get-size.js"></script>
+<script src="../components/matches-selector/matches-selector.js"></script>
+<script src="../components/eventEmitter/EventEmitter.js"></script>
+<script src="../components/eventie/eventie.js"></script>
+<script src="../components/doc-ready/doc-ready.js"></script>
+<script src="../components/classie/classie.js"></script>
+<script src="../js/rect.js"></script>
+<script src="../js/packer.js"></script>
+<script src="../js/item.js"></script>
+<script src="../js/packery.js"></script>
+
+<script src="examples.js"></script>
+<script>
+
+window.onload = function() {
+  var ex1 = document.getElementById('ex1');
+  var packery1 = new Packery( ex1 );
+
+  var ex2 = document.getElementById('ex2');
+  appendRandomSizedItems( ex2 );
+  var packery2 = new Packery( ex2 );
+
+  var ex3 = document.getElementById('ex3');
+  appendRandomSizedItems( ex3 );
+  var packery3 = new Packery( ex3, {
+    columnWidth: 50,
+    rowHeight: 50
+  });
+
+  var ex4 = document.getElementById('ex4');
+  var packery4 = new Packery( ex4 );
+
+  var ex5 = document.getElementById('ex5');
+  var packery5 = new Packery( ex5 );
+
+  var ex6 = document.getElementById('ex6');
+  appendRandomSizedItems( ex6 );
+  var packery6 = new Packery( ex6, {
+    itemSelector: '.item',
+    placedElements: ex6.querySelectorAll('.bogey')
+  });
+
+  var ex7 = document.getElementById('ex7');
+  var packery7 = window.packery7 = new Packery( ex7 );
+
+  var add7Button = document.getElementById('add-to-7');
+
+  add7Button.addEventListener( 'click', function( event ) {
+    var fragment = document.createDocumentFragment();
+    var items = [];
+    for ( var i=0; i < 3; i++ ) {
+      var item = document.createElement('div');
+      var wRand = Math.random();
+      var widthClass = wRand > 0.85 ? 'w4' :
+        wRand > 0.7 ? 'w2' : '';
+      var hRand = Math.random();
+      var heightClass = hRand > 0.85 ? 'h4' :
+        hRand > 0.7 ? 'h2' : '';
+      item.className = 'item ' + widthClass + ' ' + heightClass;
+      fragment.appendChild( item );
+      items.push( item )
+    }
+    ex7.appendChild( fragment );
+    packery7.appended( items );
+  });
+
+  ex7.addEventListener( 'click', function( event ) {
+    var elem = event.target;
+    if ( elem.className.indexOf('item') === -1 ) {
+      return;
+    }
+
+    packery7.remove( elem );
+    packery7.layout();
+
+  });
+
+  // ----- fit demo ----- //
+
+  ( function() {
+    var container = document.querySelector('#fit-demo');
+    var pckry = new Packery( container );
+
+    pckry.on( 'fitComplete', function( pckryInstance, item ) {
+      console.log('fit was completed ', item );
+    });
+
+    eventie.bind( container, 'click', function( event ) {
+      // only care about item
+      var elem = event.target;
+      if ( !classie.has( elem, 'item' ) ) {
+        return;
+      }
+
+      if ( !classie.has( elem, 'gigante') ) {
+        classie.add( elem, 'gigante' );
+        pckry.fit( elem );
+      } else {
+        classie.remove( elem, 'gigante' );
+        pckry.layout();
+      }
+    });
+  })();
+
+};
+</script>
+
+</body>
+</html>

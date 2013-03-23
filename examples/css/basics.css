@@ -1,0 +1,53 @@
+
+#ex5 .item {
+  margin-left: 1%;
+  margin-right: 1%;
+  width: 7.9%;
+}
+
+#ex5 .item.w2 { width: 17.9%; }
+#ex5 .item.w4 { width: 37.9%; }
+
+@media ( max-width: 800px ) {
+  body { background: red ;}
+
+  #ex5 .item    { width: 17.9%; }
+  #ex5 .item.w2 { width: 37.9%; }
+  #ex5 .item.w4 { width: 57.9%; }
+
+}
+
+.bogey {
+  background: red;
+  position: absolute;
+}
+
+#ex6 .bogey1 {
+  width: 30%;
+  height: 140px;
+  left: 20%;
+  top: 20px;
+}
+
+#ex6 .bogey2 {
+  width: 140px;
+  height: 180px;
+  right: 20px;
+  top: 140px;
+}
+
+#fit-demo {
+  width: 200px;
+}
+
+/*
+#fit-demo .item {
+  width: 40px;
+  height: 40px;
+}
+*/
+
+#fit-demo .item.gigante {
+  width:  150px;
+  height: 100px;
+}
