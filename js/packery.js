@@ -143,14 +143,14 @@ Packery.prototype._create = function() {
   // create drag handlers
   var _this = this;
   this.handleDraggabilly = {
-    start: function handleDraggabillyStart( event, pointer, draggie ) {
+    dragStart: function( event, pointer, draggie ) {
       _this.itemDragStart( draggie.element );
     },
-    drag: function handleDraggabillyDrag( event, pointer, draggie ) {
+    dragMove: function( event, pointer, draggie ) {
       _this.itemDragMove( draggie.element, draggie.position.x, draggie.position.y );
     },
-    stop: function handleDraggabillyStop( event, pointer, draggie ) {
-      _this.itemDragStop( draggie.element );
+    dragEnd: function( event, pointer, draggie ) {
+      _this.itemDragEnd( draggie.element );
     }
   };
 
@@ -162,7 +162,7 @@ Packery.prototype._create = function() {
       _this.itemDragMove( event.currentTarget, ui.position.left, ui.position.top );
     },
     stop: function handleUIDraggableStop( event ) {
-      _this.itemDragStop( event.currentTarget );
+      _this.itemDragEnd( event.currentTarget );
     }
   };
 
@@ -799,7 +799,7 @@ Packery.prototype.clearDragTimeout = function() {
  * handle an item drag end event
  * @param {Element} elem
  */
-Packery.prototype.itemDragStop = function( elem ) {
+Packery.prototype.itemDragEnd = function( elem ) {
   var item = this.getItemFromElement( elem );
   var dropX, dropY, itemDidDrag;
   if ( item ) {
@@ -861,9 +861,9 @@ Packery.prototype.itemDragStop = function( elem ) {
  * @param {Draggabilly} draggie
  */
 Packery.prototype.bindDraggabillyEvents = function( draggie ) {
-  draggie.on( 'start', this.handleDraggabilly.start );
-  draggie.on( 'drag', this.handleDraggabilly.drag );
-  draggie.on( 'stop', this.handleDraggabilly.stop );
+  draggie.on( 'dragStart', this.handleDraggabilly.dragStart );
+  draggie.on( 'dragMove', this.handleDraggabilly.dragMove );
+  draggie.on( 'dragEnd', this.handleDraggabilly.dragEnd );
 };
 
 /**

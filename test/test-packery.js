@@ -483,7 +483,7 @@ window.onload = function onDocReady() {
     elem.style.left = x + 'px';
     elem.style.top  = y + 'px';
     packery.itemDragMove( elem, x, y );
-    packery.itemDragStop( elem );
+    packery.itemDragEnd( elem );
   }
 
   test( 'draggabilly 1', function() {
