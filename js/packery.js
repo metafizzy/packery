@@ -31,6 +31,7 @@ var matchesSelector = window.matchesSelector;
 
 // ----- vars ----- //
 
+var document = window.document;
 var console = window.console;
 var jQuery = window.jQuery;
 
@@ -571,11 +572,7 @@ Packery.prototype.unbindResize = function() {
 // http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
 
 // this fires every resize
-Packery.prototype.onresize = function( event ) {
-  if ( event.target !== window ) {
-    return;
-  }
-
+Packery.prototype.onresize = function() {
   if ( this.resizeTimeout ) {
     clearTimeout( this.resizeTimeout );
   }
