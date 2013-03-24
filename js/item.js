@@ -347,20 +347,25 @@ Item.prototype.dragMove = function( x, y ) {
   this.positionPlaceRect( x, y );
 };
 
-// position a rect that will occupy space in the packer
-Item.prototype.positionPlaceRect = function( x, y ) {
+/**
+ * position a rect that will occupy space in the packer
+ * @param {Number} x
+ * @param {Number} y
+ * @param {Boolean} isMaxYContained
+ */
+Item.prototype.positionPlaceRect = function( x, y, isMaxYOpen ) {
   this.placeRect.x = this.getPlaceRectCoord( x, true );
-  this.placeRect.y = this.getPlaceRectCoord( y, false );
+  this.placeRect.y = this.getPlaceRectCoord( y, false, isMaxYOpen );
 };
 
 /**
  * get x/y coordinate for place rect
  * @param {Number} coord - x or y
  * @param {Boolean} isX
- * @param {Number} parentsize - size of parent packery
+ * @param {Boolean} isMaxOpen - does not limit value to outer bound
  * @returns {Number} coord - processed x or y
  */
-Item.prototype.getPlaceRectCoord = function( coord, isX ) {
+Item.prototype.getPlaceRectCoord = function( coord, isX, isMaxOpen ) {
   var measure = isX ? 'Width' : 'Height';
   var size = this.size[ 'outer' + measure ];
   var segment = this.packery[ isX ? 'columnWidth' : 'rowHeight' ];
@@ -375,6 +380,8 @@ Item.prototype.getPlaceRectCoord = function( coord, isX ) {
     }
   }
 
+  var max;
+
   if ( segment ) {
     segment += this.packery.gutter;
     // allow for last column to reach the edge
@@ -385,10 +392,13 @@ Item.prototype.getPlaceRectCoord = function( coord, isX ) {
     // x values must be contained, y values can grow box by 1
     var maxSegments = Math[ isX ? 'floor' : 'ceil' ]( parentSize / segment );
     maxSegments -= Math.ceil( size / segment );
-    coord = Math.min( coord, maxSegments ) * segment;
+    max = maxSegments;
   } else {
-    coord = Math.min( coord, parentSize - size );
+    max = parentSize - size;
   }
+
+  coord = isMaxOpen ? coord : Math.min( coord, max );
+  coord *= segment || 1;
 
   return Math.max( 0, coord );
 };

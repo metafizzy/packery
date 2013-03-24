@@ -629,7 +629,6 @@ window.onload = function onDocReady() {
       isFit = false;
       isLaidOut = false;
       // trigger next thing
-      // setTimeout( fit3, 20 );
       fit3();
     }
 
@@ -656,15 +655,42 @@ window.onload = function onDocReady() {
       pckry.fit( elem3, 40, 20 );
     }
 
-    // fit with columnWidth and rowHeight
+    function ready3() {
+      if ( !isFit || !isLaidOut ) {
+        return;
+      }
+      isFit = false;
+      isLaidOut = false;
+      // trigger next thing
+      fit4();
+    }
+
     function fit3() {
+      pckry.on( 'fitComplete', function() {
+        equal( elem3.style.left, '60px', 'x value limited' );
+        equal( elem3.style.top, '120px', 'y value NOT limited' );
+        isFit = true;
+        ready3();
+        return true;
+      });
+      pckry.on( 'layoutComplete', function() {
+        isLaidOut = true;
+        ready3();
+        return true;
+      });
+      // try to position item outside container
+      pckry.fit( elem3, 120, 120 );
+    }
+
+    // fit with columnWidth and rowHeight
+    function fit4() {
       pckry.options.columnWidth = 30;
       pckry.options.rowHeight = 30;
 
-      pckry.on ( 'fitComplete', function() {
+      pckry.on( 'fitComplete', function() {
         ok( true, 'fitComplete event emitted' );
         equal( elem3.style.left, '30px', 'with columnWidth, elem3.style.left = 30px' );
-        equal( elem3.style.top, '0px', 'with rowHeight, elem3.style.top = 0px' );
+        equal( elem3.style.top, '120px', 'with rowHeight, elem3.style.top = 120px' );
         start();
       });
 

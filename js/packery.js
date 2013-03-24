@@ -484,15 +484,21 @@ Packery.prototype.spacePlacedElements = function() {
   if ( !this.placedElements || !this.placedElements.length ) {
     return;
   }
-  // get bounding rect for container element
-  var elementBoundingRect = this.element.getBoundingClientRect();
-  this._boundingLeft = elementBoundingRect.left + this.elementSize.paddingLeft;
-  this._boundingTop  = elementBoundingRect.top  + this.elementSize.paddingTop;
+
+  this._getBounds();
 
   for ( var i=0, len = this.placedElements.length; i < len; i++ ) {
     var elem = this.placedElements[i];
     this.spacePlaced( elem );
   }
+};
+
+// update boundingLeft / Top
+Packery.prototype._getBounds = function() {
+  // get bounding rect for container element
+  var elementBoundingRect = this.element.getBoundingClientRect();
+  this._boundingLeft = elementBoundingRect.left + this.elementSize.paddingLeft;
+  this._boundingTop  = elementBoundingRect.top  + this.elementSize.paddingTop;
 };
 
 /**
@@ -505,19 +511,29 @@ Packery.prototype.spacePlaced = function( elem ) {
   if ( item && item.isPlacing ) {
     rect = item.placeRect;
   } else {
-    var boundingRect = elem.getBoundingClientRect();
-    rect = new Rect({
-      x: boundingRect.left - this._boundingLeft,
-      y: boundingRect.top - this._boundingTop
-    });
-    rect.x -= this.elementSize.borderLeftWidth;
-    rect.y -= this.elementSize.borderTopWidth;
+    rect = this._getElementOffsetRect( elem );
   }
 
   this._setRectSize( elem, rect );
   // save its space in the packer
   this.packer.placed( rect );
   this._setMaxY( rect );
+};
+
+/**
+ * get x/y position of element relative to container element
+ * @param {Element} elem
+ * @returns {Rect} rect
+ */
+Packery.prototype._getElementOffsetRect = function( elem ) {
+  var boundingRect = elem.getBoundingClientRect();
+  var rect = new Rect({
+    x: boundingRect.left - this._boundingLeft,
+    y: boundingRect.top - this._boundingTop
+  });
+  rect.x -= this.elementSize.borderLeftWidth;
+  rect.y -= this.elementSize.borderTopWidth;
+  return rect;
 };
 
 // -------------------------- resize -------------------------- //
@@ -724,6 +740,11 @@ Packery.prototype.fit = function( elem, x, y ) {
   if ( !item ) {
     return;
   }
+
+  // prepare internal properties
+  this._getBounds();
+  this._getMeasurements();
+
   // place item to get it out of layout
   this.place( item.element );
   // required for positionPlaceRect
@@ -731,11 +752,13 @@ Packery.prototype.fit = function( elem, x, y ) {
   // set placing flag
   item.isPlacing = true;
   // fall back to current position for fitting
-  x = x === undefined ? item.rect.x : x;
-  y = y === undefined ? item.rect.y : y;
+  var offsetRect = this._getElementOffsetRect( elem );
+  // add margin for outerWidth / Height
+  x = x === undefined ? offsetRect.x - item.size.marginLeft : x;
+  y = y === undefined ? offsetRect.y - item.size.marginTop  : y;
+
   // position it best at its destination
-  this._getMeasurements();
-  item.positionPlaceRect( x, y );
+  item.positionPlaceRect( x, y, true );
   // emit event when item is fit/layout
   var _this = this;
   item.on( 'layout', function() {
