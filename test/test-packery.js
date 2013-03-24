@@ -6,6 +6,8 @@
 
 'use strict';
 
+var $ = window.jQuery;
+
 module('Packery');
 
 test( 'basics', function() {
@@ -723,11 +725,13 @@ window.onload = function onDocReady() {
     strictEqual( pckry3.options.rowHeight, 30, 'rowHeight option was set' );
     strictEqual( pckry3.options.transitionDuration, '1.2s', 'transitionDuration option was set' );
     strictEqual( pckry3.options.isResizable, false, 'isResizable option was set' );
+
+    equal( $.data( container3, 'packery' ), pckry3, '$.data( elem, "packery") returns Packery instance' );
+
   });
 
   // ----- jQuery ----- //
 
-  var $ = window.jQuery;
 
   test( 'jQuery Packery', function() {
     var $elem = $('#jquery');

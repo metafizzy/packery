@@ -956,7 +956,12 @@ docReady( function() {
       }
       continue;
     }
-    new Packery( elem, options );
+    // initialize
+    var pckry = new Packery( elem, options );
+    // make available via $().data('packery')
+    if ( jQuery ) {
+      jQuery.data( elem, 'packery', pckry );
+    }
   }
 });
 
