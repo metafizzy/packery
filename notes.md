@@ -44,6 +44,8 @@ you can drag an item on to a previous dragged item while that previous dragged i
     $('#elem).packery('getItemElements');
     // returns $elem, not the item elements
 
+gutter height throws off .fit()
+
 ## options
 
 orientation
