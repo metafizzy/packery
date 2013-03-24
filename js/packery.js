@@ -742,7 +742,6 @@ Packery.prototype.fit = function( elem, x, y ) {
   }
 
   // prepare internal properties
-  this._getBounds();
   this._getMeasurements();
 
   // place item to get it out of layout
@@ -752,7 +751,12 @@ Packery.prototype.fit = function( elem, x, y ) {
   // set placing flag
   item.isPlacing = true;
   // fall back to current position for fitting
-  var offsetRect = this._getElementOffsetRect( elem );
+  // get offset rect for current positioning
+  var offsetRect;
+  if ( x === undefined || y === undefined ) {
+    this._getBounds();
+    offsetRect = this._getElementOffsetRect( elem );
+  }
   // add margin for outerWidth / Height
   x = x === undefined ? offsetRect.x - item.size.marginLeft : x;
   y = y === undefined ? offsetRect.y - item.size.marginTop  : y;
