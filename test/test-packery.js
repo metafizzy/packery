@@ -279,8 +279,8 @@ window.onload = function onDocReady() {
     equal( container.style.height, '40px', 'add padding, height same' );
 
     // border box
-    container.style.webkitBoxSizing = 'border-box';
-    container.style.mozBoxSizing = 'border-box';
+    container.style.WebkitBoxSizing = 'border-box';
+    container.style.MozBoxSizing = 'border-box';
     container.style.boxSizing = 'border-box';
     pckry.layout();
     equal( container.style.height, '48px', 'border-box, height + padding + border' );
