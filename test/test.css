@@ -1,3 +1,7 @@
+body {
+  font-family: sans-serif;
+}
+
 .container {
   width: 80px;
   margin-bottom: 20px;
