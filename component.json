@@ -1,6 +1,6 @@
 {
   "name": "packery",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": "David DeSandro / Metafizzy",
   "main": [
     "./js/rect.js",
@@ -13,7 +13,7 @@
     "doc-ready": "desandro/doc-ready#>=0.0.3",
     "eventEmitter": ">=3",
     "eventie": "desandro/eventie",
-    "get-size": "desandro/get-size#>=0.0.8",
+    "get-size": "desandro/get-size#>=1.0.0",
     "get-style-property": "desandro/get-style-property",
     "jquery-bridget": "desandro/jquery-bridget#>=0.1.2",
     "matches-selector": "desandro/matches-selector#>=0.2.0"
