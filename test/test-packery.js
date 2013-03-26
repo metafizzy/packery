@@ -504,8 +504,6 @@ window.onload = function onDocReady() {
       equal( dragElem.style.left, '35px', 'dragged 3rd item x' );
       equal( dragElem.style.top, '15px', 'dragged 3rd item y' );
       equal( pckry.items[2].element, dragElem, 'dragged elem in now 3rd in items' );
-      start();
-      stop();
       // trigger the next thing
       dragOutside();
       return true; // bind once
@@ -513,32 +511,17 @@ window.onload = function onDocReady() {
     stop();
     simulateDrag( dragElem, pckry, 35, 15 );
 
-    var isDragged = false;
-    var isLaidOut = false;
-
-    function ready1() {
-      if ( !isDragged || !isLaidOut ) {
-        return;
-      }
-      equal( pckry.items[3].element, dragElem, 'dragged elem in now 4th in items' );
-      dragWithGrid();
-    }
-
     function dragOutside() {
       pckry.on( 'dragItemPositioned', function() {
         equal( true, true, 'dragItemPositioned event did trigger' );
         equal( dragElem.style.left, '60px', 'dragged 3rd item x, aligned inside container' );
         equal( dragElem.style.top, '0px', 'dragged 3rd item y, aligned inside container' );
-        isDragged = true;
-        ready1();
+        equal( pckry.items[3].element, dragElem, 'dragged elem in now 4th in items' );
+        // the next thing
+        dragWithGrid();
         return true; // bind once
       });
-      pckry.on( 'layoutComplete', function() {
-        isLaidOut = true;
-        ready1();
-        return true; // bind once
-      });
-      // stop();
+
       simulateDrag( dragElem, pckry, 300, -30 );
     }
 
@@ -550,8 +533,7 @@ window.onload = function onDocReady() {
         equal( dragElem.style.left, '25px', 'dragged 3rd item x, aligned to grid' );
         // TODO, this should be 50px
         equal( dragElem.style.top, '50px', 'dragged 3rd item y, aligned to grid' );
-        start();
-        stop();
+        // the next thing
         dragOutsideWithGrid();
         return true; // bind one
       });

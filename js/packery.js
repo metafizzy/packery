@@ -1,5 +1,5 @@
 /*!
- * Packery v0.3.2
+ * Packery v0.3.3
  * bin-packing layout library
  * http://packery.metafizzy.co
  *
@@ -845,7 +845,9 @@ Packery.prototype.itemDragEnd = function( elem ) {
 
   classie.add( item.element, 'is-positioning-post-drag' );
 
-  var asyncCount = item.needsPositioning ? 2 : 1;
+  // save this var, as it could get reset in dragStart
+  var itemNeedsPositioning = item.needsPositioning;
+  var asyncCount = itemNeedsPositioning ? 2 : 1;
   var completeCount = 0;
   var _this = this;
   function onLayoutComplete() {
@@ -854,7 +856,7 @@ Packery.prototype.itemDragEnd = function( elem ) {
     if ( completeCount !== asyncCount ) {
       return true;
     }
-
+    // reset item
     if ( item ) {
       classie.remove( item.element, 'is-positioning-post-drag' );
       item.isPlacing = false;
@@ -863,15 +865,16 @@ Packery.prototype.itemDragEnd = function( elem ) {
     _this.unplace( elem );
     // only sort when item moved
     _this.sortItemsByPosition();
+
+    // emit item drag event now that everything is done
+    if ( item && itemNeedsPositioning ) {
+      _this.emitEvent( 'dragItemPositioned', [ _this, item ] );
+    }
     // listen once
     return true;
   }
 
-  if ( item.needsPositioning ) {
-    item.on( 'layout', function() {
-      _this.emitEvent( 'dragItemPositioned', [ _this, item ] );
-      return true;
-    });
+  if ( itemNeedsPositioning ) {
     item.on( 'layout', onLayoutComplete );
     item.moveTo( dropX, dropY );
   }
