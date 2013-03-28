@@ -347,6 +347,18 @@ Item.prototype.dragMove = function( x, y ) {
   this.positionPlaceRect( x, y );
 };
 
+Item.prototype.dragStop = function() {
+  this.getPosition();
+  var isDiffX = this.position.x !== this.placeRect.x;
+  var isDiffY = this.position.y !== this.placeRect.y;
+  // set post-drag positioning flag
+  this.needsPositioning = isDiffX || isDiffY;
+  // reset flag
+  this.didDrag = false;
+};
+
+// -------------------------- placing -------------------------- //
+
 /**
  * position a rect that will occupy space in the packer
  * @param {Number} x
@@ -403,14 +415,9 @@ Item.prototype.getPlaceRectCoord = function( coord, isX, isMaxOpen ) {
   return Math.max( 0, coord );
 };
 
-Item.prototype.dragStop = function() {
-  this.getPosition();
-  var isDiffX = this.position.x !== this.placeRect.x;
-  var isDiffY = this.position.y !== this.placeRect.y;
-  // set post-drag positioning flag
-  this.needsPositioning = isDiffX || isDiffY;
-  // reset flag
-  this.didDrag = false;
+Item.prototype.copyPlaceRectPosition = function() {
+  this.rect.x = this.placeRect.x;
+  this.rect.y = this.placeRect.y;
 };
 
 // --------------------------  -------------------------- //

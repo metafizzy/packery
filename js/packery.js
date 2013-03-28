@@ -768,8 +768,7 @@ Packery.prototype.fit = function( elem, x, y ) {
   // un set placing flag, back to normal
   item.isPlacing = false;
   // copy place rect position
-  item.rect.x = item.placeRect.x;
-  item.rect.y = item.placeRect.y;
+  item.copyPlaceRectPosition();
 };
 
 // -------------------------- drag -------------------------- //
@@ -823,11 +822,8 @@ Packery.prototype.clearDragTimeout = function() {
  */
 Packery.prototype.itemDragEnd = function( elem ) {
   var item = this.getItemFromElement( elem );
-  var dropX, dropY, itemDidDrag;
+  var itemDidDrag;
   if ( item ) {
-    // copy over vars, they're reset by dragStop
-    dropX = item.placeRect.x;
-    dropY = item.placeRect.y;
     itemDidDrag = item.didDrag;
     item.dragStop();
   }
@@ -872,7 +868,10 @@ Packery.prototype.itemDragEnd = function( elem ) {
 
   if ( itemNeedsPositioning ) {
     item.on( 'layout', onLayoutComplete );
-    item.moveTo( dropX, dropY );
+    item.moveTo( item.placeRect.x, item.placeRect.y );
+  } else if ( item ) {
+    // item didn't need placement
+    item.copyPlaceRectPosition();
   }
 
   this.clearDragTimeout();
