@@ -65,17 +65,23 @@ $( function() {
   $ex4.packery({
     columnWidth: 50,
     rowHeight: 50,
-    transitionDuration: '1.6s'
+    transitionDuration: '0.6s'
   });
 
   // get item elements and make them draggaable
   var itemElems = $ex4.packery('getItemElements');
   var $itemElems = $( itemElems ).draggable();
-  $ex4.packery( 'bindUIDraggableEvents', $itemElems );
 
-  $ex4.packery( 'on',  'layoutComplete', function( packery ) {
-    console.log('completed layout');
-  });
+  function orderItems() {
+    var itemElems = $ex4.packery('getItemElements');
+    $( itemElems ).each( function( i, elem ) {
+      $(elem).text( i+1 );
+    });
+  }
+
+  $ex4.packery( 'bindUIDraggableEvents', $itemElems );
+  $ex4.packery( 'on', 'dragItemPositioned', orderItems );
+  $ex4.packery( 'on', 'layoutComplete', orderItems );
 
   // ----- random sized ----- //
 
