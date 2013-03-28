@@ -748,15 +748,8 @@ Packery.prototype.fit = function( elem, x, y ) {
   // set placing flag
   item.isPlacing = true;
   // fall back to current position for fitting
-  // get offset rect for current positioning
-  var offsetRect;
-  if ( x === undefined || y === undefined ) {
-    this._getBounds();
-    offsetRect = this._getElementOffsetRect( elem );
-  }
-  // add margin for outerWidth / Height
-  x = x === undefined ? offsetRect.x - item.size.marginLeft : x;
-  y = y === undefined ? offsetRect.y - item.size.marginTop  : y;
+  x = x === undefined ? item.rect.x: x;
+  y = y === undefined ? item.rect.y: y;
 
   // position it best at its destination
   item.positionPlaceRect( x, y, true );
@@ -774,6 +767,9 @@ Packery.prototype.fit = function( elem, x, y ) {
   this.sortItemsByPosition();
   // un set placing flag, back to normal
   item.isPlacing = false;
+  // copy place rect position
+  item.rect.x = item.placeRect.x;
+  item.rect.y = item.placeRect.y;
 };
 
 // -------------------------- drag -------------------------- //
