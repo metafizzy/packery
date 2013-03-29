@@ -766,8 +766,8 @@ window.onload = function onDocReady() {
       start();
     });
 
-    $elem.packery();
     stop();
+    $elem.packery();
   });
 
 };
