@@ -5,21 +5,30 @@
 
   <title>fit</title>
 
-  <link rel="stylesheet" href="css/examples" />
+  <link rel="stylesheet" href="css/examples.css" />
   <style>
-  #fit-demo {
+  #expanding-demo {
     width: 40%;
   }
-  
-  #fit-demo .item {
+
+  #expanding-demo .item {
     height: 40px;
     width: 25%;
   }
-  
-  #fit-demo .item.gigante {
+
+  #expanding-demo .item.is-expanded {
     height: 60px;
     width: 100%;
     background: #1D6;
+  }
+
+  #position-demo {
+    width: 30%;
+  }
+
+  #position-demo .item {
+    width: 60px;
+    height: 60px;
   }
   </style>
 
@@ -28,7 +37,19 @@
 
   <h1>fit</h1>
 
-<div id="fit-demo" class="container">
+<div id="expanding-demo" class="container">
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+</div>
+
+<div id="position-demo" class="container">
   <div class="item"></div>
   <div class="item"></div>
   <div class="item"></div>
@@ -54,27 +75,51 @@
 
 <script>
 docReady( function() {
-  var container = document.querySelector('#fit-demo');
-  var pckry = new Packery( container );
+  ( function() {
+    var container = document.querySelector('#expanding-demo');
+    var pckry = new Packery( container );
 
-  eventie.bind( container, 'click', function() {
-    // don't proceed if item was not clicked on
-    var target = event.target;
-    if ( !classie.has( target, 'item' ) ) {
-      return;
-    }
+    eventie.bind( container, 'click', function( event ) {
+      // don't proceed if item was not clicked on
+      var target = event.target;
+      if ( !classie.has( target, 'item' ) ) {
+        return;
+      }
 
-    var isGigante = classie.has( target, 'gigante' );
-    classie.toggleClass( target, 'gigante' );
+      var isExpanded = classie.has( target, 'is-expanded' );
+      classie.toggleClass( target, 'is-expanded' );
 
-    if ( isGigante ) {
-      // if shrinking, just layout
-      pckry.layout();
-    } else {
-      // if expanding, fit it
-      pckry.fit( target );
-    }
-  });
+      if ( isExpanded ) {
+        // if shrinking, just layout
+        pckry.layout();
+      } else {
+        // if expanding, fit it
+        pckry.fit( target );
+      }
+    });
+  })();
+
+
+  ( function() {
+    var container = document.querySelector('#position-demo');
+    var pckry = new Packery( container );
+
+    eventie.bind( container, 'click', function( event ) {
+      // don't proceed if item was not clicked on
+      var target = event.target;
+      if ( !classie.has( target, 'item' ) ) {
+        return;
+      }
+      // position item at 40, 40
+      // pckry.fit( target, 40, 40 );
+      var item = pckry.getItemFromElement( target );
+      var size = getSize( item.element );
+      item._transitionTo( ~~( Math.random() * 100 ), ~~( Math.random() * 100 ) );
+      // item.rect.x = ~~( Math.random() * 100 );
+      // item.rect.y = ~~( Math.random() * 100 );
+      // pckry._layoutItem( item );
+    });
+  })();
 });
 </script>
 

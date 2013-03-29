@@ -46,6 +46,8 @@ you can drag an item on to a previous dragged item while that previous dragged i
 
 gutter height throws off .fit()
 
+fit() items not being transitioned in IE 10
+
 ## options
 
 orientation
