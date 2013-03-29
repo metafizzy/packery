@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>fit</title>
+
+  <link rel="stylesheet" href="css/examples" />
+  <style>
+  #fit-demo {
+    width: 40%;
+  }
+  
+  #fit-demo .item {
+    height: 40px;
+    width: 25%;
+  }
+  
+  #fit-demo .item.gigante {
+    height: 60px;
+    width: 100%;
+    background: #1D6;
+  }
+  </style>
+
+</head>
+<body>
+
+  <h1>fit</h1>
+
+<div id="fit-demo" class="container">
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+</div>
+
+<script src="../components/get-style-property/get-style-property.js"></script>
+<script src="../components/get-size/get-size.js"></script>
+<script src="../components/matches-selector/matches-selector.js"></script>
+<script src="../components/eventEmitter/EventEmitter.js"></script>
+<script src="../components/eventie/eventie.js"></script>
+<script src="../components/doc-ready/doc-ready.js"></script>
+<script src="../components/classie/classie.js"></script>
+<script src="../js/rect.js"></script>
+<script src="../js/packer.js"></script>
+<script src="../js/item.js"></script>
+<script src="../js/packery.js"></script>
+
+<script>
+docReady( function() {
+  var container = document.querySelector('#fit-demo');
+  var pckry = new Packery( container );
+
+  eventie.bind( container, 'click', function() {
+    // don't proceed if item was not clicked on
+    var target = event.target;
+    if ( !classie.has( target, 'item' ) ) {
+      return;
+    }
+
+    var isGigante = classie.has( target, 'gigante' );
+    classie.toggleClass( target, 'gigante' );
+
+    if ( isGigante ) {
+      // if shrinking, just layout
+      pckry.layout();
+    } else {
+      // if expanding, fit it
+      pckry.fit( target );
+    }
+  });
+});
+</script>
+
+</body>
+</html>
