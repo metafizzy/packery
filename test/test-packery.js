@@ -8,6 +8,19 @@
 
 var $ = window.jQuery;
 
+// -------------------------- helpers -------------------------- //
+
+// trigger next function if then flag has been set
+function after( then, nextFn ) {
+  if ( then ) {
+    nextFn();
+  } else {
+    setTimeout( nextFn, 20 );
+  }
+}
+
+// -------------------------- tests -------------------------- //
+
 module('Packery');
 
 test( 'basics', function() {
@@ -74,7 +87,7 @@ window.onload = function onDocReady() {
     // change size of elems to change layout
     elem0.style.width = '18px';
     pckry.items[3].element.style.height = '58px';
-    var items;
+    var items = pckry._getLayoutItems( pckry.items );
     pckry.on( 'layoutComplete', function( obj, completeItems ) {
       equal( true, true, 'layoutComplete event did fire' );
       equal( obj, pckry, 'event-emitted argument matches Packery instance' );
@@ -91,7 +104,6 @@ window.onload = function onDocReady() {
 
     stop();
     pckry.layout();
-    items = pckry._getLayoutItems( pckry.items );
     equal( container.style.height, '80px', 'height set' );
   });
 
@@ -128,24 +140,27 @@ window.onload = function onDocReady() {
       ok( true, 'layoutComplete triggered' );
       equal( i3.style.left, '0px', 'i3.style.left' );
       equal( i3.style.top, '20px', 'i3.style.top' );
-      fit1();
+      after( then, fit1 );
       return true;
     });
 
     stop();
     pckry.layout();
+    var then = true;
 
     function fit1() {
       pckry.on( 'layoutComplete', function() {
         equal( i3.style.left, '60px', 'i3.style.left' );
         equal( i3.style.top, '30px', 'i3.style.top' );
+        // all done
         start();
+        return true;
       });
       i0.style.width = '38px';
       i0.style.height = '38px';
       i0.style.background = 'orange';
       pckry.layout();
-      // pckry.fit( i1, 10, 10 );
+      return true;
     }
 
   });
@@ -210,24 +225,25 @@ window.onload = function onDocReady() {
     pckry.options.rowHeight = gridSizer;
     pckry.on( 'layoutComplete', function() {
       checkPackeryGrid( pckry );
-      setGutter();
+      after( then1, setGutter );
       return true; // bind once
     });
+    stop();
     pckry.layout();
+    var then1 = true;
     equal( pckry.columnWidth, 30, 'columnWidth is set from element width, in px' );
     equal( pckry.rowHeight, 25, 'rowHeight is set from element height, in px' );
-    stop();
 
     function setGutter() {
       pckry.options.gutter = container.querySelector('.gutter-sizer');
       pckry.on( 'layoutComplete', function() {
         checkPackeryGrid( pckry );
-        setPercentageGrid();
+        after( then2, setPercentageGrid );
         return true; // bind once
       });
       pckry.layout();
+      var then2 = true;
       equal( pckry.gutter, 10, 'gutter set from element width, in px' );
-      // stop();
     }
 
     function setPercentageGrid() {
@@ -505,11 +521,12 @@ window.onload = function onDocReady() {
       equal( dragElem.style.top, '15px', 'dragged 3rd item y' );
       equal( pckry.items[2].element, dragElem, 'dragged elem in now 3rd in items' );
       // trigger the next thing
-      dragOutside();
+      after( then1, dragOutside );
       return true; // bind once
     });
     stop();
     simulateDrag( dragElem, pckry, 35, 15 );
+    var then1 = true;
 
     function dragOutside() {
       pckry.on( 'dragItemPositioned', function() {
@@ -518,11 +535,12 @@ window.onload = function onDocReady() {
         equal( dragElem.style.top, '0px', 'dragged 3rd item y, aligned inside container' );
         equal( pckry.items[3].element, dragElem, 'dragged elem in now 4th in items' );
         // the next thing
-        dragWithGrid();
+        after( then2, dragWithGrid );
         return true; // bind once
       });
 
       simulateDrag( dragElem, pckry, 300, -30 );
+      var then2 = true;
     }
 
     function dragWithGrid() {
@@ -534,10 +552,11 @@ window.onload = function onDocReady() {
         // TODO, this should be 50px
         equal( dragElem.style.top, '50px', 'dragged 3rd item y, aligned to grid' );
         // the next thing
-        dragOutsideWithGrid();
+        after( then3, dragOutsideWithGrid );
         return true; // bind one
       });
       simulateDrag( dragElem, pckry, 35, 160 );
+      var then3 = true;
     }
 
     function dragOutsideWithGrid() {
@@ -581,8 +600,7 @@ window.onload = function onDocReady() {
       isFit = false;
       isLaidOut = false;
       // trigger next thing
-      fit2();
-      // setTimeout( , 20 );
+      after( then1, fit2 );
     }
 
     pckry.on( 'fitComplete', function( pckryInstance, item ) {
@@ -605,6 +623,7 @@ window.onload = function onDocReady() {
     // fit it
     stop();
     pckry.fit( elem3 );
+    var then1 = true;
 
     function ready2() {
       if ( !isFit || !isLaidOut ) {
@@ -613,9 +632,10 @@ window.onload = function onDocReady() {
       isFit = false;
       isLaidOut = false;
       // trigger next thing
-      fit3();
+      after( then2, fit3 );
     }
 
+    var then2;
     function fit2() {
       elem3.style.width = '18px';
       elem3.style.height = '18px';
@@ -637,6 +657,7 @@ window.onload = function onDocReady() {
       });
 
       pckry.fit( elem3, 40, 20 );
+      then2 = true;
     }
 
     function ready3() {
@@ -646,11 +667,14 @@ window.onload = function onDocReady() {
       isFit = false;
       isLaidOut = false;
       // trigger next thing
-      fit4();
+      after( then3, fit4 );
+      // fit4();
     }
 
+    var then3;
     function fit3() {
       pckry.on( 'fitComplete', function() {
+
         equal( elem3.style.left, '60px', 'x value limited' );
         equal( elem3.style.top, '120px', 'y value NOT limited' );
         isFit = true;
@@ -664,6 +688,7 @@ window.onload = function onDocReady() {
       });
       // try to position item outside container
       pckry.fit( elem3, 120, 120 );
+      then3 = true;
     }
 
     // fit with columnWidth and rowHeight
