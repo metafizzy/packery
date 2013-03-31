@@ -203,8 +203,9 @@ Item.prototype._transition = function( style, onTransitionEnd ) {
   }
 
   // enable transition
-  style[ transitionProperty + 'Property' ] = transitionValue.join(',');
-  style[ transitionProperty + 'Duration' ] = this.packery.options.transitionDuration;
+  var transitionStyle = {};
+  transitionStyle[ transitionProperty + 'Property' ] = transitionValue.join(',');
+  transitionStyle[ transitionProperty + 'Duration' ] = this.packery.options.transitionDuration;
 
   this.element.addEventListener( transitionEndEvent, this, false );
 
@@ -217,6 +218,8 @@ Item.prototype._transition = function( style, onTransitionEnd ) {
   }
 
   // set transition styles
+  this.css( transitionStyle );
+  // set styles that are transitioning
   this.css( style );
 
   this.isTransitioning = true;
