@@ -507,7 +507,7 @@ Packery.prototype._getBounds = function() {
  * @param {Element} elem
  */
 Packery.prototype.spacePlaced = function( elem ) {
-  var item = this.getItemFromElement( elem );
+  var item = this.getItem( elem );
   var rect;
   if ( item && item.isPlacing ) {
     rect = item.placeRect;
@@ -640,7 +640,7 @@ Packery.prototype.appended = function( elems ) {
  * @param {Function} callback
  * @returns {Packery.Item} item
  */
-Packery.prototype.getItemFromElement = function( elem ) {
+Packery.prototype.getItem = function( elem ) {
   // loop through items to get the one that matches
   for ( var i=0, len = this.items.length; i < len; i++ ) {
     var item = this.items[i];
@@ -663,7 +663,7 @@ Packery.prototype.getItemsFromElements = function( elems ) {
   var items = [];
   for ( var i=0, len = elems.length; i < len; i++ ) {
     var elem = elems[i];
-    var item = this.getItemFromElement( elem );
+    var item = this.getItem( elem );
     if ( item ) {
       items.push( item );
     }
@@ -699,7 +699,7 @@ Packery.prototype.remove = function( elems ) {
  * @param {Element} elem
  */
 Packery.prototype.ignore = function( elem ) {
-  var item = this.getItemFromElement( elem );
+  var item = this.getItem( elem );
   if ( item ) {
     item.isIgnored = true;
   }
@@ -710,7 +710,7 @@ Packery.prototype.ignore = function( elem ) {
  * @param {Element} elem
  */
 Packery.prototype.unignore = function( elem ) {
-  var item = this.getItemFromElement( elem );
+  var item = this.getItem( elem );
   if ( item ) {
     delete item.isIgnored;
   }
@@ -733,7 +733,7 @@ Packery.prototype.sortItemsByPosition = function() {
  * @param {Number} y - vertical destination position, optional
  */
 Packery.prototype.fit = function( elem, x, y ) {
-  var item = this.getItemFromElement( elem );
+  var item = this.getItem( elem );
   if ( !item ) {
     return;
   }
@@ -793,7 +793,7 @@ Packery.prototype.fit = function( elem, x, y ) {
  */
 Packery.prototype.itemDragStart = function( elem ) {
   this.place( elem );
-  var item = this.getItemFromElement( elem );
+  var item = this.getItem( elem );
   if ( item ) {
     item.dragStart();
   }
@@ -806,7 +806,7 @@ Packery.prototype.itemDragStart = function( elem ) {
  * @param {Number} y - vertical change in position
  */
 Packery.prototype.itemDragMove = function( elem, x, y ) {
-  var item = this.getItemFromElement( elem );
+  var item = this.getItem( elem );
   if ( item ) {
     item.dragMove( x, y );
   }
@@ -835,7 +835,7 @@ Packery.prototype.clearDragTimeout = function() {
  * @param {Element} elem
  */
 Packery.prototype.itemDragEnd = function( elem ) {
-  var item = this.getItemFromElement( elem );
+  var item = this.getItem( elem );
   var itemDidDrag;
   if ( item ) {
     itemDidDrag = item.didDrag;

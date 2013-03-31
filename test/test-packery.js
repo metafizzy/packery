@@ -580,7 +580,7 @@ window.onload = function onDocReady() {
     var elem1 = container.querySelector('.i1');
     var elem2 = container.querySelector('.i2');
     var elem3 = container.querySelector('.i3');
-    var item3 = pckry.getItemFromElement( elem3 );
+    var item3 = pckry.getItem( elem3 );
     // expand item3
     elem3.style.width = '48px';
     elem3.style.height = '28px';
