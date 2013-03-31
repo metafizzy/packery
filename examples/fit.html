@@ -111,13 +111,7 @@ docReady( function() {
         return;
       }
       // position item at 40, 40
-      // pckry.fit( target, 40, 40 );
-      var item = pckry.getItemFromElement( target );
-      var size = getSize( item.element );
-      item._transitionTo( ~~( Math.random() * 100 ), ~~( Math.random() * 100 ) );
-      // item.rect.x = ~~( Math.random() * 100 );
-      // item.rect.y = ~~( Math.random() * 100 );
-      // pckry._layoutItem( item );
+      pckry.fit( target, 40, 40 );
     });
   })();
 });
