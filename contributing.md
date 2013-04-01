@@ -1,12 +1,12 @@
 ## Submitting issues
 
-### All bug reports and problem issues require a reduced test case
+### Reduced test case required
 
-All bug reports and problem issues require a reduced test case. [See CSS Tricks - Reduced Test Cases on why they "are the absolute, ... number one way to troubleshoot bugs."](http://css-tricks.com/reduced-test-cases/)
+All bug reports and problem issues require a reduced test case. See [CSS Tricks - Reduced Test Cases](http://css-tricks.com/reduced-test-cases/) on why they _"are the absolute, ... number one way to troubleshoot bugs."_
 
 + A reduced test case is an isolated example that demonstrates the bug or issue.
-+ It contains no extra functionality or styling than what is required to demonstrate the bug.
-+ Please fork any one of the CodePen examples in the docs and use that to build your reduced test case.
++ It contains the bare minimum HTML, CSS, and JavaScript required to demonstrate the bug. No extra functionality or styling.
++ Any one of the CodePen examples in the docs may be forked and used to build your reduced test case.
 + A link to your site is **not** a reduced test case.
 + Until you provide a reduced test case, your issue will be closed.
 
