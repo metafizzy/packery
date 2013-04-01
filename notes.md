@@ -29,6 +29,9 @@
 1. set transform to new destination
 2. once element reaches destination, remove transform, set top/left -->
 
+Contributing
+- add CodePen links
+
 ## Bugs
 
 you can drag an item on to a previous dragged item while that previous dragged item is still transitioning
