@@ -145,13 +145,13 @@ Packery.prototype._create = function() {
   // create drag handlers
   var _this = this;
   this.handleDraggabilly = {
-    dragStart: function( event, pointer, draggie ) {
+    dragStart: function( draggie ) {
       _this.itemDragStart( draggie.element );
     },
-    dragMove: function( event, pointer, draggie ) {
+    dragMove: function( draggie ) {
       _this.itemDragMove( draggie.element, draggie.position.x, draggie.position.y );
     },
-    dragEnd: function( event, pointer, draggie ) {
+    dragEnd: function( draggie ) {
       _this.itemDragEnd( draggie.element );
     }
   };
