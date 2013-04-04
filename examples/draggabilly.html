@@ -6,6 +6,11 @@
   <title>Draggabilly</title>
 
   <link rel="stylesheet" href="css/examples.css" />
+  <style>
+  .item.expanded {
+    width: 100% !important;
+  }
+  </style>
 
 </head>
 <body>
@@ -66,8 +71,9 @@ function bindDraggies( packery ) {
     draggie = new Draggabilly( item );
     packery.bindDraggabillyEvents( draggie );
     draggies.push( draggie );
-  }
 
+  }
+  return draggies;
   packery.on( 'dragItemPositioned', function( pckry, item ) {
     console.log( 'drag item positioned', item.position.x, item.position.y );
   });
@@ -101,8 +107,36 @@ window.onload = function() {
 
   window.packery4 = packery4;
 
+  ( function() {
+    var draggies = bindDraggies( packery4 );
 
-  bindDraggies( packery4 );
+    // when clicked toggle expanded
+    function onDragEnd( draggie ) {
+      var p1 = draggie.position;
+      var p2 = draggie.startPosition;
+      // only proceed if stuff has moved
+      if ( p1.x !== p2.x || p1.y !== p2.y ) {
+        return;
+      }
+      // dragger didn't move
+      var isExpanded = classie.has( draggie.element, 'expanded' );
+      classie.toggle( draggie.element, 'expanded' );
+      if ( !isExpanded ) {
+        // HACK unplace first
+        packery4.unplace( draggie.element );
+        packery4.fit( draggie.element );
+      } else {
+        packery4.layout();
+      }
+    }
+
+    for ( var i=0, len = draggies.length; i < len; i++ ) {
+      var draggie = draggies[i];
+      draggie.on( 'dragEnd', onDragEnd );
+    }
+  })();
+
+
   bindDraggies( packery6 );
 
 };
