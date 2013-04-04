@@ -61,12 +61,14 @@ function makeArray( obj ) {
 }
 
 // http://stackoverflow.com/a/384380/182183
-function isElement(o){
-  return (
-    typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
-    o && typeof o === "object" && o.nodeType === 1 && typeof o.nodeName==="string"
-  );
-}
+var isElement = ( typeof HTMLElement === 'object' ) ?
+  function isElementDOM2( obj ) {
+    return obj instanceof HTMLElement;
+  } :
+  function isElementQuirky( obj ) {
+    return obj && typeof obj === 'object' &&
+      obj.nodeType === 1 && typeof obj.nodeName === 'string';
+  };
 
 // index of helper cause IE8
 var indexOf = Array.prototype.indexOf ? function( ary, obj ) {
@@ -92,7 +94,7 @@ function Packery( element, options ) {
   // bail out if not proper element
   if ( !element || !isElement( element ) ) {
     if ( console ) {
-      console.error( element + ' Packery element' );
+      console.error( 'bad Packery element: ' + element );
     }
     return;
   }

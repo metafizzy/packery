@@ -26,10 +26,13 @@ module('Packery');
 test( 'basics', function() {
   equal( typeof Packery === 'function', true, 'Packery is a function' );
   // TODO pckry should be null or something
-  var pckry = new Packery();
+  var pckry1 = new Packery();
   // console.log( pckry, typeof pckry );
-  ok( !pckry._isInited, 'packery not inited' );
+  ok( !pckry1._isInited, 'packery not inited on undefined' );
 
+  var pckry2 = new Packery({});
+  // console.log( pckry, typeof pckry );
+  ok( !pckry2._isInited, 'packery not inited on object' );
 });
 
 window.onload = function onDocReady() {
