@@ -760,7 +760,7 @@ Packery.prototype.fit = function( elem, x, y ) {
   function tick() {
     ticks++;
     if ( ticks !== 2 ) {
-      return
+      return;
     }
     _this.emitEvent( 'fitComplete', [ _this, item ] );
   }
