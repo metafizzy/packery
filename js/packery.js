@@ -658,7 +658,7 @@ Packery.prototype.getItem = function( elem ) {
  * @param {Array} elems
  * @returns {Array} items - Packery.Items
  */
-Packery.prototype.getItemsFromElements = function( elems ) {
+Packery.prototype.getItems = function( elems ) {
   if ( !elems || !elems.length ) {
     return;
   }
@@ -681,7 +681,7 @@ Packery.prototype.getItemsFromElements = function( elems ) {
 Packery.prototype.remove = function( elems ) {
   elems = makeArray( elems );
 
-  var removeItems = this.getItemsFromElements( elems );
+  var removeItems = this.getItems( elems );
 
   this._itemsOn( removeItems, 'remove', function() {
     this.emitEvent( 'removeComplete', [ this, removeItems ] );
