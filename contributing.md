@@ -10,4 +10,4 @@ All bug reports and problem issues require a reduced test case. See [CSS Tricks 
 + A link to your site is **not** a reduced test case.
 + Until you provide a reduced test case, your issue will be closed.
 
-I realize this guideline may seem a little harsh, but it dramatically helps both of you and me. Reduced test cases help you understand your own software and identify the issue at hand. On my side, they greatly reduce the amount of time spent resolving the issue.
+I realize this guideline may seem a little harsh, but it dramatically helps both of you and me. Reduced test cases help you identify the issue at hand and understand your own code. On my side, they greatly reduce the amount of time spent resolving the issue.
