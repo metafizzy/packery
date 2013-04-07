@@ -42,7 +42,7 @@ window.onload = function onDocReady() {
     var pckry = new Packery( empty );
     deepEqual( pckry.options, Packery.prototype.options, 'default options match prototype' );
     equal( pckry.items.length, 0, 'zero items' );
-    equal( pckry.placedElements.length, 0, 'zero placed elements' );
+    equal( pckry.stampedElements.length, 0, 'zero stamped elements' );
     equal( Packery.data( empty ), pckry, 'data method returns instance' );
     ok( pckry.isResizeBound, 'isResizeBound' );
   });
@@ -330,15 +330,15 @@ window.onload = function onDocReady() {
 
   });
 
-  test( 'placed1', function() {
-    var container = document.querySelector('#placed1');
+  test( 'stamped1', function() {
+    var container = document.querySelector('#stamped1');
     var stamps = container.querySelectorAll('.stamp');
     var pckry = new Packery( container, {
       itemSelector: '.item',
-      placedElements: stamps
+      stamped: stamps
     });
 
-    equal( pckry.placedElements.length, 2, '2 placed elements' );
+    equal( pckry.stampedElements.length, 2, '2 stamped elements' );
     var elem0 = pckry.items[0].element;
     equal( elem0.style.left, '0px', '1st item left' );
     equal( elem0.style.top, '0px', '1st item top' );
@@ -354,21 +354,21 @@ window.onload = function onDocReady() {
 
     equal( container.style.height, '75px', 'container height' );
 
-    // unplace first stamp
-    pckry.unplace( stamps[1] );
-    equal( pckry.placedElements.length, 1, 'element was unplaced' );
-    // place it back
-    pckry.place( stamps[1] );
-    equal( pckry.placedElements.length, 2, 'element was placed back' );
+    // unstamp first stamp
+    pckry.unstamp( stamps[1] );
+    equal( pckry.stampedElements.length, 1, 'element was unstamped' );
+    // stamp it back
+    pckry.stamp( stamps[1] );
+    equal( pckry.stampedElements.length, 2, 'element was stamped back' );
 
   });
 
-  test( 'placed2, items are placed', function() {
-    var container = document.querySelector('#placed2');
+  test( 'stampedd2, items are stamped', function() {
+    var container = document.querySelector('#stamped2');
     var stamps = container.querySelectorAll('.stamp');
     var pckry = new Packery( container, {
       itemSelector: '.item',
-      placedElements: stamps
+      stamped: stamps
     });
 
     var layoutItems = pckry._getLayoutItems( pckry.items );
@@ -385,10 +385,10 @@ window.onload = function onDocReady() {
     equal( elem4.style.top, '40px', '5th item top' );
 
     // unplacing
-    pckry.unplace( stamps );
+    pckry.unstamp( stamps );
     layoutItems = pckry._getLayoutItems( pckry.items );
     equal( layoutItems.length, 9, '9 layout items' );
-    equal( pckry.placedElements.length, 0, '0 placedElements items' );
+    equal( pckry.stampedElements.length, 0, '0 stampedElements items' );
 
     pckry.on( 'layoutComplete', function() {
       var elem0 = pckry.items[0].element;
@@ -404,16 +404,16 @@ window.onload = function onDocReady() {
     pckry.layout();
   });
 
-  test( 'placed3, place with selector string ', function() {
-    var container3 = document.querySelector('#placed3');
+  test( 'stamped3, stamp with selector string ', function() {
+    var container3 = document.querySelector('#stamped3');
     var pckry3 = new Packery( container3, {
       itemSelector: '.item',
-      placedElements: '.stamp'
+      stamped: '.stamp'
     });
 
-    equal( pckry3.placedElements.length, 2, '2 placed elements' );
+    equal( pckry3.stampedElements.length, 2, '2 stamped elements' );
 
-    equal( pckry3.placedElements.length, 2, '2 placed elements' );
+    equal( pckry3.stampedElements.length, 2, '2 stamped elements' );
     var elem0 = pckry3.items[0].element;
     equal( elem0.style.left, '0px', '1st item left' );
     equal( elem0.style.top, '0px', '1st item top' );
@@ -429,20 +429,20 @@ window.onload = function onDocReady() {
 
     equal( container3.style.height, '75px', 'container height' );
 
-    var container4 = document.querySelector('#placed4');
+    var container4 = document.querySelector('#stamped4');
     var pckry4 = new Packery( container4, {
       itemSelector: '.item',
-      placedElements: 'foobar'
+      stamped: 'foobar'
     });
 
     ok( pckry4._isInited, 'bad selector didnt cause error' );
   });
 
-  test( 'placed with borders', function() {
-    var container = document.querySelector('#placed-borders');
+  test( 'stamped with borders', function() {
+    var container = document.querySelector('#stamped-borders');
     var pckry = new Packery( container, {
       itemSelector: '.item',
-      placedElements: '.stamp'
+      stamped: '.stamp'
     });
 
     var elem0 = pckry.items[0].element;

@@ -40,7 +40,7 @@ body {
   background: red;
 }
 
-.has-placed {
+.has-stamps {
   position: relative;
 }
 
@@ -62,24 +62,24 @@ body {
   top: 30px;
 }
 
-#placed2 .stamp1 {
+#stamped2 .stamp1 {
   position: relative;
   left: 8px;
   top: 8px;
 }
 
-#placed2 .stamp2 {
+#stamped2 .stamp2 {
   position: absolute;
   right: 8px;
   top: 23px;
 }
 
-#placed-borders {
+#stamped-borders {
   border-left: 10px solid;
   border-top: 15px solid;
 }
 
-#placed-borders .stamp1 {
+#stamped-borders .stamp1 {
   width: 50px;
   height: 30px;
 }

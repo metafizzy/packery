@@ -133,8 +133,8 @@ Packery.prototype._create = function() {
   // get items from children
   this.reloadItems();
   // collection of element that don't get laid out
-  this.placedElements = [];
-  this.place( this.options.placedElements );
+  this.stampedElements = [];
+  this.stamp( this.options.stamped );
 
   var containerStyle = this.options.containerStyle;
   extend( this.element.style, containerStyle );
@@ -260,7 +260,7 @@ Packery.prototype.layout = function() {
 
   // layout
   this.maxY = 0;
-  this.spacePlacedElements();
+  this.placeStampedElements();
   // don't animate first layout
   this.layoutItems( this.items, !this._isInited );
 
@@ -437,13 +437,13 @@ Packery.prototype._itemsOn = function( items, eventName, callback ) {
   }
 };
 
-// -------------------------- place -------------------------- //
+// -------------------------- stamp -------------------------- //
 
 /**
- * adds elements to placedElements
+ * adds elements to stampedElements
  * @param {NodeList, Array, Element, or String} elems
  */
-Packery.prototype.place = function( elems ) {
+Packery.prototype.stamp = function( elems ) {
   if ( !elems ) {
     return;
   }
@@ -452,7 +452,7 @@ Packery.prototype.place = function( elems ) {
     elems = this.element.querySelectorAll( elems );
   }
   elems = makeArray( elems );
-  this.placedElements.push.apply( this.placedElements, elems );
+  this.stampedElements.push.apply( this.stampedElements, elems );
   // ignore
   for ( var i=0, len = elems.length; i < len; i++ ) {
     var elem = elems[i];
@@ -461,10 +461,10 @@ Packery.prototype.place = function( elems ) {
 };
 
 /**
- * removes elements to placedElements
+ * removes elements to stampedElements
  * @param {NodeList, Array, or Element} elems
  */
-Packery.prototype.unplace = function( elems ) {
+Packery.prototype.unstamp = function( elems ) {
   if ( !elems ){
     return;
   }
@@ -472,27 +472,27 @@ Packery.prototype.unplace = function( elems ) {
 
   for ( var i=0, len = elems.length; i < len; i++ ) {
     var elem = elems[i];
-    // filter out removed place elements
-    var index = indexOf( this.placedElements, elem );
+    // filter out removed stamp elements
+    var index = indexOf( this.stampedElements, elem );
     if ( index !== -1 ) {
-      this.placedElements.splice( index, 1 );
+      this.stampedElements.splice( index, 1 );
     }
     this.unignore( elem );
   }
 
 };
 
-// make spaces for placed elements
-Packery.prototype.spacePlacedElements = function() {
-  if ( !this.placedElements || !this.placedElements.length ) {
+// make spaces for stamped elements
+Packery.prototype.placeStampedElements = function() {
+  if ( !this.stampedElements || !this.stampedElements.length ) {
     return;
   }
 
   this._getBounds();
 
-  for ( var i=0, len = this.placedElements.length; i < len; i++ ) {
-    var elem = this.placedElements[i];
-    this.spacePlaced( elem );
+  for ( var i=0, len = this.stampedElements.length; i < len; i++ ) {
+    var elem = this.stampedElements[i];
+    this.placeStamp( elem );
   }
 };
 
@@ -508,7 +508,7 @@ Packery.prototype._getBounds = function() {
  * makes space for element
  * @param {Element} elem
  */
-Packery.prototype.spacePlaced = function( elem ) {
+Packery.prototype.placeStamp = function( elem ) {
   var item = this.getItem( elem );
   var rect;
   if ( item && item.isPlacing ) {
@@ -743,8 +743,8 @@ Packery.prototype.fit = function( elem, x, y ) {
   // prepare internal properties
   this._getMeasurements();
 
-  // place item to get it out of layout
-  this.place( item.element );
+  // stamp item to get it out of layout
+  this.stamp( item.element );
   // required for positionPlaceRect
   item.getSize();
   // set placing flag
@@ -779,7 +779,7 @@ Packery.prototype.fit = function( elem, x, y ) {
   this.layout();
 
   // return back to regularly scheduled programming
-  this.unplace( item.element );
+  this.unstamp( item.element );
   this.sortItemsByPosition();
   // un set placing flag, back to normal
   item.isPlacing = false;
@@ -794,7 +794,7 @@ Packery.prototype.fit = function( elem, x, y ) {
  * @param {Element} elem
  */
 Packery.prototype.itemDragStart = function( elem ) {
-  this.place( elem );
+  this.stamp( elem );
   var item = this.getItem( elem );
   if ( item ) {
     item.dragStart();
@@ -844,9 +844,9 @@ Packery.prototype.itemDragEnd = function( elem ) {
     item.dragStop();
   }
   // if elem didn't move, or if it doesn't need positioning
-  // unignore and unplace and call it a day
+  // unignore and unstamp and call it a day
   if ( !item || ( !itemDidDrag && !item.needsPositioning ) ) {
-    this.unplace( elem );
+    this.unstamp( elem );
     return;
   }
   // procced with dragged item
@@ -871,7 +871,7 @@ Packery.prototype.itemDragEnd = function( elem ) {
       item.copyPlaceRectPosition();
     }
 
-    _this.unplace( elem );
+    _this.unstamp( elem );
     // only sort when item moved
     _this.sortItemsByPosition();
 
