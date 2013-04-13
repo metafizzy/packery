@@ -112,7 +112,10 @@ function Packery( element, options ) {
 
   // kick it off
   this._create();
-  this.layout();
+
+  if ( this.options.isInitLayout ) {
+    this.layout();
+  }
 }
 
 // inherit EventEmitter
@@ -123,6 +126,7 @@ Packery.prototype.options = {
   containerStyle: {
     position: 'relative'
   },
+  isInitLayout: true,
   isResizeBound: true,
   transitionDuration: '0.4s'
 };
@@ -257,15 +261,16 @@ Packery.prototype.layout = function() {
   this.packer.height = Number.POSITIVE_INFINITY;
   this.packer.reset();
 
-
   // layout
   this.maxY = 0;
   this.placeStampedElements();
   // don't animate first layout
-  this.layoutItems( this.items, !this._isInited );
+  var isInstant = this.options.isLayoutInstant !== undefined ?
+    this.options.isLayoutInstant : !this._isLayoutInited;
+  this.layoutItems( this.items, isInstant );
 
   // flag for initalized
-  this._isInited = true;
+  this._isLayoutInited = true;
 };
 
 // _init is alias for layout
@@ -311,9 +316,9 @@ Packery.prototype._getMeasurement = function( measurement, size ) {
 /**
  * layout a collection of item elements
  * @param {Array} items - array of Packery.Items
- * @param {Boolean} isStill - disable transitions for setting item position
+ * @param {Boolean} isInstant - disable transitions for setting item position
  */
-Packery.prototype.layoutItems = function( items, isStill ) {
+Packery.prototype.layoutItems = function( items, isInstant ) {
   // console.log('layout Items');
   var layoutItems = this._getLayoutItems( items );
 
@@ -325,7 +330,7 @@ Packery.prototype.layoutItems = function( items, isStill ) {
     var item = layoutItems[i];
     // listen to layout events for callback
     this._packItem( item );
-    this._layoutItem( item, isStill );
+    this._layoutItem( item, isInstant );
   }
 
   // set container size
@@ -397,13 +402,13 @@ Packery.prototype._setRectSize = function( elem, rect ) {
 /**
  * Sets position of item in DOM
  * @param {Packery.Item} item
- * @param {Boolean} isStill - disables transitions
+ * @param {Boolean} isInstant - disables transitions
  */
-Packery.prototype._layoutItem = function( item, isStill ) {
+Packery.prototype._layoutItem = function( item, isInstant ) {
 
   // copy over position of packed rect to item element
   var rect = item.rect;
-  if ( isStill ) {
+  if ( isInstant ) {
     // if not transition, just set CSS
     item.goTo( rect.x, rect.y );
   } else {

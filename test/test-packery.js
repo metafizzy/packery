@@ -28,11 +28,11 @@ test( 'basics', function() {
   // TODO pckry should be null or something
   var pckry1 = new Packery();
   // console.log( pckry, typeof pckry );
-  ok( !pckry1._isInited, 'packery not inited on undefined' );
+  ok( !pckry1._isLayoutInited, 'packery not inited on undefined' );
 
   var pckry2 = new Packery({});
   // console.log( pckry, typeof pckry );
-  ok( !pckry2._isInited, 'packery not inited on object' );
+  ok( !pckry2._isLayoutInited, 'packery not inited on object' );
 });
 
 window.onload = function onDocReady() {
@@ -435,7 +435,7 @@ window.onload = function onDocReady() {
       stamped: 'foobar'
     });
 
-    ok( pckry4._isInited, 'bad selector didnt cause error' );
+    ok( pckry4._isLayoutInited, 'bad selector didnt cause error' );
   });
 
   test( 'stamped with borders', function() {
@@ -719,7 +719,7 @@ window.onload = function onDocReady() {
     var pckry1 = Packery.data( container1 );
     ok( pckry1 instanceof Packery, 'Packery instance retrieved from element' );
     deepEqual( pckry1.options, Packery.prototype.options, 'options match defaults' );
-    ok( pckry1._isInited, 'Packer was initialized' );
+    ok( pckry1._isLayoutInited, 'Packer was initialized' );
 
     // has data-packery-options, but bad JSON
     var container2 = document.querySelector('#declarative-bad-json');
@@ -772,6 +772,27 @@ window.onload = function onDocReady() {
     stop();
     $elem.packery();
   });
+
+  // ----- isInitLayout ----- //
+
+  test( 'isInitLayout', function() {
+    var container = document.querySelector('#is-init-layout');
+    var pckry = new Packery( container, {
+      isInitLayout: false
+    });
+    ok( !pckry._isLayoutInited, 'packy is not layout initialized' );
+  });
+
+  // ----- isLayoutInstant ----- //
+
+
+  // TODO add this
+  // test( 'isLayoutInstant', function() {
+  //   var container = document.querySelector('#is-layout-instant');
+  //   var pckry = new Packery( container, {
+  //     isTransitioning: true
+  //   });
+  // });
 
 };
 
