@@ -2,6 +2,8 @@
 
 _Bin-packing layout library_
 
+See http://packery.metafizzy.co for complete docs and demos
+
 ## Install
 
 Install with [Bower](https://github.com/twitter/bower).
@@ -14,7 +16,9 @@ bower install packery
 
 Packery may be used in commercial projects and applications with the one-time purchase of a commercial license. If you are paid to do your job, and part of your job is implementing Packery, a commercial license is required.
 
-Use in non-commercial, personal, or open-source applications is free.
+http://packery.metafizzy.co/license.html
+
+For non-commercial, personal, or open source projects and applications, you may use Packery under the terms of the MIT License. You may use Packery for free.
 
 ## Initialize
 
