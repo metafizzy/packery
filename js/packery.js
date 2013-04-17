@@ -251,7 +251,28 @@ Packery.prototype.getItemElements = function() {
 
 // ----- init & layout ----- //
 
+/**
+ * lays out all items
+ */
 Packery.prototype.layout = function() {
+  this._prelayout();
+
+  // don't animate first layout
+  var isInstant = this.options.isLayoutInstant !== undefined ?
+    this.options.isLayoutInstant : !this._isLayoutInited;
+  this.layoutItems( this.items, isInstant );
+
+  // flag for initalized
+  this._isLayoutInited = true;
+};
+
+// _init is alias for layout
+Packery.prototype._init = Packery.prototype.layout;
+
+/**
+ * logic before any new layout
+ */
+Packery.prototype._prelayout = function() {
   // reset packer
   this.elementSize = getSize( this.element );
 
@@ -264,17 +285,7 @@ Packery.prototype.layout = function() {
   // layout
   this.maxY = 0;
   this.placeStampedElements();
-  // don't animate first layout
-  var isInstant = this.options.isLayoutInstant !== undefined ?
-    this.options.isLayoutInstant : !this._isLayoutInited;
-  this.layoutItems( this.items, isInstant );
-
-  // flag for initalized
-  this._isLayoutInited = true;
 };
-
-// _init is alias for layout
-Packery.prototype._init = Packery.prototype.layout;
 
 /**
  * update columnWidth, rowHeight, & gutter
@@ -632,9 +643,37 @@ Packery.prototype.appended = function( elems ) {
   if ( !items.length ) {
     return;
   }
-  // layout just the new items
+  // layout and reveal just the new items
   this.layoutItems( items, true );
-  // reveal new items
+  this.reveal( items );
+};
+
+/**
+ * Layout prepended elements
+ * @param {Array or NodeList or Element} elems
+ */
+Packery.prototype.prepended = function( elems ) {
+  var items = this._getItems( elems );
+  if ( !items.length ) {
+    return;
+  }
+  // add items to beginning of collection
+  var previousItems = this.items.slice(0);
+  this.items = items.concat( previousItems );
+  // start new layout
+  this._prelayout();
+  // layout new stuff without transition
+  this.layoutItems( items, true );
+  this.reveal( items );
+  // layout previous items
+  this.layoutItems( previousItems );
+};
+
+// reveal a collection of items
+Packery.prototype.reveal = function( items ) {
+  if ( !items || !items.length ) {
+    return;
+  }
   for ( var i=0, len = items.length; i < len; i++ ) {
     var item = items[i];
     item.reveal();
