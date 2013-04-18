@@ -1,5 +1,5 @@
 /*!
- * Packery v1.0.0
+ * Packery v1.0.1
  * bin-packing layout library
  * http://packery.metafizzy.co
  *
