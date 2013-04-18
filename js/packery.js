@@ -977,7 +977,7 @@ Packery.prototype.destroy = function() {
     item.destroy();
   }
 
-  eventie.unbind( window, 'resize', this );
+  this.unbindResize();
 };
 
 // -------------------------- data -------------------------- //
