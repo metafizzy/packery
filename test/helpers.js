@@ -33,6 +33,12 @@ window.after = function( then, nextFn ) {
   } else {
     setTimeout( nextFn, 20 );
   }
-}
+};
+
+window.gimmeAnItemElement = function() {
+  var elem = document.createElement('div');
+  elem.className = 'item';
+  return elem;
+};
 
 })( window );

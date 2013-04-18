@@ -1,10 +1,8 @@
 ( function() {
 
-function gimmeAnItemElement() {
-  var elem = document.createElement('div');
-  elem.className = 'item';
-  return elem;
-}
+'use strict';
+
+var gimmeAnItemElement = window.gimmeAnItemElement;
 
 test( 'addItems', function() {
   var container = document.querySelector('#adding');
