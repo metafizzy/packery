@@ -92,3 +92,7 @@ body {
   position: absolute;
   top: 0;
 }*/
+
+#hidden-items .hidden {
+  display: none;
+}
