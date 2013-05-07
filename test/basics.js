@@ -5,7 +5,7 @@
 module('Packery');
 
 test( 'basics', function() {
-  equal( typeof Packery === 'function', true, 'Packery is a function' );
+  equal( typeof Packery, 'function', 'Packery is a function' );
   // TODO pckry should be null or something
   var pckry1 = new Packery();
   // console.log( pckry, typeof pckry );
