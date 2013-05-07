@@ -10,6 +10,15 @@ test( 'defaults / empty', function() {
   equal( pckry.stampedElements.length, 0, 'zero stamped elements' );
   equal( Packery.data( empty ), pckry, 'data method returns instance' );
   ok( pckry.isResizeBound, 'isResizeBound' );
+
+  pckry.on( 'layoutComplete', function( obj, items ) {
+    ok( true, 'layoutComplete triggered with no items' );
+    equal( items.length, 0, 'no items' );
+    start();
+    return true; // bind once
+  });
+  stop();
+  pckry.layout();
 });
 
 })();

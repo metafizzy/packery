@@ -1,5 +1,5 @@
 /*!
- * Packery v1.0.2
+ * Packery v1.0.3
  * bin-packing layout library
  * http://packery.metafizzy.co
  *
@@ -333,15 +333,20 @@ Packery.prototype.layoutItems = function( items, isInstant ) {
   // console.log('layout Items');
   var layoutItems = this._getLayoutItems( items );
 
-  this._itemsOn( layoutItems, 'layout', function onItemsLayout() {
-    this.emitEvent( 'layoutComplete', [ this, layoutItems ] );
-  });
+  if ( !layoutItems || !layoutItems.length ) {
+    // no items, just emit layout complete with empty array
+    this.emitEvent( 'layoutComplete', [ this, [] ] );
+  } else {
+    this._itemsOn( layoutItems, 'layout', function onItemsLayout() {
+      this.emitEvent( 'layoutComplete', [ this, layoutItems ] );
+    });
 
-  for ( var i=0, len = layoutItems.length; i < len; i++ ) {
-    var item = layoutItems[i];
-    // listen to layout events for callback
-    this._packItem( item );
-    this._layoutItem( item, isInstant );
+    for ( var i=0, len = layoutItems.length; i < len; i++ ) {
+      var item = layoutItems[i];
+      // listen to layout events for callback
+      this._packItem( item );
+      this._layoutItem( item, isInstant );
+    }
   }
 
   // set container size
