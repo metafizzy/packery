@@ -1,6 +1,6 @@
 {
   "name": "packery",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": "David DeSandro / Metafizzy",
   "description": "bin-packing layout library",
   "main": [
