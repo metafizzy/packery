@@ -1,5 +1,5 @@
 /*!
- * Packery v1.0.4
+ * Packery v1.0.5
  * bin-packing layout library
  * http://packery.metafizzy.co
  *
@@ -357,6 +357,8 @@ Packery.prototype.layoutItems = function( items, isInstant ) {
     elemH += elemSize.paddingBottom + elemSize.paddingTop +
       elemSize.borderTopWidth + elemSize.borderBottomWidth;
   }
+  // prevent negative size, which causes error in IE
+  elemH = Math.max( elemH, 0 );
   this.element.style.height = elemH + 'px';
 };
 

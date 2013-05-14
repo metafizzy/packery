@@ -18,6 +18,8 @@ test( 'defaults / empty', function() {
     return true; // bind once
   });
   stop();
+  // add gutter, to check that container size doesn't get negative number
+  pckry.options.gutter = 20;
   pckry.layout();
 });
 
