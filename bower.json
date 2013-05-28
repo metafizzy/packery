@@ -1,6 +1,6 @@
 {
   "name": "packery",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "author": "David DeSandro / Metafizzy",
   "description": "bin-packing layout library",
   "main": [
@@ -13,7 +13,7 @@
     "classie": "desandro/classie",
     "doc-ready": "desandro/doc-ready#>=0.0.3",
     "eventEmitter": ">=3",
-    "eventie": "desandro/eventie",
+    "eventie": "desandro/eventie#>=1.0.3",
     "get-size": "desandro/get-size#>=1.1.0",
     "get-style-property": "desandro/get-style-property",
     "jquery-bridget": "desandro/jquery-bridget#>=0.1.2",
