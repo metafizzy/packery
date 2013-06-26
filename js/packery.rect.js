@@ -20,9 +20,6 @@ function Rect( props ) {
 
 }
 
-// make available
-Packery.Rect = Rect;
-
 Rect.defaults = {
   x: 0,
   y: 0,
