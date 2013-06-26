@@ -1052,7 +1052,7 @@ if ( typeof define === 'function' && define.amd ) {
   define( [
       'packery.rect',
       'packery.packer',
-      'packery.tem',
+      'packery.item',
       'classie',
       'doc-ready',
       'eventEmitter',

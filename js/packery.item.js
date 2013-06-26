@@ -428,7 +428,7 @@ Item.prototype.copyPlaceRectPosition = function() {
 if ( typeof define === 'function' && define.amd ) {
   // AMD
   define( [
-      'Rect',
+      'packery.rect',
       'get-size',
       'get-style-property',
       'eventEmitter'
