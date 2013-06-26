@@ -7,12 +7,6 @@
 
 "use strict";
 
-// -------------------------- Packery -------------------------- //
-
-// global namespace
-var Packery = window.Packery = function() {};
-
-// -------------------------- Rect -------------------------- //
 
 function Rect( props ) {
   // extend properties from defaults
@@ -140,5 +134,15 @@ Rect.prototype.canFit = function( rect ) {
 };
 
 
+// -------------------------- transport -------------------------- //
+
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( Rect );
+} else {
+  // browser global
+  window.Packery = window.Packery || {};
+  window.Packery.Rect = Rect;
+}
 
 })( window );
