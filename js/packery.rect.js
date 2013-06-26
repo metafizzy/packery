@@ -135,7 +135,7 @@ Rect.prototype.canFit = function( rect ) {
 
 if ( typeof define === 'function' && define.amd ) {
   // AMD
-  define( Rect );
+  define( function () { return Rect; } );
 } else {
   // browser global
   window.Packery = window.Packery || {};
