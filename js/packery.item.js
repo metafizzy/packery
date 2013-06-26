@@ -420,6 +420,8 @@ Item.prototype.copyPlaceRectPosition = function() {
   this.rect.y = this.placeRect.y;
 };
 
+return Item;
+
 } // end definitions
 
 

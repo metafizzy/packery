@@ -1042,6 +1042,8 @@ if ( jQuery && jQuery.bridget ) {
   jQuery.bridget( 'packery', Packery );
 }
 
+return Packery;
+
 } // end definition
 
 

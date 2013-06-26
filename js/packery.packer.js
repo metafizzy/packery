@@ -116,6 +116,8 @@ Packer.spaceSorterLeftTop = function( a, b ) {
   return a.x - b.x || a.y - b.y;
 };
 
+return Packer;
+
 } // end definition
 
 
