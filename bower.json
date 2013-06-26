@@ -4,9 +4,9 @@
   "author": "David DeSandro / Metafizzy",
   "description": "bin-packing layout library",
   "main": [
-    "js/rect.js",
-    "js/packer.js",
-    "js/item.js",
+    "js/packery.rect.js",
+    "js/packery.packer.js",
+    "js/packery.item.js",
     "js/packery.js"
   ],
   "dependencies": {
