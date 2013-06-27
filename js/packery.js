@@ -15,19 +15,19 @@
 
 'use strict';
 
-// Packery classes
-var _Packery = window.Packery;
-var Rect = _Packery.Rect;
-var Packer = _Packery.Packer;
-var Item = _Packery.Item;
+// -------------------------- definition -------------------------- //
 
-// dependencies
-var classie = window.classie;
-var docReady = window.docReady;
-var EventEmitter = window.EventEmitter;
-var eventie = window.eventie;
-var getSize = window.getSize;
-var matchesSelector = window.matchesSelector;
+function packeryDefinition(
+  Rect,
+  Packer,
+  Item,
+  classie,
+  docReady,
+  EventEmitter,
+  eventie,
+  getSize,
+  matchesSelector
+) {
 
 // ----- vars ----- //
 
@@ -1042,12 +1042,40 @@ if ( jQuery && jQuery.bridget ) {
   jQuery.bridget( 'packery', Packery );
 }
 
+return Packery;
+
+} // end definition
+
+
 // -------------------------- transport -------------------------- //
 
-// back in global
-Packery.Rect = Rect;
-Packery.Packer = Packer;
-Packery.Item = Item;
-window.Packery = Packery;
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( [
+      'packery.rect',
+      'packery.packer',
+      'packery.item',
+      'classie',
+      'doc-ready',
+      'eventEmitter',
+      'eventie',
+      'get-size',
+      'matches-selector'
+    ],
+    packeryDefinition );
+} else {
+  // browser global
+  window.Draggabilly = packeryDefinition(
+    window.Packery.Rect,
+    window.Packery.Packer,
+    window.Packery.Item,
+    window.classie,
+    window.docReady,
+    window.EventEmitter,
+    window.eventie,
+    window.getSize,
+    window.matchesSelector
+  );
+}
 
 })( window );

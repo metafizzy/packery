@@ -6,12 +6,9 @@
 
 'use strict';
 
-// dependencies
-var Packery = window.Packery;
-var Rect = Packery.Rect;
-var getSize = window.getSize;
-var getStyleProperty = window.getStyleProperty;
-var EventEmitter = window.EventEmitter;
+// -------------------------- definition -------------------------- //
+
+function itemDefinition(Rect, getSize, getStyleProperty, EventEmitter) {
 
 // ----- get style ----- //
 
@@ -423,10 +420,32 @@ Item.prototype.copyPlaceRectPosition = function() {
   this.rect.y = this.placeRect.y;
 };
 
-// --------------------------  -------------------------- //
+return Item;
 
-// publicize
-Packery.Item = Item;
+} // end definitions
+
+
+// -------------------------- transport -------------------------- //
+
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( [
+      'packery.rect',
+      'get-size',
+      'get-style-property',
+      'eventEmitter'
+    ],
+    itemDefinition );
+} else {
+  // browser global
+  window.Packery = window.Packery || {};
+  window.Packery.Item = itemDefinition(
+    window.Packery.Rect,
+    window.getSize,
+    window.getStyleProperty,
+    window.EventEmitter
+  );
+}
 
 })( window );
 

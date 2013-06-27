@@ -2,11 +2,9 @@
 
 'use strict';
 
-var Packery = window.Packery;
-var Rect = Packery.Rect;
+// -------------------------- definition -------------------------- //
 
-
-// -------------------------- Packer -------------------------- //
+function packerDefinition( Rect ) {
 
 function Packer( width, height ) {
   this.width = width || 0;
@@ -118,8 +116,20 @@ Packer.spaceSorterLeftTop = function( a, b ) {
   return a.x - b.x || a.y - b.y;
 };
 
-// -----  ----- //
+return Packer;
 
-Packery.Packer = Packer;
+} // end definition
+
+
+// -------------------------- transport -------------------------- //
+
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define(['packery.rect'], packerDefinition );
+} else {
+  // browser global
+  window.Packery = window.Packery || {};
+  window.Packery.Packery = packerDefinition( window.Packery.Rect );
+}
 
 })( window );
