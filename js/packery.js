@@ -255,6 +255,9 @@ Packery.prototype.getItemElements = function() {
  * lays out all items
  */
 Packery.prototype.layout = function() {
+
+  this.emitEvent( 'beforeLayout', [ this, [] ] );
+
   this._prelayout();
 
   // don't animate first layout
