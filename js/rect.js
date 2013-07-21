@@ -12,6 +12,8 @@
 // global namespace
 var Packery = window.Packery = function() {};
 
+function rectDefinition() {
+
 // -------------------------- Rect -------------------------- //
 
 function Rect( props ) {
@@ -139,6 +141,19 @@ Rect.prototype.canFit = function( rect ) {
   return this.width >= rect.width && this.height >= rect.height;
 };
 
+return Rect;
 
+}
+
+// -------------------------- transport -------------------------- //
+
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( rectDefinition );
+} else {
+  // browser global
+  window.Packery = window.Packery || {};
+  window.Packery.Rect = rectDefinition();
+}
 
 })( window );
