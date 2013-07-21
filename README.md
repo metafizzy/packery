@@ -18,7 +18,7 @@ Packery may be used in commercial projects and applications with the one-time pu
 
 http://packery.metafizzy.co/license.html
 
-For non-commercial, personal, or open source projects and applications, you may use Packery under the terms of the MIT License. You may use Packery for free.
+For non-commercial, personal, or open source projects and applications, you may use Packery under the terms of the GPL V3 License. You may use Packery for free.
 
 ## Initialize
 
