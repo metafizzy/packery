@@ -151,7 +151,7 @@ Packery.prototype._setRectSize = function( elem, rect ) {
 
 Packery.prototype._getContainerSize = function() {
   return {
-    height: this.maxY
+    height: this.maxY - this.gutter
   };
 };
 
