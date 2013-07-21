@@ -115,13 +115,15 @@
     <div class="item"></div>
   </div>
 
-<script src="../components/get-style-property/get-style-property.js"></script>
-<script src="../components/get-size/get-size.js"></script>
-<script src="../components/matches-selector/matches-selector.js"></script>
-<script src="../components/eventEmitter/EventEmitter.js"></script>
-<script src="../components/eventie/eventie.js"></script>
-<script src="../components/doc-ready/doc-ready.js"></script>
-<script src="../components/classie/classie.js"></script>
+<script src="../bower_components/get-style-property/get-style-property.js"></script>
+<script src="../bower_components/get-size/get-size.js"></script>
+<script src="../bower_components/matches-selector/matches-selector.js"></script>
+<script src="../bower_components/eventEmitter/EventEmitter.js"></script>
+<script src="../bower_components/eventie/eventie.js"></script>
+<script src="../bower_components/doc-ready/doc-ready.js"></script>
+<script src="../bower_components/classie/classie.js"></script>
+<script src="../bower_components/outlayer/item.js"></script>
+<script src="../bower_components/outlayer/outlayer.js"></script>
 <script src="../js/rect.js"></script>
 <script src="../js/packer.js"></script>
 <script src="../js/packery.js"></script>
@@ -163,7 +165,6 @@ window.onload = function() {
   ( function() {
     var container = document.querySelector('#fit-demo');
     var pckry = new Packery( container );
-
     pckry.on( 'fitComplete', function( pckryInstance, item ) {
       console.log('fit was completed ', item );
     });
