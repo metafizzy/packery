@@ -92,7 +92,6 @@ Packery.prototype._resetLayout = function() {
 
   // layout
   this.maxY = 0;
-  this.placeStampedElements();
 };
 
 /**
@@ -159,41 +158,22 @@ Packery.prototype._getContainerSize = function() {
 
 // -------------------------- stamp -------------------------- //
 
-
-
-// make spaces for stamped elements
-Packery.prototype.placeStampedElements = function() {
-  if ( !this.stampedElements || !this.stampedElements.length ) {
-    return;
-  }
-
-  this._getBounds();
-
-  for ( var i=0, len = this.stampedElements.length; i < len; i++ ) {
-    var elem = this.stampedElements[i];
-    this.placeStamp( elem );
-  }
-};
-
-// update boundingLeft / Top
-Packery.prototype._getBounds = function() {
-  // get bounding rect for container element
-  var elementBoundingRect = this.element.getBoundingClientRect();
-  this._boundingLeft = elementBoundingRect.left + this.size.paddingLeft;
-  this._boundingTop  = elementBoundingRect.top  + this.size.paddingTop;
-};
-
 /**
  * makes space for element
  * @param {Element} elem
  */
-Packery.prototype.placeStamp = function( elem ) {
+Packery.prototype._manageStamp = function( elem ) {
+
   var item = this.getItem( elem );
   var rect;
   if ( item && item.isPlacing ) {
     rect = item.placeRect;
   } else {
-    rect = this._getElementOffsetRect( elem );
+    var offset = this._getElementOffset( elem );
+    rect = new Rect({
+      x: offset.left,
+      y: offset.top
+    });
   }
 
   this._setRectSize( elem, rect );
@@ -201,41 +181,6 @@ Packery.prototype.placeStamp = function( elem ) {
   this.packer.placed( rect );
   this._setMaxY( rect );
 };
-
-/**
- * get x/y position of element relative to container element
- * @param {Element} elem
- * @returns {Rect} rect
- */
-Packery.prototype._getElementOffsetRect = function( elem ) {
-  var boundingRect = elem.getBoundingClientRect();
-  var rect = new Rect({
-    x: boundingRect.left - this._boundingLeft,
-    y: boundingRect.top - this._boundingTop
-  });
-  rect.x -= this.size.borderLeftWidth;
-  rect.y -= this.size.borderTopWidth;
-  return rect;
-};
-
-// -------------------------- resize -------------------------- //
-
-// debounced, layout on resize
-Packery.prototype.resize = function() {
-  // don't trigger if size did not change
-  var size = getSize( this.element );
-  // check that size and size are there
-  // IE8 triggers resize on body size change, so they might not be
-  var hasSizes = this.size && size;
-  if ( hasSizes && size.innerWidth === this.size.innerWidth ) {
-    return;
-  }
-
-  this.layout();
-
-  delete this.resizeTimeout;
-};
-
 
 // -------------------------- methods -------------------------- //
 
