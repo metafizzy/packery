@@ -306,11 +306,35 @@ Packery.prototype.itemDragEnd = function( elem ) {
   classie.add( item.element, 'is-positioning-post-drag' );
 
   // save this var, as it could get reset in dragStart
-  var itemNeedsPositioning = item.needsPositioning;
-  var asyncCount = itemNeedsPositioning ? 2 : 1;
+  var onLayoutComplete = this._getDragEndLayoutComplete( elem, item );
+
+  if ( item.needsPositioning ) {
+    item.on( 'layout', onLayoutComplete );
+    item.moveTo( item.placeRect.x, item.placeRect.y );
+  } else if ( item ) {
+    // item didn't need placement
+    item.copyPlaceRectPosition();
+  }
+
+  this.clearDragTimeout();
+  this.on( 'layoutComplete', onLayoutComplete );
+  this.layout();
+
+};
+
+/**
+ * get drag end callback
+ * @param {Element} elem
+ * @param {Packery.Item} item
+ * @returns {Function} onLayoutComplete
+ */
+Packery.prototype._getDragEndLayoutComplete = function( elem, item ) {
+  var itemNeedsPositioning = item && item.needsPositioning;
   var completeCount = 0;
+  var asyncCount = itemNeedsPositioning ? 2 : 1;
   var _this = this;
-  function onLayoutComplete() {
+
+  return function onLayoutComplete() {
     completeCount++;
     // don't proceed if not complete
     if ( completeCount !== asyncCount ) {
@@ -328,25 +352,12 @@ Packery.prototype.itemDragEnd = function( elem ) {
     _this.sortItemsByPosition();
 
     // emit item drag event now that everything is done
-    if ( item && itemNeedsPositioning ) {
+    if ( itemNeedsPositioning ) {
       _this.emitEvent( 'dragItemPositioned', [ _this, item ] );
     }
     // listen once
     return true;
-  }
-
-  if ( itemNeedsPositioning ) {
-    item.on( 'layout', onLayoutComplete );
-    item.moveTo( item.placeRect.x, item.placeRect.y );
-  } else if ( item ) {
-    // item didn't need placement
-    item.copyPlaceRectPosition();
-  }
-
-  this.clearDragTimeout();
-  this.on( 'layoutComplete', onLayoutComplete );
-  this.layout();
-
+  };
 };
 
 /**
