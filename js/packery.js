@@ -1,12 +1,12 @@
 /*!
- * Packery v1.0.6
+ * Packery v1.1.0
  * bin-packing layout library
  * http://packery.metafizzy.co
  *
  * Commercial use requires one-time purchase of a commercial license
  * http://packery.metafizzy.co/license.html
  *
- * Non-commercial use is licensed under the MIT License
+ * Non-commercial use is licensed under the GPL V3 License
  *
  * Copyright 2013 Metafizzy
  */
@@ -15,138 +15,20 @@
 
 'use strict';
 
-// Packery classes
-var _Packery = window.Packery;
-var Rect = _Packery.Rect;
-var Packer = _Packery.Packer;
-var Item = _Packery.Item;
-
-// dependencies
-var classie = window.classie;
-var docReady = window.docReady;
-var EventEmitter = window.EventEmitter;
-var eventie = window.eventie;
-var getSize = window.getSize;
-var matchesSelector = window.matchesSelector;
-
-// ----- vars ----- //
-
-var document = window.document;
-var console = window.console;
-var jQuery = window.jQuery;
-
-// -------------------------- helpers -------------------------- //
-
-// extend objects
-function extend( a, b ) {
-  for ( var prop in b ) {
-    a[ prop ] = b[ prop ];
-  }
-  return a;
-}
-
-// turn element or nodeList into an array
-function makeArray( obj ) {
-  var ary = [];
-  if ( typeof obj.length === 'number' ) {
-    // convert nodeList to array
-    for ( var i=0, len = obj.length; i < len; i++ ) {
-      ary.push( obj[i] );
-    }
-  } else {
-    // array of single index
-    ary.push( obj );
-  }
-  return ary;
-}
-
-// http://stackoverflow.com/a/384380/182183
-var isElement = ( typeof HTMLElement === 'object' ) ?
-  function isElementDOM2( obj ) {
-    return obj instanceof HTMLElement;
-  } :
-  function isElementQuirky( obj ) {
-    return obj && typeof obj === 'object' &&
-      obj.nodeType === 1 && typeof obj.nodeName === 'string';
-  };
-
-// index of helper cause IE8
-var indexOf = Array.prototype.indexOf ? function( ary, obj ) {
-    return ary.indexOf( obj );
-  } : function( ary, obj ) {
-    for ( var i=0, len = ary.length; i < len; i++ ) {
-      if ( ary[i] === obj ) {
-        return i;
-      }
-    }
-    return -1;
-  };
-
-
 // -------------------------- Packery -------------------------- //
 
-// globally unique identifiers
-var GUID = 0;
-// internal store of all Packery intances
-var packeries = {};
+// used for AMD definition and requires
+function packeryDefinition( classie, getSize, Outlayer, Rect, Packer ) {
 
-function Packery( element, options ) {
-  // bail out if not proper element
-  if ( !element || !isElement( element ) ) {
-    if ( console ) {
-      console.error( 'bad Packery element: ' + element );
-    }
-    return;
-  }
-
-  this.element = element;
-
-  // options
-  this.options = extend( {}, this.options );
-  extend( this.options, options );
-
-  // add id for Packery.getFromElement
-  var id = ++GUID;
-  this.element.packeryGUID = id; // expando
-  packeries[ id ] = this; // associate via id
-
-  // kick it off
-  this._create();
-
-  if ( this.options.isInitLayout ) {
-    this.layout();
-  }
-}
-
-// inherit EventEmitter
-extend( Packery.prototype, EventEmitter.prototype );
-
-// default options
-Packery.prototype.options = {
-  containerStyle: {
-    position: 'relative'
-  },
-  isInitLayout: true,
-  isResizeBound: true,
-  transitionDuration: '0.4s'
-};
+// create an Outlayer layout class
+var Packery = Outlayer.create('packery');
 
 Packery.prototype._create = function() {
+  // call super
+  Outlayer.prototype._create.call( this );
+
   // initial properties
   this.packer = new Packer();
-  // get items from children
-  this.reloadItems();
-  // collection of element that don't get laid out
-  this.stampedElements = [];
-  this.stamp( this.options.stamped );
-
-  var containerStyle = this.options.containerStyle;
-  extend( this.element.style, containerStyle );
-
-  // bind resize method
-  if ( this.options.isResizeBound ) {
-    this.bindResize();
-  }
 
   // create drag handlers
   var _this = this;
@@ -176,109 +58,35 @@ Packery.prototype._create = function() {
 
 };
 
-// goes through all children again and gets bricks in proper order
-Packery.prototype.reloadItems = function() {
-  // collection of item elements
-  this.items = this._getItems( this.element.children );
-};
-
-
-/**
- * get item elements to be used in layout
- * @param {Array or NodeList or HTMLElement} elems
- * @returns {Array} items - collection of new Packery Items
- */
-Packery.prototype._getItems = function( elems ) {
-
-  var itemElems = this._filterFindItemElements( elems );
-
-  // create new Packery Items for collection
-  var items = [];
-  for ( var i=0, len = itemElems.length; i < len; i++ ) {
-    var elem = itemElems[i];
-    var item = new Item( elem, this );
-    items.push( item );
-  }
-
-  return items;
-};
-
-/**
- * get item elements to be used in layout
- * @param {Array or NodeList or HTMLElement} elems
- * @returns {Array} items - item elements
- */
-Packery.prototype._filterFindItemElements = function( elems ) {
-  // make array of elems
-  elems = makeArray( elems );
-  var itemSelector = this.options.itemSelector;
-
-  if ( !itemSelector ) {
-    return elems;
-  }
-
-  var itemElems = [];
-
-  // filter & find items if we have an item selector
-  for ( var i=0, len = elems.length; i < len; i++ ) {
-    var elem = elems[i];
-    // filter siblings
-    if ( matchesSelector( elem, itemSelector ) ) {
-      itemElems.push( elem );
-    }
-    // find children
-    var childElems = elem.querySelectorAll( itemSelector );
-    // concat childElems to filterFound array
-    for ( var j=0, jLen = childElems.length; j < jLen; j++ ) {
-      itemElems.push( childElems[j] );
-    }
-  }
-
-  return itemElems;
-};
-
-/**
- * getter method for getting item elements
- * @returns {Array} elems - collection of item elements
- */
-Packery.prototype.getItemElements = function() {
-  var elems = [];
-  for ( var i=0, len = this.items.length; i < len; i++ ) {
-    elems.push( this.items[i].element );
-  }
-  return elems;
-};
 
 // ----- init & layout ----- //
 
 /**
  * lays out all items
  */
-Packery.prototype.layout = function() {
-  this._prelayout();
-
-  // don't animate first layout
-  var isInstant = this.options.isLayoutInstant !== undefined ?
-    this.options.isLayoutInstant : !this._isLayoutInited;
-  this.layoutItems( this.items, isInstant );
-
-  // flag for initalized
-  this._isLayoutInited = true;
-};
-
-// _init is alias for layout
-Packery.prototype._init = Packery.prototype.layout;
+// Packery.prototype.layout = function() {
+//   this._prelayout();
+// 
+//   // don't animate first layout
+//   var isInstant = this.options.isLayoutInstant !== undefined ?
+//     this.options.isLayoutInstant : !this._isLayoutInited;
+//   this.layoutItems( this.items, isInstant );
+// 
+//   // flag for initalized
+//   this._isLayoutInited = true;
+// };
 
 /**
  * logic before any new layout
  */
-Packery.prototype._prelayout = function() {
-  // reset packer
-  this.elementSize = getSize( this.element );
+Packery.prototype._resetLayout = function() {
+  this.getSize();
+  this.size = getSize( this.element );
 
   this._getMeasurements();
 
-  this.packer.width = this.elementSize.innerWidth + this.gutter;
+  // reset packer
+  this.packer.width = this.size.innerWidth + this.gutter;
   this.packer.height = Number.POSITIVE_INFINITY;
   this.packer.reset();
 
@@ -297,86 +105,11 @@ Packery.prototype._getMeasurements = function() {
   this._getMeasurement( 'gutter', 'width' );
 };
 
-/**
- * get measurement from option, for columnWidth, rowHeight, gutter
- * if option is String -> get element from selector string, & get size of element
- * if option is Element -> get size of element
- * else use option as a number
- *
- * @param {String} measurement
- * @param {String} size - width or height
- * @private
- */
-Packery.prototype._getMeasurement = function( measurement, size ) {
-  var option = this.options[ measurement ];
-  var elem;
-  if ( !option ) {
-    // default to 0
-    this[ measurement ] = 0;
-  } else {
-    if ( typeof option === 'string' ) {
-      elem = this.element.querySelector( option );
-    } else if ( isElement( option ) ) {
-      elem = option;
-    }
-    // use size of element, if element
-    this[ measurement ] = elem ? getSize( elem )[ size ] : option;
-  }
+Packery.prototype._getItemLayoutPosition = function( item ) {
+  this._packItem( item );
+  return item.rect;
 };
 
-/**
- * layout a collection of item elements
- * @param {Array} items - array of Packery.Items
- * @param {Boolean} isInstant - disable transitions for setting item position
- */
-Packery.prototype.layoutItems = function( items, isInstant ) {
-  // console.log('layout Items');
-  var layoutItems = this._getLayoutItems( items );
-
-  if ( !layoutItems || !layoutItems.length ) {
-    // no items, just emit layout complete with empty array
-    this.emitEvent( 'layoutComplete', [ this, [] ] );
-  } else {
-    this._itemsOn( layoutItems, 'layout', function onItemsLayout() {
-      this.emitEvent( 'layoutComplete', [ this, layoutItems ] );
-    });
-
-    for ( var i=0, len = layoutItems.length; i < len; i++ ) {
-      var item = layoutItems[i];
-      // listen to layout events for callback
-      this._packItem( item );
-      this._layoutItem( item, isInstant );
-    }
-  }
-
-  // set container size
-  var elemSize = this.elementSize;
-  var elemH = this.maxY - this.gutter;
-  // add padding and border width if border box
-  if ( elemSize.isBorderBox ) {
-    elemH += elemSize.paddingBottom + elemSize.paddingTop +
-      elemSize.borderTopWidth + elemSize.borderBottomWidth;
-  }
-  // prevent negative size, which causes error in IE
-  elemH = Math.max( elemH, 0 );
-  this.element.style.height = elemH + 'px';
-};
-
-/**
- * filters items for non-ignored items
- * @param {Array} items
- * @returns {Array} layoutItems
- */
-Packery.prototype._getLayoutItems = function( items ) {
-  var layoutItems = [];
-  for ( var i=0, len = items.length; i < len; i++ ) {
-    var item = items[i];
-    if ( !item.isIgnored ) {
-      layoutItems.push( item );
-    }
-  }
-  return layoutItems;
-};
 
 /**
  * layout item in packer
@@ -417,93 +150,16 @@ Packery.prototype._setRectSize = function( elem, rect ) {
   rect.height = h;
 };
 
-/**
- * Sets position of item in DOM
- * @param {Packery.Item} item
- * @param {Boolean} isInstant - disables transitions
- */
-Packery.prototype._layoutItem = function( item, isInstant ) {
-
-  // copy over position of packed rect to item element
-  var rect = item.rect;
-  if ( isInstant ) {
-    // if not transition, just set CSS
-    item.goTo( rect.x, rect.y );
-  } else {
-    item.moveTo( rect.x, rect.y );
-  }
-
+Packery.prototype._getContainerSize = function() {
+  return {
+    height: this.maxY
+  };
 };
 
-/**
- * trigger a callback for a collection of items events
- * @param {Array} items - Packery.Items
- * @param {String} eventName
- * @param {Function} callback
- */
-Packery.prototype._itemsOn = function( items, eventName, callback ) {
-  var doneCount = 0;
-  var count = items.length;
-  // event callback
-  var _this = this;
-  function tick() {
-    doneCount++;
-    if ( doneCount === count ) {
-      callback.call( _this );
-    }
-    return true; // bind once
-  }
-  // bind callback
-  for ( var i=0, len = items.length; i < len; i++ ) {
-    var item = items[i];
-    item.on( eventName, tick );
-  }
-};
 
 // -------------------------- stamp -------------------------- //
 
-/**
- * adds elements to stampedElements
- * @param {NodeList, Array, Element, or String} elems
- */
-Packery.prototype.stamp = function( elems ) {
-  if ( !elems ) {
-    return;
-  }
-  // if string, use argument as selector string
-  if ( typeof elems === 'string' ) {
-    elems = this.element.querySelectorAll( elems );
-  }
-  elems = makeArray( elems );
-  this.stampedElements.push.apply( this.stampedElements, elems );
-  // ignore
-  for ( var i=0, len = elems.length; i < len; i++ ) {
-    var elem = elems[i];
-    this.ignore( elem );
-  }
-};
 
-/**
- * removes elements to stampedElements
- * @param {NodeList, Array, or Element} elems
- */
-Packery.prototype.unstamp = function( elems ) {
-  if ( !elems ){
-    return;
-  }
-  elems = makeArray( elems );
-
-  for ( var i=0, len = elems.length; i < len; i++ ) {
-    var elem = elems[i];
-    // filter out removed stamp elements
-    var index = indexOf( this.stampedElements, elem );
-    if ( index !== -1 ) {
-      this.stampedElements.splice( index, 1 );
-    }
-    this.unignore( elem );
-  }
-
-};
 
 // make spaces for stamped elements
 Packery.prototype.placeStampedElements = function() {
@@ -523,8 +179,8 @@ Packery.prototype.placeStampedElements = function() {
 Packery.prototype._getBounds = function() {
   // get bounding rect for container element
   var elementBoundingRect = this.element.getBoundingClientRect();
-  this._boundingLeft = elementBoundingRect.left + this.elementSize.paddingLeft;
-  this._boundingTop  = elementBoundingRect.top  + this.elementSize.paddingTop;
+  this._boundingLeft = elementBoundingRect.left + this.size.paddingLeft;
+  this._boundingTop  = elementBoundingRect.top  + this.size.paddingTop;
 };
 
 /**
@@ -557,67 +213,21 @@ Packery.prototype._getElementOffsetRect = function( elem ) {
     x: boundingRect.left - this._boundingLeft,
     y: boundingRect.top - this._boundingTop
   });
-  rect.x -= this.elementSize.borderLeftWidth;
-  rect.y -= this.elementSize.borderTopWidth;
+  rect.x -= this.size.borderLeftWidth;
+  rect.y -= this.size.borderTopWidth;
   return rect;
 };
 
 // -------------------------- resize -------------------------- //
 
-// enable event handlers for listeners
-// i.e. resize -> onresize
-Packery.prototype.handleEvent = function( event ) {
-  var method = 'on' + event.type;
-  if ( this[ method ] ) {
-    this[ method ]( event );
-  }
-};
-
-/**
- * Bind layout to window resizing
- */
-Packery.prototype.bindResize = function() {
-  // bind just one listener
-  if ( this.isResizeBound ) {
-    return;
-  }
-  eventie.bind( window, 'resize', this );
-  this.isResizeBound = true;
-};
-
-/**
- * Unbind layout to window resizing
- */
-Packery.prototype.unbindResize = function() {
-  eventie.unbind( window, 'resize', this );
-  this.isResizeBound = false;
-};
-
-// original debounce by John Hann
-// http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
-
-// this fires every resize
-Packery.prototype.onresize = function() {
-  if ( this.resizeTimeout ) {
-    clearTimeout( this.resizeTimeout );
-  }
-
-  var _this = this;
-  function delayed() {
-    _this.resize();
-  }
-
-  this.resizeTimeout = setTimeout( delayed, 100 );
-};
-
 // debounced, layout on resize
 Packery.prototype.resize = function() {
   // don't trigger if size did not change
   var size = getSize( this.element );
-  // check that elementSize and size are there
+  // check that size and size are there
   // IE8 triggers resize on body size change, so they might not be
-  var hasSizes = this.elementSize && size;
-  if ( hasSizes && size.innerWidth === this.elementSize.innerWidth ) {
+  var hasSizes = this.size && size;
+  if ( hasSizes && size.innerWidth === this.size.innerWidth ) {
     return;
   }
 
@@ -629,151 +239,8 @@ Packery.prototype.resize = function() {
 
 // -------------------------- methods -------------------------- //
 
-/**
- * add items to Packery instance
- * @param {Array or NodeList or Element} elems
- * @returns {Array} items - Packery.Items
-**/
-Packery.prototype.addItems = function( elems ) {
-  var items = this._getItems( elems );
-  if ( !items.length ) {
-    return;
-  }
-  // add items to collection
-  this.items.push.apply( this.items, items );
-  return items;
-};
-
-/**
- * Layout newly-appended item elements
- * @param {Array or NodeList or Element} elems
- */
-Packery.prototype.appended = function( elems ) {
-  var items = this.addItems( elems );
-  if ( !items.length ) {
-    return;
-  }
-  // layout and reveal just the new items
-  this.layoutItems( items, true );
-  this.reveal( items );
-};
-
-/**
- * Layout prepended elements
- * @param {Array or NodeList or Element} elems
- */
-Packery.prototype.prepended = function( elems ) {
-  var items = this._getItems( elems );
-  if ( !items.length ) {
-    return;
-  }
-  // add items to beginning of collection
-  var previousItems = this.items.slice(0);
-  this.items = items.concat( previousItems );
-  // start new layout
-  this._prelayout();
-  // layout new stuff without transition
-  this.layoutItems( items, true );
-  this.reveal( items );
-  // layout previous items
-  this.layoutItems( previousItems );
-};
-
-// reveal a collection of items
-Packery.prototype.reveal = function( items ) {
-  if ( !items || !items.length ) {
-    return;
-  }
-  for ( var i=0, len = items.length; i < len; i++ ) {
-    var item = items[i];
-    item.reveal();
-  }
-};
-
-/**
- * get Packery.Item, given an Element
- * @param {Element} elem
- * @param {Function} callback
- * @returns {Packery.Item} item
- */
-Packery.prototype.getItem = function( elem ) {
-  // loop through items to get the one that matches
-  for ( var i=0, len = this.items.length; i < len; i++ ) {
-    var item = this.items[i];
-    if ( item.element === elem ) {
-      // return item
-      return item;
-    }
-  }
-};
-
-/**
- * get collection of Packery.Items, given Elements
- * @param {Array} elems
- * @returns {Array} items - Packery.Items
- */
-Packery.prototype.getItems = function( elems ) {
-  if ( !elems || !elems.length ) {
-    return;
-  }
-  var items = [];
-  for ( var i=0, len = elems.length; i < len; i++ ) {
-    var elem = elems[i];
-    var item = this.getItem( elem );
-    if ( item ) {
-      items.push( item );
-    }
-  }
-
-  return items;
-};
-
-/**
- * remove element(s) from instance and DOM
- * @param {Array or NodeList or Element} elems
- */
-Packery.prototype.remove = function( elems ) {
-  elems = makeArray( elems );
-
-  var removeItems = this.getItems( elems );
-
-  this._itemsOn( removeItems, 'remove', function() {
-    this.emitEvent( 'removeComplete', [ this, removeItems ] );
-  });
-
-  for ( var i=0, len = removeItems.length; i < len; i++ ) {
-    var item = removeItems[i];
-    item.remove();
-    // remove item from collection
-    var index = indexOf( this.items, item );
-    this.items.splice( index, 1 );
-  }
-};
-
-/**
- * keep item in collection, but do not lay it out
- * @param {Element} elem
- */
-Packery.prototype.ignore = function( elem ) {
-  var item = this.getItem( elem );
-  if ( item ) {
-    item.isIgnored = true;
-  }
-};
-
-/**
- * return item to layout collection
- * @param {Element} elem
- */
-Packery.prototype.unignore = function( elem ) {
-  var item = this.getItem( elem );
-  if ( item ) {
-    delete item.isIgnored;
-  }
-};
 
 Packery.prototype.sortItemsByPosition = function() {
-  // console.log('sortItemsByPosition');
   this.items.sort( function( a, b ) {
     return a.position.y - b.position.y || a.position.x - b.position.x;
   });
@@ -990,64 +457,36 @@ Packery.prototype.destroy = function() {
   this.unbindResize();
 };
 
-// -------------------------- data -------------------------- //
+Packery.Rect = Rect;
+Packery.Packer = Packer;
 
-/**
- * get Packery instance from element
- * @param {Element} elem
- * @returns {Packery}
- */
-Packery.data = function( elem ) {
-  var id = elem.packeryGUID;
-  return id && packeries[ id ];
-};
+return Packery;
 
-// -------------------------- declarative -------------------------- //
-
-/**
- * allow user to initialize Packery via .js-packery class
- * options are parsed from data-packery-option attribute
- */
-docReady( function() {
-  var elems = document.querySelectorAll('.js-packery');
-
-  for ( var i=0, len = elems.length; i < len; i++ ) {
-    var elem = elems[i];
-    var attr = elem.getAttribute('data-packery-options');
-    var options;
-    try {
-      options = attr && JSON.parse( attr );
-    } catch ( error ) {
-      // log error, do not initialize
-      if ( console ) {
-        console.error( 'Error parsing data-packery-options on ' +
-          elem.nodeName.toLowerCase() + ( elem.id ? '#' + elem.id : '' ) + ': ' +
-          error );
-      }
-      continue;
-    }
-    // initialize
-    var pckry = new Packery( elem, options );
-    // make available via $().data('packery')
-    if ( jQuery ) {
-      jQuery.data( elem, 'packery', pckry );
-    }
-  }
-});
-
-// -------------------------- jQuery bridge -------------------------- //
-
-// make into jQuery plugin
-if ( jQuery && jQuery.bridget ) {
-  jQuery.bridget( 'packery', Packery );
 }
 
 // -------------------------- transport -------------------------- //
 
-// back in global
-Packery.Rect = Rect;
-Packery.Packer = Packer;
-Packery.Item = Item;
-window.Packery = Packery;
+if ( typeof define === 'function' && define.amd ) {
+  // AMD
+  define( [
+      'classie/classie',
+      'get-size/get-size',
+      'outlayer/outlayer',
+      './rect',
+      './packery'
+    ],
+    packeryDefinition );
+} else {
+  // browser global
+  window.Packery = packeryDefinition(
+    window.classie,
+    window.getSize,
+    window.Outlayer,
+    window.Packery.Rect,
+    window.Packery.Packer
+  );
+}
+
+
 
 })( window );

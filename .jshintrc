@@ -5,6 +5,7 @@
   "undef": true,
   "unused": true,
   "predef": {
-    "Packery": true
+    "Packery": true,
+    "define": false
   }
 }
