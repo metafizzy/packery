@@ -6,8 +6,8 @@
   "main": [
     "js/rect.js",
     "js/packer.js",
-    "js/packery.js",
-    "js/item.js"
+    "js/item.js",
+    "js/packery.js"
   ],
   "dependencies": {
     "classie": "desandro/classie",
