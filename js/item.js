@@ -6,21 +6,6 @@
 
 'use strict';
 
-// dependencies
-// var Packery = window.Packery;
-// var Rect = Packery.Rect;
-// var getStyleProperty = window.getStyleProperty;
-
-// ----- get style ----- //
-
-
-// extend objects
-
-// -------------------------- CSS3 support -------------------------- //
-
-
-
-
 // -------------------------- Item -------------------------- //
 
 function itemDefinition( getStyleProperty, Outlayer, Rect ) {
