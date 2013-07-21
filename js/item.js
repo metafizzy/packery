@@ -65,7 +65,7 @@ Item.prototype.dragStart = function() {
  */
 Item.prototype.dragMove = function( x, y ) {
   this.didDrag = true;
-  var packerySize = this.packery.elementSize;
+  var packerySize = this.layout.size;
   x -= packerySize.paddingLeft;
   y -= packerySize.paddingTop;
   this.positionPlaceRect( x, y );
@@ -104,24 +104,24 @@ Item.prototype.positionPlaceRect = function( x, y, isMaxYOpen ) {
 Item.prototype.getPlaceRectCoord = function( coord, isX, isMaxOpen ) {
   var measure = isX ? 'Width' : 'Height';
   var size = this.size[ 'outer' + measure ];
-  var segment = this.packery[ isX ? 'columnWidth' : 'rowHeight' ];
-  var parentSize = this.packery.elementSize[ 'inner' + measure ];
+  var segment = this.layout[ isX ? 'columnWidth' : 'rowHeight' ];
+  var parentSize = this.layout.size[ 'inner' + measure ];
 
   // additional parentSize calculations for Y
   if ( !isX ) {
-    parentSize = Math.max( parentSize, this.packery.maxY );
+    parentSize = Math.max( parentSize, this.layout.maxY );
     // prevent gutter from bumping up height when non-vertical grid
-    if ( !this.packery.rowHeight ) {
-      parentSize -= this.packery.gutter;
+    if ( !this.layout.rowHeight ) {
+      parentSize -= this.layout.gutter;
     }
   }
 
   var max;
 
   if ( segment ) {
-    segment += this.packery.gutter;
+    segment += this.layout.gutter;
     // allow for last column to reach the edge
-    parentSize += isX ? this.packery.gutter : 0;
+    parentSize += isX ? this.layout.gutter : 0;
     // snap to closest segment
     coord = Math.round( coord / segment );
     // contain to outer bound
