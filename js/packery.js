@@ -63,21 +63,6 @@ Packery.prototype._create = function() {
 // ----- init & layout ----- //
 
 /**
- * lays out all items
- */
-// Packery.prototype.layout = function() {
-//   this._prelayout();
-// 
-//   // don't animate first layout
-//   var isInstant = this.options.isLayoutInstant !== undefined ?
-//     this.options.isLayoutInstant : !this._isLayoutInited;
-//   this.layoutItems( this.items, isInstant );
-// 
-//   // flag for initalized
-//   this._isLayoutInited = true;
-// };
-
-/**
  * logic before any new layout
  */
 Packery.prototype._resetLayout = function() {
@@ -383,24 +368,6 @@ Packery.prototype.bindUIDraggableEvents = function( $elems ) {
     .on( 'dragstart', this.handleUIDraggable.start )
     .on( 'drag', this.handleUIDraggable.drag )
     .on( 'dragstop', this.handleUIDraggable.stop );
-};
-
-// ----- destroy ----- //
-
-// remove and disable Packery instance
-Packery.prototype.destroy = function() {
-  // reset element styles
-  this.element.style.position = '';
-  this.element.style.height = '';
-  delete this.element.packeryGUID;
-
-  // destroy items
-  for ( var i=0, len = this.items.length; i < len; i++ ) {
-    var item = this.items[i];
-    item.destroy();
-  }
-
-  this.unbindResize();
 };
 
 Packery.Rect = Rect;
