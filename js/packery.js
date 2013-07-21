@@ -18,10 +18,11 @@
 // -------------------------- Packery -------------------------- //
 
 // used for AMD definition and requires
-function packeryDefinition( classie, getSize, Outlayer, Rect, Packer ) {
+function packeryDefinition( classie, getSize, Outlayer, Rect, Packer, Item ) {
 
 // create an Outlayer layout class
 var Packery = Outlayer.create('packery');
+Packery.prototype.settings.item = Item;
 
 Packery.prototype._create = function() {
   // call super
@@ -418,7 +419,8 @@ if ( typeof define === 'function' && define.amd ) {
       'get-size/get-size',
       'outlayer/outlayer',
       './rect',
-      './packery'
+      './packer',
+      './item'
     ],
     packeryDefinition );
 } else {
@@ -428,10 +430,9 @@ if ( typeof define === 'function' && define.amd ) {
     window.getSize,
     window.Outlayer,
     window.Packery.Rect,
-    window.Packery.Packer
+    window.Packery.Packer,
+    window.Packery.Item
   );
 }
-
-
 
 })( window );

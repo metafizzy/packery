@@ -23,11 +23,16 @@
 
 // -------------------------- Item -------------------------- //
 
-function itemDefinition( getStyleProperty, Rect, Packery ) {
+function itemDefinition( getStyleProperty, Outlayer, Rect ) {
 
 var transformProperty = getStyleProperty('transform');
 
-var Item = Packery.Item;
+// sub-class Item
+var Item = function PackeryItem() {
+  Outlayer.Item.apply( this, arguments );
+};
+
+Item.prototype = new Outlayer.Item();
 
 Item.prototype._create = function() {
   this.rect = new Rect();
@@ -154,18 +159,17 @@ if ( typeof define === 'function' && define.amd ) {
   // AMD
   define( [
       'get-style-property/get-style-property',
-      './rect',
-      './packery'
+      'outlayer/outlayer',
+      './rect'
     ],
     itemDefinition );
 } else {
   // browser global
   window.Packery.Item = itemDefinition(
     window.getStyleProperty,
-    window.Packery.Rect,
-    window.Packery
+    window.Outlayer,
+    window.Packery.Rect
   );
 }
 
 })( window );
-
