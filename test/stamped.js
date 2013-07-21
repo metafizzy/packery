@@ -7,10 +7,10 @@ test( 'stamped1', function() {
   var stamps = container.querySelectorAll('.stamp');
   var pckry = new Packery( container, {
     itemSelector: '.item',
-    stamped: stamps
+    stamp: stamps
   });
 
-  equal( pckry.stampedElements.length, 2, '2 stamped elements' );
+  equal( pckry.stamps.length, 2, '2 stamped elements' );
   var elem0 = pckry.items[0].element;
   equal( elem0.style.left, '0px', '1st item left' );
   equal( elem0.style.top, '0px', '1st item top' );
@@ -28,10 +28,10 @@ test( 'stamped1', function() {
 
   // unstamp first stamp
   pckry.unstamp( stamps[1] );
-  equal( pckry.stampedElements.length, 1, 'element was unstamped' );
+  equal( pckry.stamps.length, 1, 'element was unstamped' );
   // stamp it back
   pckry.stamp( stamps[1] );
-  equal( pckry.stampedElements.length, 2, 'element was stamped back' );
+  equal( pckry.stamps.length, 2, 'element was stamped back' );
 
 });
 
@@ -40,27 +40,27 @@ test( 'stamped2, items are stamped', function() {
   var stamps = container.querySelectorAll('.stamp');
   var pckry = new Packery( container, {
     itemSelector: '.item',
-    stamped: stamps
+    stamp: stamps
   });
 
-  var layoutItems = pckry._getLayoutItems( pckry.items );
+  var layoutItems = pckry._getItemsForLayout( pckry.items );
 
   equal( layoutItems.length, 7, '7 layout items' );
   var elem0 = layoutItems[0].element;
-  equal( elem0.style.left, '29px', '1st item left' );
+  equal( elem0.style.left, '28px', '1st item left' );
   equal( elem0.style.top, '0px', '1st item top' );
   var elem3 = layoutItems[3].element;
   equal( elem3.style.left, '0px', '4th item left' );
-  equal( elem3.style.top, '29px', '4th item top' );
+  equal( elem3.style.top, '28px', '4th item top' );
   var elem4 = layoutItems[4].element;
   equal( elem4.style.left, '20px', '5th item left' );
   equal( elem4.style.top, '40px', '5th item top' );
 
   // unplacing
   pckry.unstamp( stamps );
-  layoutItems = pckry._getLayoutItems( pckry.items );
+  layoutItems = pckry._getItemsForLayout( pckry.items );
   equal( layoutItems.length, 9, '9 layout items' );
-  equal( pckry.stampedElements.length, 0, '0 stampedElements items' );
+  equal( pckry.stamps.length, 0, '0 stamps items' );
 
   pckry.on( 'layoutComplete', function() {
     var elem0 = pckry.items[0].element;
@@ -80,12 +80,12 @@ test( 'stamped3, stamp with selector string ', function() {
   var container3 = document.querySelector('#stamped3');
   var pckry3 = new Packery( container3, {
     itemSelector: '.item',
-    stamped: '.stamp'
+    stamp: '.stamp'
   });
 
-  equal( pckry3.stampedElements.length, 2, '2 stamped elements' );
+  equal( pckry3.stamps.length, 2, '2 stamped elements' );
 
-  equal( pckry3.stampedElements.length, 2, '2 stamped elements' );
+  equal( pckry3.stamps.length, 2, '2 stamped elements' );
   var elem0 = pckry3.items[0].element;
   equal( elem0.style.left, '0px', '1st item left' );
   equal( elem0.style.top, '0px', '1st item top' );
@@ -104,7 +104,7 @@ test( 'stamped3, stamp with selector string ', function() {
   var container4 = document.querySelector('#stamped4');
   var pckry4 = new Packery( container4, {
     itemSelector: '.item',
-    stamped: 'foobar'
+    stamp: 'foobar'
   });
 
   ok( pckry4._isLayoutInited, 'bad selector didnt cause error' );
@@ -114,7 +114,7 @@ test( 'stamped with borders', function() {
   var container = document.querySelector('#stamped-borders');
   var pckry = new Packery( container, {
     itemSelector: '.item',
-    stamped: '.stamp'
+    stamp: '.stamp'
   });
 
   var elem0 = pckry.items[0].element;

@@ -20,7 +20,7 @@ test( 'layout', function() {
   // change size of elems to change layout
   elem0.style.width = '18px';
   pckry.items[3].element.style.height = '58px';
-  var items = pckry._getLayoutItems( pckry.items );
+  var items = pckry._getItemsForLayout( pckry.items );
   pckry.on( 'layoutComplete', function( obj, completeItems ) {
     equal( true, true, 'layoutComplete event did fire' );
     equal( obj, pckry, 'event-emitted argument matches Packery instance' );

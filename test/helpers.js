@@ -28,11 +28,11 @@ window.appendRandomSizedItems = function( container ) {
 
 // trigger next function if then flag has been set
 window.after = function( then, nextFn ) {
-  if ( then ) {
-    nextFn();
-  } else {
+  // if ( then ) {
+  //   nextFn();
+  // } else {
     setTimeout( nextFn, 20 );
-  }
+  // }
 };
 
 window.gimmeAnItemElement = function() {
