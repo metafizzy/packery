@@ -208,24 +208,7 @@ Packery.prototype.fit = function( elem, x, y ) {
   // position it best at its destination
   item.positionPlaceRect( x, y, true );
 
-  // emit event when item is fit and other items are laid out
-  var _this = this;
-  var ticks = 0;
-  function tick() {
-    ticks++;
-    if ( ticks !== 2 ) {
-      return;
-    }
-    _this.emitEvent( 'fitComplete', [ _this, item ] );
-  }
-  item.on( 'layout', function() {
-    tick();
-    return true;
-  });
-  this.on( 'layoutComplete', function() {
-    tick();
-    return true;
-  });
+  this._bindFitEvents( item );
   item.moveTo( item.placeRect.x, item.placeRect.y );
   // layout everything else
   this.layout();
@@ -238,6 +221,34 @@ Packery.prototype.fit = function( elem, x, y ) {
   // copy place rect position
   item.copyPlaceRectPosition();
 };
+
+/**
+ * emit event when item is fit and other items are laid out
+ * @param {Packery.Item} item
+ * @private
+ */
+Packery.prototype._bindFitEvents = function( item ) {
+  var _this = this;
+  var ticks = 0;
+  function tick() {
+    ticks++;
+    if ( ticks !== 2 ) {
+      return;
+    }
+    _this.emitEvent( 'fitComplete', [ _this, item ] );
+  }
+  // when item is laid out
+  item.on( 'layout', function() {
+    tick();
+    return true;
+  });
+  // when all items are laid out
+  this.on( 'layoutComplete', function() {
+    tick();
+    return true;
+  });
+};
+
 
 // -------------------------- drag -------------------------- //
 
