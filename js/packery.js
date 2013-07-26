@@ -126,6 +126,7 @@ Packery.prototype.options = {
   containerStyle: {
     position: 'relative'
   },
+  layoutMode: 'vertical',
   isInitLayout: true,
   isResizeBound: true,
   transitionDuration: '0.4s'
@@ -278,11 +279,17 @@ Packery.prototype._prelayout = function() {
 
   this._getMeasurements();
 
-  this.packer.width = this.elementSize.innerWidth + this.gutter;
-  this.packer.height = Number.POSITIVE_INFINITY;
+  if ( this.options.layoutMode == 'horizontal' ) {
+    this.packer.width = Number.POSITIVE_INFINITY;
+    this.packer.height = this.elementSize.innerHeight + this.gutter;
+  } else {
+    this.packer.width = this.elementSize.innerWidth + this.gutter;
+    this.packer.height = Number.POSITIVE_INFINITY;
+  }
   this.packer.reset();
 
   // layout
+  this.maxX = 0;
   this.maxY = 0;
   this.placeStampedElements();
 };
@@ -349,17 +356,39 @@ Packery.prototype.layoutItems = function( items, isInstant ) {
     }
   }
 
+  this._setContainerSize();
+}
+
+/**
+ * sets the container size
+ * @private
+ */
+Packery.prototype._setContainerSize = function() {
   // set container size
   var elemSize = this.elementSize;
-  var elemH = this.maxY - this.gutter;
-  // add padding and border width if border box
-  if ( elemSize.isBorderBox ) {
-    elemH += elemSize.paddingBottom + elemSize.paddingTop +
-      elemSize.borderTopWidth + elemSize.borderBottomWidth;
+  
+  // are we going for a horizontal layout?
+  if ( this.options.layoutMode == 'horizontal' ) {
+    var elemW = this.maxX - this.gutter;
+    // add padding and border width if border box
+    if ( elemSize.isBorderBox ) {
+      elemW += elemSize.paddingLeft + elemSize.paddingRight +
+        elemSize.borderRightWidth + elemSize.borderLeftWidth;
+    }
+    // prevent negative size, which causes error in IE
+    elemW = Math.max( elemW, 0 );
+    this.element.style.width = elemW + 'px';
+  } else {
+    var elemH = this.maxY - this.gutter;
+    // add padding and border width if border box
+    if ( elemSize.isBorderBox ) {
+      elemH += elemSize.paddingBottom + elemSize.paddingTop +
+        elemSize.borderTopWidth + elemSize.borderBottomWidth;
+    }
+    // prevent negative size, which causes error in IE
+    elemH = Math.max( elemH, 0 );
+    this.element.style.height = elemH + 'px';
   }
-  // prevent negative size, which causes error in IE
-  elemH = Math.max( elemH, 0 );
-  this.element.style.height = elemH + 'px';
 };
 
 /**
@@ -385,9 +414,23 @@ Packery.prototype._getLayoutItems = function( items ) {
 Packery.prototype._packItem = function( item ) {
   this._setRectSize( item.element, item.rect );
   // pack the rect in the packer
-  this.packer.pack( item.rect );
-  this._setMaxY( item.rect );
+  this.packer.pack( item.rect, this.options.layoutMode );
+
+  if ( this.options.layoutMode == 'horizontal' ) {
+    this._setMaxX( item.rect );
+  } else {
+    this._setMaxY( item.rect );
+  }
 };
+
+/**
+ * set max X value, for height of container
+ * @param {Packery.Rect} rect
+ * @private
+ */
+Packery.prototype._setMaxX = function( rect ) {
+  this.maxX = Math.max( rect.x + rect.width, this.maxX );
+}
 
 /**
  * set max Y value, for height of container
@@ -413,8 +456,13 @@ Packery.prototype._setRectSize = function( elem, rect ) {
   w = this.columnWidth ? Math.ceil( w / colW ) * colW : w + this.gutter;
   h = this.rowHeight ? Math.ceil( h / rowH ) * rowH : h + this.gutter;
   // rect must fit in packer
-  rect.width = Math.min( w, this.packer.width );
-  rect.height = h;
+  if ( this.options.layoutMode == 'horizontal' ) {
+    rect.width = w;
+    rect.height = Math.min( h, this.packer.height );
+  } else {
+    rect.width = Math.min( w, this.packer.width );
+    rect.height = h;
+  }
 };
 
 /**
@@ -542,8 +590,13 @@ Packery.prototype.placeStamp = function( elem ) {
 
   this._setRectSize( elem, rect );
   // save its space in the packer
-  this.packer.placed( rect );
-  this._setMaxY( rect );
+  this.packer.placed( rect, this.options.layoutMode );
+
+  if ( this.options.layoutMode == 'horizontal' ) {
+    this._setMaxX( item.rect );
+  } else {
+    this._setMaxY( item.rect );
+  }
 };
 
 /**

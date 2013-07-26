@@ -30,26 +30,26 @@ Packer.prototype.reset = function() {
 };
 
 // change x and y of rect to fit with in Packer's available spaces
-Packer.prototype.pack = function( rect ) {
+Packer.prototype.pack = function( rect, layoutMode ) {
   for ( var i=0, len = this.spaces.length; i < len; i++ ) {
     var space = this.spaces[i];
     if ( space.canFit( rect ) ) {
-      this.placeInSpace( rect, space );
+      this.placeInSpace( rect, space, layoutMode );
       break;
     }
   }
 };
 
-Packer.prototype.placeInSpace = function( rect, space ) {
+Packer.prototype.placeInSpace = function( rect, space, layoutMode ) {
   // place rect in space
   rect.x = space.x;
   rect.y = space.y;
 
-  this.placed( rect );
+  this.placed( rect, layoutMode );
 };
 
 // update spaces with placed rect
-Packer.prototype.placed = function( rect ) {
+Packer.prototype.placed = function( rect, layoutMode ) {
   // update spaces
   var revisedSpaces = [];
   for ( var i=0, len = this.spaces.length; i < len; i++ ) {
@@ -68,7 +68,12 @@ Packer.prototype.placed = function( rect ) {
   // remove redundant spaces
   Packer.mergeRects( this.spaces );
 
-  this.spaces.sort( Packer.spaceSorterTopLeft );
+  // vertical or horizontal layout?
+  if ( layoutMode == 'horizontal' ) {
+    this.spaces.sort( Packer.spaceSorterLeftTop );
+  } else {
+    this.spaces.sort( Packer.spaceSorterTopLeft );
+  }
 };
 
 // -------------------------- utility functions -------------------------- //
