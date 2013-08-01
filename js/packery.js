@@ -31,6 +31,9 @@ Packery.prototype._create = function() {
   // initial properties
   this.packer = new Packer();
 
+  // Left over from v1.0
+  this.stamp( this.options.stamped );
+
   // create drag handlers
   var _this = this;
   this.handleDraggabilly = {
