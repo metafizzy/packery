@@ -6,7 +6,7 @@
  * Commercial use requires one-time purchase of a commercial license
  * http://packery.metafizzy.co/license.html
  *
- * Non-commercial use is licensed under the GPL V3 License
+ * Non-commercial use is licensed under the GPL v3 License
  *
  * Copyright 2013 Metafizzy
  */
