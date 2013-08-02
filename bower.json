@@ -18,8 +18,8 @@
   "devDependencies": {
     "draggabilly": "desandro/draggabilly#>=1.0.0",
     "jquery": "~1",
-    "jquery-ui-draggable": "git://gist.github.com/4985610.git",
-    "qunit": "~1"
+    "jquery-ui-draggable": "https://gist.github.com/4985610.git",
+    "qunit": "1.12"
   },
   "ignore": [
     "test/",
