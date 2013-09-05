@@ -19,14 +19,13 @@ var Item = function PackeryItem() {
 
 Item.prototype = new Outlayer.Item();
 
+var protoCreate = Item.prototype._create;
 Item.prototype._create = function() {
+  // call default _create logic
+  protoCreate.call( this );
   this.rect = new Rect();
   // rect used for placing, in drag or Packery.fit()
   this.placeRect = new Rect();
-
-  this.css({
-    position: 'absolute'
-  });
 };
 
 // -------------------------- drag -------------------------- //
