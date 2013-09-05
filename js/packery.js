@@ -70,7 +70,6 @@ Packery.prototype._create = function() {
  */
 Packery.prototype._resetLayout = function() {
   this.getSize();
-  this.size = getSize( this.element );
 
   this._getMeasurements();
 
