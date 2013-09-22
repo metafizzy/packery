@@ -159,8 +159,8 @@ Packery.prototype._manageStamp = function( elem ) {
   } else {
     var offset = this._getElementOffset( elem );
     rect = new Rect({
-      x: offset.left,
-      y: offset.top
+      x: this.options.isOriginLeft ? offset.left : offset.right,
+      y: this.options.isOriginTop ? offset.top : offset.bottom
     });
   }
 

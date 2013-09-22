@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Packery basic examples</title>
+
+  <link rel="stylesheet" href="css/examples.css" />
+  <link rel="stylesheet" href="css/basics.css" />
+
+  <style>
+  .container {
+    position: relative;
+    width: 50%;
+    counter-reset: item;
+  }
+
+  .container .item:before {
+    counter-increment: item;
+    content: counter(item);
+    display: block;
+  }
+  
+  .stamp {
+    position: absolute;
+    background: red;
+    border: 1px solid;
+    opacity: 0.8;
+  }
+
+  .stamp1 {
+    width: 200px;
+    height: 100px;
+    left: 130px;
+  }
+
+  .stamp2 {
+    width: 100px;
+    height: 200px;
+    right: 30%;
+  }
+  
+  #top-right .stamp1 { top: 10px; }
+  #bottom-right .stamp1,
+  #bottom-left .stamp1 { bottom: 10px; }
+
+  #top-right .stamp2 { top: 20px; }
+  #bottom-right .stamp2,
+  #bottom-left .stamp2 { bottom: 20px; }
+  </style>
+
+</head>
+<body>
+
+  <h1>Packery basic examples</h1>
+
+  <div id="top-right" class="container">
+    <div class="stamp stamp1"></div>
+    <div class="stamp stamp2"></div>
+    <div class="item w4"></div>
+    <div class="item h4"></div>
+    <div class="item w2"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+    <div class="item w4"></div>
+    <div class="item w2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item w4"></div>
+    <div class="item"></div>
+    <div class="item w2"></div>
+  </div>
+
+  <div id="bottom-left" class="container">
+    <div class="stamp stamp1"></div>
+    <div class="stamp stamp2"></div>
+    <div class="item w4"></div>
+    <div class="item h4"></div>
+    <div class="item w2"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+    <div class="item w4"></div>
+    <div class="item w2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item w4"></div>
+    <div class="item"></div>
+    <div class="item w2"></div>
+  </div>
+
+  <div id="bottom-right" class="container">
+    <div class="stamp stamp1"></div>
+    <div class="stamp stamp2"></div>
+    <div class="item w4"></div>
+    <div class="item h4"></div>
+    <div class="item w2"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+    <div class="item w4"></div>
+    <div class="item w2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item w4"></div>
+    <div class="item"></div>
+    <div class="item w2"></div>
+  </div>
+
+
+<script src="../bower_components/get-style-property/get-style-property.js"></script>
+<script src="../bower_components/get-size/get-size.js"></script>
+<script src="../bower_components/matches-selector/matches-selector.js"></script>
+<script src="../bower_components/eventEmitter/EventEmitter.js"></script>
+<script src="../bower_components/eventie/eventie.js"></script>
+<script src="../bower_components/doc-ready/doc-ready.js"></script>
+<script src="../bower_components/classie/classie.js"></script>
+<script src="../bower_components/outlayer/item.js"></script>
+<script src="../bower_components/outlayer/outlayer.js"></script>
+<script src="../bower_components/draggabilly/draggabilly.js"></script>
+<script src="../js/rect.js"></script>
+<script src="../js/packer.js"></script>
+<script src="../js/item.js"></script>
+<script src="../js/packery.js"></script>
+
+<script src="examples.js"></script>
+<script>
+
+docReady( function() {
+  new Packery( '#top-right', {
+    itemSelector: '.item',
+    stamp: '.stamp',
+    isOriginLeft: false
+  });
+
+  new Packery( '#bottom-left', {
+    itemSelector: '.item',
+    stamp: '.stamp',
+    isOriginTop: false
+  });
+
+  ( function() {
+    var pckry = new Packery( '#bottom-right', {
+      itemSelector: '.item',
+      stamp: '.stamp',
+      isOriginLeft: false,
+      isOriginTop: false
+    });
+
+    for ( var i=0, len = pckry.items.length; i < len; i++ ) {
+      var item = pckry.items[i];
+      var draggie = new Draggabilly( item.element );
+      pckry.bindDraggabillyEvents( draggie );
+    }
+
+  })();
+});
+</script>
+
+</body>
+</html>
