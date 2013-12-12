@@ -11,11 +11,16 @@
 
 function packerDefinition( Rect ) {
 
-function Packer( width, height ) {
+/**
+ * @param {Number} width
+ * @param {Number} height
+ * @param {String} sortDirection
+ *   topLeft for vertical, leftTop for horizontal
+ */
+function Packer( width, height, sortDirection ) {
   this.width = width || 0;
   this.height = height || 0;
-  // sorter
-  this.sorter = Packer.sorter.topLeft;
+  this.sortDirection = sortDirection || 'downwardLeftToRight';
 
   this.reset();
 }
@@ -32,6 +37,8 @@ Packer.prototype.reset = function() {
   });
 
   this.spaces.push( initialSpace );
+  // set sorter
+  this.sorter = sorters[ this.sortDirection ] || sorters.downwardLeftToRight;
 };
 
 // change x and y of rect to fit with in Packer's available spaces
@@ -117,13 +124,13 @@ Packer.mergeRects = function( rects ) {
 // -------------------------- sorters -------------------------- //
 
 // functions for sorting rects in order
-Packer.sorter = {
+var sorters = {
   // top down, then left to right
-  topLeft: function( a, b ) {
+  downwardLeftToRight: function( a, b ) {
     return a.y - b.y || a.x - b.x;
   },
   // left to right, then top down
-  leftTop: function( a, b ) {
+  rightwardTopToBottom: function( a, b ) {
     return a.x - b.x || a.y - b.y;
   }
 };

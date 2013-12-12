@@ -76,6 +76,9 @@ Packery.prototype._resetLayout = function() {
   // reset packer
   this.packer.width = this.size.innerWidth + this.gutter;
   this.packer.height = Number.POSITIVE_INFINITY;
+  // horizontal packing is done by changing sortDirection
+  this.packer.sortDirection = this.options.isHorizontal ?
+    'rightwardTopToBottom' : 'downwardLeftToRight';
   this.packer.reset();
 
   // layout

@@ -105,8 +105,7 @@ test( 'packing horizontal', function() {
     equal( rect.y, y, 'y: ' + y );
   }
 
-  var packr = new Packer( 10, 3 );
-  packr.sorter = Packer.sorter.leftTop;
+  var packr = new Packer( 10, 3, 'rightwardTopToBottom' );
 
   // 133xx
   // 154xx
