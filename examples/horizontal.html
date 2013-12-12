@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Packery horizontal examples</title>
+
+  <link rel="stylesheet" href="css/examples.css" />
+  <link rel="stylesheet" href="css/basics.css" />
+  <style>
+    html, body { height: 100%; }
+
+    .container {
+      width: auto;
+      height: 300px;
+    }
+    
+    .container.fluid {
+      width: auto;
+      height: 80%;
+      position: relative;
+    }
+
+    #ex6 .bogey1 { 
+      top: 40%;
+      left: 200px;
+      width: 200px;
+    }
+
+    #ex6 .bogey2 {
+      right: auto;
+      left: 60px;
+    }
+    
+    #fit-demo {
+      height: 200px;
+    }
+  </style>
+
+
+</head>
+<body>
+
+  <h1>horizontal examples</h1>
+
+  <div id="ex1" class="container">
+    <div class="item w4"></div>
+    <div class="item h4"></div>
+    <div class="item w2"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+    <div class="item w4"></div>
+    <div class="item w2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item w2 h2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item w4"></div>
+    <div class="item"></div>
+    <div class="item w2"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+  </div>
+
+  <div id="ex2" class="container">
+  </div>
+
+  <div id="ex3" class="container">
+  </div>
+
+  <div id="ex4" class="container fluid has-padding">
+    <div class="item w4"></div>
+    <div class="item h4"></div>
+    <div class="item w2"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+    <div class="item w4"></div>
+    <div class="item w2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item w2 h2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item h4"></div>
+    <div class="item"></div>
+    <div class="item w4"></div>
+    <div class="item"></div>
+    <div class="item w2"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+    <div class="item"></div>
+    <div class="item h2"></div>
+  </div>
+
+  <div id="ex6" class="container fluid has-padding">
+    <div class="bogey bogey1"></div>
+    <div class="bogey bogey2"></div>
+  </div>
+
+  <div id="fit-demo" class="container">
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item w2"></div>
+    <div class="item h2"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+  </div>
+
+<script src="../bower_components/get-style-property/get-style-property.js"></script>
+<script src="../bower_components/get-size/get-size.js"></script>
+<script src="../bower_components/matches-selector/matches-selector.js"></script>
+<script src="../bower_components/eventEmitter/EventEmitter.js"></script>
+<script src="../bower_components/eventie/eventie.js"></script>
+<script src="../bower_components/doc-ready/doc-ready.js"></script>
+<script src="../bower_components/classie/classie.js"></script>
+<script src="../bower_components/outlayer/item.js"></script>
+<script src="../bower_components/outlayer/outlayer.js"></script>
+<script src="../js/rect.js"></script>
+<script src="../js/packer.js"></script>
+<script src="../js/item.js"></script>
+<script src="../js/packery.js"></script>
+
+<script src="examples.js"></script>
+<script>
+// everything horizontal on this page
+Packery.prototype.options.isHorizontal = true;
+
+window.onload = function() {
+  var ex1 = document.getElementById('ex1');
+  var packery1 = new Packery( ex1 );
+
+  var ex2 = document.getElementById('ex2');
+  appendRandomSizedItems( ex2 );
+  var packery2 = new Packery( ex2 );
+
+  var ex3 = document.getElementById('ex3');
+  appendRandomSizedItems( ex3 );
+  var packery3 = new Packery( ex3, {
+    columnWidth: 50,
+    rowHeight: 50
+  });
+
+  var ex4 = document.getElementById('ex4');
+  var packery4 = new Packery( ex4 );
+
+  var ex6 = document.getElementById('ex6');
+  appendRandomSizedItems( ex6 );
+  var packery6 = new Packery( ex6, {
+    itemSelector: '.item',
+    stamp: ex6.querySelectorAll('.bogey')
+  });
+
+  // ----- fit demo ----- //
+
+  ( function() {
+    var container = document.querySelector('#fit-demo');
+    var pckry = new Packery( container );
+    pckry.on( 'fitComplete', function( pckryInstance, item ) {
+      console.log('fit was completed ', item );
+    });
+
+    eventie.bind( container, 'click', function( event ) {
+      // only care about item
+      var elem = event.target;
+      if ( !classie.has( elem, 'item' ) ) {
+        return;
+      }
+
+      if ( !classie.has( elem, 'gigante') ) {
+        classie.add( elem, 'gigante' );
+        pckry.fit( elem );
+      } else {
+        classie.remove( elem, 'gigante' );
+        pckry.layout();
+      }
+    });
+  })();
+
+};
+</script>
+
+</body>
+</html>

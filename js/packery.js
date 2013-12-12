@@ -74,15 +74,23 @@ Packery.prototype._resetLayout = function() {
   this._getMeasurements();
 
   // reset packer
-  this.packer.width = this.size.innerWidth + this.gutter;
-  this.packer.height = Number.POSITIVE_INFINITY;
-  // horizontal packing is done by changing sortDirection
-  this.packer.sortDirection = this.options.isHorizontal ?
-    'rightwardTopToBottom' : 'downwardLeftToRight';
-  this.packer.reset();
+  var packer = this.packer;
+  // packer settings, if horizontal or vertical
+  if ( this.options.isHorizontal ) {
+    packer.width = Number.POSITIVE_INFINITY;
+    packer.height = this.size.innerHeight + this.gutter;
+    packer.sortDirection = 'rightwardTopToBottom';
+  } else {
+    packer.width = this.size.innerWidth + this.gutter;
+    packer.height = Number.POSITIVE_INFINITY;
+    packer.sortDirection = 'downwardLeftToRight';
+  }
+
+  packer.reset();
 
   // layout
   this.maxY = 0;
+  this.maxX = 0;
 };
 
 /**
@@ -109,15 +117,16 @@ Packery.prototype._packItem = function( item ) {
   this._setRectSize( item.element, item.rect );
   // pack the rect in the packer
   this.packer.pack( item.rect );
-  this._setMaxY( item.rect );
+  this._setMaxXY( item.rect );
 };
 
 /**
- * set max Y value, for height of container
+ * set max X and Y value, for size of container
  * @param {Packery.Rect} rect
  * @private
  */
-Packery.prototype._setMaxY = function( rect ) {
+Packery.prototype._setMaxXY = function( rect ) {
+  this.maxX = Math.max( rect.x + rect.width, this.maxX );
   this.maxY = Math.max( rect.y + rect.height, this.maxY );
 };
 
@@ -141,9 +150,15 @@ Packery.prototype._setRectSize = function( elem, rect ) {
 };
 
 Packery.prototype._getContainerSize = function() {
-  return {
-    height: this.maxY - this.gutter
-  };
+  if ( this.options.isHorizontal ) {
+    return {
+      width: this.maxX - this.gutter
+    };
+  } else {
+    return {
+      height: this.maxY - this.gutter
+    };
+  }
 };
 
 
@@ -170,7 +185,7 @@ Packery.prototype._manageStamp = function( elem ) {
   this._setRectSize( elem, rect );
   // save its space in the packer
   this.packer.placed( rect );
-  this._setMaxY( rect );
+  this._setMaxXY( rect );
 };
 
 // -------------------------- methods -------------------------- //
@@ -254,6 +269,22 @@ Packery.prototype._bindFitEvents = function( item ) {
   });
 };
 
+// -------------------------- resize -------------------------- //
+
+// debounced, layout on resize
+Packery.prototype.resize = function() {
+  // don't trigger if size did not change
+  var size = getSize( this.element );
+  // check that this.size and size are there
+  // IE8 triggers resize on body size change, so they might not be
+  var hasSizes = this.size && size;
+  var innerSize = this.options.isHorizontal ? 'innerHeight' : 'innerWidth';
+  if ( hasSizes && size[ innerSize ] === this.size[ innerSize ] ) {
+    return;
+  }
+
+  this.layout();
+};
 
 // -------------------------- drag -------------------------- //
 
