@@ -17,8 +17,6 @@ test( 'basics', function() {
   equal( typeof Packer === 'function', true, 'Packery is a function' );
 });
 
-
-
 test( 'packing', function() {
   var packr = new Packer( 3, 10 );
 
@@ -96,7 +94,48 @@ test( 'packing with a placed', function() {
   equal( rect5.x, 2, 'rect5.x packed in top right' );
   equal( rect5.y, 0, 'rect5.y packed in top right' );
 
-  equal( packr.spaces.length, 3, '3 spaces left')
+  equal( packr.spaces.length, 3, '3 spaces left' );
+
+});
+
+test( 'packing horizontal', function() {
+
+  function checkRect( rect, x, y ) {
+    equal( rect.x, x, 'x: ' + x );
+    equal( rect.y, y, 'y: ' + y );
+  }
+
+  var packr = new Packer( 10, 3 );
+  packr.sorter = Packer.sorter.leftTop;
+
+  // 133xx
+  // 154xx
+  // 224xx
+
+  var rect1 = new Rect({ width: 1, height: 2 });
+  var rect2 = new Rect({ width: 2, height: 1 });
+  var rect3 = new Rect({ width: 2, height: 1 });
+  var rect4 = new Rect({ width: 1, height: 2 });
+  var rect5 = new Rect({ width: 1, height: 1 });
+
+  packr.pack( rect1 );
+  packr.pack( rect2 );
+  packr.pack( rect3 );
+  packr.pack( rect4 );
+  packr.pack( rect5 );
+
+  checkRect( rect1, 0, 0 );
+  checkRect( rect2, 0, 2 );
+  checkRect( rect3, 1, 0 );
+  checkRect( rect4, 2, 1 );
+  checkRect( rect5, 1, 1 );
+
+  // bottom space is open
+  equal( packr.spaces.length, 1, 'one space open' );
+  var space = packr.spaces[0];
+  equal( space.width, 7, 'space.width' );
+  equal( space.height, 3, 'space.height' );
+  checkRect( space, 3, 0 );
 
 });
 

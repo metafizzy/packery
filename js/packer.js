@@ -1,3 +1,8 @@
+/**
+ * Packer
+ * bin-packing algorithm
+ */
+
 ( function( window ) {
 
 'use strict';
@@ -9,6 +14,8 @@ function packerDefinition( Rect ) {
 function Packer( width, height ) {
   this.width = width || 0;
   this.height = height || 0;
+  // sorter
+  this.sorter = Packer.sorter.topLeft;
 
   this.reset();
 }
@@ -66,7 +73,7 @@ Packer.prototype.placed = function( rect ) {
   // remove redundant spaces
   Packer.mergeRects( this.spaces );
 
-  this.spaces.sort( Packer.spaceSorterTopLeft );
+  this.spaces.sort( this.sorter );
 };
 
 // -------------------------- utility functions -------------------------- //
@@ -106,15 +113,23 @@ Packer.mergeRects = function( rects ) {
   return rects;
 };
 
-// top down, then left to right
-Packer.spaceSorterTopLeft = function( a, b ) {
-  return a.y - b.y || a.x - b.x;
+
+// -------------------------- sorters -------------------------- //
+
+// functions for sorting rects in order
+Packer.sorter = {
+  // top down, then left to right
+  topLeft: function( a, b ) {
+    return a.y - b.y || a.x - b.x;
+  },
+  // left to right, then top down
+  leftTop: function( a, b ) {
+    return a.x - b.x || a.y - b.y;
+  }
 };
 
-// left to right, then top down
-Packer.spaceSorterLeftTop = function( a, b ) {
-  return a.x - b.x || a.y - b.y;
-};
+
+// --------------------------  -------------------------- //
 
 return Packer;
 
