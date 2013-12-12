@@ -114,8 +114,14 @@ Item.prototype.getPlaceRectCoord = function( coord, isX, isMaxOpen ) {
     // snap to closest segment
     coord = Math.round( coord / segment );
     // contain to outer bound
-    // x values must be contained, y values can grow box by 1
-    var maxSegments = Math[ isX ? 'floor' : 'ceil' ]( parentSize / segment );
+    // contain non-growing bound, allow growing bound to grow
+    var mathMethod;
+    if ( this.layout.options.isHorizontal ) {
+      mathMethod = !isX ? 'floor' : 'ceil';
+    } else {
+      mathMethod = isX ? 'floor' : 'ceil';
+    }
+    var maxSegments = Math[ mathMethod ]( parentSize / segment );
     maxSegments -= Math.ceil( size / segment );
     max = maxSegments;
   } else {
