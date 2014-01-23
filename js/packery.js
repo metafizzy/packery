@@ -1,5 +1,5 @@
 /*!
- * Packery v1.2.0
+ * Packery v1.2.1
  * bin-packing layout library
  * http://packery.metafizzy.co
  *
@@ -22,7 +22,7 @@ function packeryDefinition( classie, getSize, Outlayer, Rect, Packer, Item ) {
 
 // create an Outlayer layout class
 var Packery = Outlayer.create('packery');
-Packery.Item = Packery.prototype.settings.item = Item;
+Packery.Item = Item;
 
 Packery.prototype._create = function() {
   // call super

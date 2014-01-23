@@ -1,6 +1,6 @@
 {
   "name": "packery",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": "David DeSandro / Metafizzy",
   "description": "bin-packing layout library",
   "main": [
@@ -10,10 +10,10 @@
     "js/packery.js"
   ],
   "dependencies": {
-    "outlayer": ">=1.1 <2"
     "classie": "#>=1 <2",
     "get-style-property": "desandro/get-style-property#>=1 <2",
     "get-size": "desandro/get-size#>=1.1 <2",
+    "outlayer": ">=1.1.10 <2"
   },
   "devDependencies": {
     "draggabilly": "desandro/draggabilly#>=1.0.0",
