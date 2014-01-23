@@ -10,10 +10,10 @@
     "js/packery.js"
   ],
   "dependencies": {
-    "classie": "desandro/classie",
-    "get-style-property": "desandro/get-style-property",
-    "get-size": "desandro/get-size#>=1.1.0",
     "outlayer": ">=1.1 <2"
+    "classie": "#>=1 <2",
+    "get-style-property": "desandro/get-style-property#>=1 <2",
+    "get-size": "desandro/get-size#>=1.1 <2",
   },
   "devDependencies": {
     "draggabilly": "desandro/draggabilly#>=1.0.0",
