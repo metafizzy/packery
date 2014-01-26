@@ -86,6 +86,15 @@ Packery.prototype._resetLayout = function() {
     packer.sortDirection = 'downwardLeftToRight';
   }
 
+  var centered = this.options.centered;
+  if ( centered ) {
+    packer.center = {};
+    packer.center.x = centered.x ||
+      ( !this.options.isHorizontal && this.size.innerWidth / 2 ) || 0;
+    packer.center.y = centered.y ||
+      ( this.options.isHorizontal && this.size.innerHeight / 2 ) || 0;
+  }
+
   packer.reset();
 
   // layout

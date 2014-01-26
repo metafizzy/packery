@@ -29,16 +29,53 @@ Packer.prototype.reset = function() {
   this.spaces = [];
   this.newSpaces = [];
 
-  var initialSpace = new Rect({
-    x: 0,
-    y: 0,
-    width: this.width,
-    height: this.height
-  });
+  if ( this.center ) {
+    var initialSpaces = [
+      // top left
+      new Rect ({
+        x: 0,
+        y: 0,
+        width: this.center.x,
+        height: this.center.y
+      }),
+      // top right
+      new Rect ({
+        x: this.center.x,
+        y: 0,
+        width: this.width - this.center.x,
+        height: this.center.y
+      }),
+      // bottom left
+      new Rect ({
+        x: 0,
+        y: this.center.y,
+        width: this.center.x,
+        height: this.height - this.center.y
+      }),
+      // bottom right
+      new Rect ({
+        x: this.center.x,
+        y: this.center.y,
+        width: this.width - this.center.x,
+        height: this.height - this.center.y
+      })
+    ];
+    this.spaces = this.spaces.concat( initialSpaces );
 
-  this.spaces.push( initialSpace );
-  // set sorter
-  this.sorter = sorters[ this.sortDirection ] || sorters.downwardLeftToRight;
+    this.sorter = sorters.centeredOutCorners;
+  } else {
+    var initialSpace = new Rect({
+      x: 0,
+      y: 0,
+      width: this.width,
+      height: this.height
+    });
+
+    this.spaces.push( initialSpace );
+    this.sorter = sorters[ this.sortDirection ] || sorters.downwardLeftToRight;
+
+  }
+
 };
 
 // change x and y of rect to fit with in Packer's available spaces
@@ -54,8 +91,14 @@ Packer.prototype.pack = function( rect ) {
 
 Packer.prototype.placeInSpace = function( rect, space ) {
   // place rect in space
-  rect.x = space.x;
-  rect.y = space.y;
+  if ( this.center ) {
+    rect.x = space.x >= this.center.x ? space.x : ( space.x + space.width - rect.width );
+    rect.y = space.y >= this.center.y ? space.y : ( space.y + space.height - rect.height );
+  } else {
+
+    rect.x = space.x;
+    rect.y = space.y;
+  }
 
   this.placed( rect );
 };
@@ -80,8 +123,34 @@ Packer.prototype.placed = function( rect ) {
   // remove redundant spaces
   Packer.mergeRects( this.spaces );
 
+  console.log( this.center.x, this.center.y );
+  this.measureSpacesNearestCornerDistance();
+
   this.spaces.sort( this.sorter );
 };
+
+Packer.prototype.measureSpacesNearestCornerDistance = function() {
+  if ( !this.center ) {
+    return;
+  }
+
+
+  for ( var i=0, len = this.spaces.length; i < len; i++ ) {
+    var space = this.spaces[i];
+    var corner = {
+      x: space.x >= this.center.x ? space.x : space.x + space.width,
+      y: space.y >= this.center.y ? space.y : space.y + space.height
+    };
+    space.nearestCornerDistance = getDistance( corner, this.center );
+  }
+
+};
+
+function getDistance( pointA, pointB ) {
+  var dx = pointB.x - pointA.x;
+  var dy = pointB.y - pointA.y;
+  return Math.sqrt( dx * dx + dy * dy );
+}
 
 // -------------------------- utility functions -------------------------- //
 
@@ -132,6 +201,10 @@ var sorters = {
   // left to right, then top down
   rightwardTopToBottom: function( a, b ) {
     return a.x - b.x || a.y - b.y;
+  },
+
+  centeredOutCorners: function ( a, b ) {
+    return a.nearestCornerDistance - b.nearestCornerDistance;
   }
 };
 
