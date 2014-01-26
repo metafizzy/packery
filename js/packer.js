@@ -36,28 +36,32 @@ Packer.prototype.reset = function() {
         x: 0,
         y: 0,
         width: this.center.x,
-        height: this.center.y
+        height: this.center.y,
+        nearestCornerDistance: 0
       }),
       // top right
       new Rect ({
         x: this.center.x,
         y: 0,
         width: this.width - this.center.x,
-        height: this.center.y
+        height: this.center.y,
+        nearestCornerDistance: 0
       }),
       // bottom left
       new Rect ({
         x: 0,
         y: this.center.y,
         width: this.center.x,
-        height: this.height - this.center.y
+        height: this.height - this.center.y,
+        nearestCornerDistance: 0
       }),
       // bottom right
       new Rect ({
         x: this.center.x,
         y: this.center.y,
         width: this.width - this.center.x,
-        height: this.height - this.center.y
+        height: this.height - this.center.y,
+        nearestCornerDistance: 0
       })
     ];
     this.spaces = this.spaces.concat( initialSpaces );
@@ -113,6 +117,7 @@ Packer.prototype.placed = function( rect ) {
     // add either the original space or the new spaces to the revised spaces
     if ( newSpaces ) {
       revisedSpaces.push.apply( revisedSpaces, newSpaces );
+      this.measureNearestCornerDistance( newSpaces );
     } else {
       revisedSpaces.push( space );
     }
@@ -123,20 +128,17 @@ Packer.prototype.placed = function( rect ) {
   // remove redundant spaces
   Packer.mergeRects( this.spaces );
 
-  console.log( this.center.x, this.center.y );
-  this.measureSpacesNearestCornerDistance();
-
   this.spaces.sort( this.sorter );
 };
 
-Packer.prototype.measureSpacesNearestCornerDistance = function() {
+Packer.prototype.measureNearestCornerDistance = function( spaces ) {
   if ( !this.center ) {
     return;
   }
 
 
-  for ( var i=0, len = this.spaces.length; i < len; i++ ) {
-    var space = this.spaces[i];
+  for ( var i=0, len = spaces.length; i < len; i++ ) {
+    var space = spaces[i];
     var corner = {
       x: space.x >= this.center.x ? space.x : space.x + space.width,
       y: space.y >= this.center.y ? space.y : space.y + space.height
