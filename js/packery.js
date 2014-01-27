@@ -93,6 +93,7 @@ Packery.prototype._resetLayout = function() {
       ( !this.options.isHorizontal && this.size.innerWidth / 2 ) || 0;
     packer.center.y = centered.y ||
       ( this.options.isHorizontal && this.size.innerHeight / 2 ) || 0;
+    packer.sortDirection = 'centeredOutCorners';
   }
 
   packer.reset();

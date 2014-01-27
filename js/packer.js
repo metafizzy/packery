@@ -65,8 +65,6 @@ Packer.prototype.reset = function() {
       })
     ];
     this.spaces = this.spaces.concat( initialSpaces );
-
-    this.sorter = sorters.centeredOutCorners;
   } else {
     var initialSpace = new Rect({
       x: 0,
@@ -76,9 +74,9 @@ Packer.prototype.reset = function() {
     });
 
     this.spaces.push( initialSpace );
-    this.sorter = sorters[ this.sortDirection ] || sorters.downwardLeftToRight;
-
   }
+
+  this.sorter = sorters[ this.sortDirection ] || sorters.downwardLeftToRight;
 
 };
 
