@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
 
-  <title>Packery basic examples</title>
+  <title>centered out corners</title>
 
   <link rel="stylesheet" href="css/examples.css" />
   <link rel="stylesheet" href="css/basics.css" />
@@ -17,8 +17,9 @@
 </head>
 <body>
 
-  <h1>Packery basic examples</h1>
+  <h1>centered out corners</h1>
 
+  <p><button id="add">Add</button></p>
   <div id="center-out1" class="container fluid"></div>
 
 <script src="../bower_components/get-style-property/get-style-property.js"></script>
@@ -37,17 +38,55 @@
 
 <script src="examples.js"></script>
 <script>
+
+
 window.onload = function() {
 
   ( function() {
     var container = document.querySelector('#center-out1');
-    appendRandomSizedItems( container );
-    appendRandomSizedItems( container );
+    // appendRandomSizedItems( container );
+    // appendRandomSizedItems( container );
     var pckry = new Packery( container, {
       centered: {
         y: 300
       }
     });
+
+    eventie.bind( container, 'click', function() {
+      var elem = event.target;
+      if ( !matchesSelector( elem, '.item' ) ) {
+        return;
+      }
+
+      pckry.remove( elem );
+      pckry.layout();
+    });
+
+    function appendItem() {
+      var item = document.createElement('div');
+      item.className = 'item';
+      var w = Math.floor( Math.random() * Math.random() * 100 ) + 20;
+      var h = Math.floor( Math.random() * Math.random() * 100 ) + 20;
+      item.style.width  = w + 'px';
+      item.style.height = h + 'px';
+      container.appendChild( item );
+      pckry.appended( item );
+    }
+
+    itemCount = 0;
+    function autoAppend() {
+      appendItem();
+      if ( itemCount++ < 100 ) {
+        setTimeout( autoAppend, 50 );
+      }
+    }
+    autoAppend();
+
+    eventie.bind( document.querySelector('#add'), 'click',  appendItem );
+
+
+
+
   })();
 
 };
