@@ -12,6 +12,20 @@
   .container {
     width: auto;
   }
+
+  .stamp {
+    position: absolute;
+    border: 1px solid;
+    background: #D33;
+    opacity: 0.8;
+  }
+
+  .stamp1 {
+    width: 20%;
+    height: 150px;
+    left: 40%;
+    top: 200px;
+  }
   </style>
 
 </head>
@@ -20,7 +34,9 @@
   <h1>centered out corners</h1>
 
   <p><button id="add">Add</button></p>
-  <div id="center-out1" class="container fluid"></div>
+  <div id="center-out1" class="container fluid">
+    <!-- <div class="stamp stamp1"></div> -->
+  </div>
 
 <script src="../bower_components/get-style-property/get-style-property.js"></script>
 <script src="../bower_components/get-size/get-size.js"></script>
@@ -47,7 +63,11 @@ window.onload = function() {
     // appendRandomSizedItems( container );
     // appendRandomSizedItems( container );
     var pckry = new Packery( container, {
+      stamp: '.stamp',
+      // gutter: 10,
+      itemSelector: '.item',
       centered: {
+        // x: 400,
         y: 300
       }
     });
