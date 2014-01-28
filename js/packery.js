@@ -1,5 +1,5 @@
 /*!
- * Packery v1.2.1
+ * Packery v1.2.2
  * bin-packing layout library
  * http://packery.metafizzy.co
  *
@@ -190,11 +190,17 @@ Packery.prototype._manageStamp = function( elem ) {
 
 // -------------------------- methods -------------------------- //
 
+function verticalSorter( a, b ) {
+  return a.position.y - b.position.y || a.position.x - b.position.x;
+}
+
+function horizontalSorter( a, b ) {
+  return a.position.x - b.position.x || a.position.y - b.position.y;
+}
 
 Packery.prototype.sortItemsByPosition = function() {
-  this.items.sort( function( a, b ) {
-    return a.position.y - b.position.y || a.position.x - b.position.x;
-  });
+  var sorter = this.options.isHorizontal ? horizontalSorter : verticalSorter;
+  this.items.sort( sorter );
 };
 
 /**
@@ -322,7 +328,6 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
 
   this.clearDragTimeout();
 
-  this.dragTimeout = setTimeout( delayed, 40 );
 };
 
 Packery.prototype.clearDragTimeout = function() {
