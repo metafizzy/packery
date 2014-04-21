@@ -147,6 +147,10 @@ return Packer;
 if ( typeof define === 'function' && define.amd ) {
   // AMD
   define( [ './rect' ], packerDefinition );
+} else if ( typeof exports === 'object' ) {
+  module.exports = packerDefinition(
+    require('./rect')
+  );
 } else {
   // browser global
   var Packery = window.Packery = window.Packery || {};
