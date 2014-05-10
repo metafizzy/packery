@@ -146,7 +146,7 @@ Packery.prototype._setRectSize = function( elem, rect ) {
   h = this.rowHeight ? Math.ceil( h / rowH ) * rowH : h + this.gutter;
   // rect must fit in packer
   rect.width = Math.min( w, this.packer.width );
-  rect.height = h;
+  rect.height = Math.min( h, this.packer.height );
 };
 
 Packery.prototype._getContainerSize = function() {
