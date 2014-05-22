@@ -153,6 +153,12 @@ if ( typeof define === 'function' && define.amd ) {
       './rect'
     ],
     itemDefinition );
+} else if ( typeof exports === 'object' ) {
+  module.exports = itemDefinition(
+    require('get-style-property'),
+    require('outlayer'),
+    require('./rect')
+  );
 } else {
   // browser global
   window.Packery.Item = itemDefinition(

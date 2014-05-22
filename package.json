@@ -1,0 +1,29 @@
+{
+  "name": "packery",
+  "version": "1.2.2",
+  "description": "bin-packing layout library",
+  "main": "js/packery.js",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metafizzy/packery.git"
+  },
+  "author": "David DeSandro / Metafizzy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/metafizzy/packery/issues"
+  },
+  "homepage": "https://github.com/metafizzy/packery",
+  "dependencies": {
+    "classie": "https://github.com/wbinnssmith/classie/archive/commonjs.tar.gz",
+    "get-size": "https://github.com/wbinnssmith/get-size/archive/packagejson.tar.gz",
+    "get-style-property": "https://github.com/wbinnssmith/get-style-property/archive/packagejson.tar.gz",
+    "outlayer": "https://github.com/wbinnssmith/outlayer/archive/commonjs-browserify.tar.gz"
+  }
+}

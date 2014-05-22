@@ -454,6 +454,15 @@ if ( typeof define === 'function' && define.amd ) {
       './item'
     ],
     packeryDefinition );
+} else if ( typeof exports === 'object' ) {
+  module.exports = packeryDefinition(
+    require('classie'),
+    require('get-size'),
+    require('outlayer'),
+    require('./rect'),
+    require('./packer'),
+    require('./item')
+  );
 } else {
   // browser global
   window.Packery = packeryDefinition(
