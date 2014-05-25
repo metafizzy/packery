@@ -140,10 +140,13 @@ Packery.prototype._setRectSize = function( elem, rect ) {
   var w = size.outerWidth;
   var h = size.outerHeight;
   // size for columnWidth and rowHeight, if available
-  var colW = this.columnWidth + this.gutter;
-  var rowH = this.rowHeight + this.gutter;
-  w = this.columnWidth ? Math.ceil( w / colW ) * colW : w + this.gutter;
-  h = this.rowHeight ? Math.ceil( h / rowH ) * rowH : h + this.gutter;
+  // only check if size is non-zero, #177
+  if ( w || h ) {
+    var colW = this.columnWidth + this.gutter;
+    var rowH = this.rowHeight + this.gutter;
+    w = this.columnWidth ? Math.ceil( w / colW ) * colW : w + this.gutter;
+    h = this.rowHeight ? Math.ceil( h / rowH ) * rowH : h + this.gutter;
+  }
   // rect must fit in packer
   rect.width = Math.min( w, this.packer.width );
   rect.height = Math.min( h, this.packer.height );
