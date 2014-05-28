@@ -1,5 +1,5 @@
 /*!
- * Packery PACKAGED v1.2.2
+ * Packery PACKAGED v1.2.3
  * bin-packing layout library
  * http://packery.metafizzy.co
  *
@@ -3234,7 +3234,7 @@ if ( typeof define === 'function' && define.amd ) {
 })( window );
 
 /*!
- * Packery v1.2.2
+ * Packery v1.2.3
  * bin-packing layout library
  * http://packery.metafizzy.co
  *
@@ -3683,13 +3683,13 @@ return Packery;
 
 if ( typeof define === 'function' && define.amd ) {
   // AMD
-  define( 'packery/js/packery',[
+  define( [
       'classie/classie',
       'get-size/get-size',
       'outlayer/outlayer',
-      './rect',
-      './packer',
-      './item'
+      'packery/js/rect',
+      'packery/js/packer',
+      'packery/js/item'
     ],
     packeryDefinition );
 } else {
