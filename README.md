@@ -43,4 +43,4 @@ Add a class of `js-packery` to your element. Options can be set in JSON in `data
 
 ---
 
-Copyright (c) 2013 Metafizzy
+Copyright (c) 2014 Metafizzy

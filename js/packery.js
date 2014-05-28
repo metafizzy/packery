@@ -8,7 +8,7 @@
  *
  * Non-commercial use is licensed under the GPL v3 License
  *
- * Copyright 2013 Metafizzy
+ * Copyright 2014 Metafizzy
  */
 
 ( function( window ) {
