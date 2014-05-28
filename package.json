@@ -1,0 +1,35 @@
+{
+  "name": "packery",
+  "version": "1.2.2",
+  "description": "bin-packing layout library",
+  "main": "js/packery.js",
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "grunt-contrib-jshint": "~0.4.1",
+    "grunt-contrib-uglify": "~0.1.1",
+    "grunt-requirejs": "~0.4.0"
+  },
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/metafizzy/packery.git"
+  },
+  "keywords": [
+    "layout",
+    "bin",
+    "binpacking",
+    "packing",
+    "masonry"
+  ],
+  "author": "David DeSandro / Metafizzy",
+  "bugs": {
+    "url": "https://github.com/metafizzy/packery/issues"
+  },
+  "homepage": "https://github.com/metafizzy/packery"
+}

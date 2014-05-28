@@ -6,11 +6,12 @@ See http://packery.metafizzy.co for complete docs and demos
 
 ## Install
 
-Install with [Bower](https://github.com/twitter/bower).
+Download a packaged source file:
 
-``` bash
-bower install packery
-```
++ [packery.pkgd.js](dist/packery.pkgd.js)
++ [packery.pkgd.min.js](dist/packery.pkgd.min.js)
+
+Install with [Bower :bird:](http://bower.io): `bower install packery`
 
 ## Commercial license
 

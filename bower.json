@@ -22,7 +22,11 @@
     "qunit": "1.12"
   },
   "ignore": [
+    "**/.*",
     "test/",
-    "examples/"
+    "examples/",
+    "contributing.md",
+    "package.json",
+    "Gruntfile.js"
   ]
 }
