@@ -8,8 +8,8 @@ See http://packery.metafizzy.co for complete docs and demos
 
 Download a packaged source file:
 
-+ [packery.pkgd.js](dist/packery.pkgd.js)
-+ [packery.pkgd.min.js](dist/packery.pkgd.min.js)
++ [packery.pkgd.js](http://packeryjs.com/packery.pkgd.js)
++ [packery.pkgd.min.js](http://packeryjs.com/packery.pkgd.min.js)
 
 Install with [Bower :bird:](http://bower.io): `bower install packery`
 
