@@ -429,8 +429,32 @@ Packery.prototype.itemDragEnd = function( elem ) {
   var onLayoutComplete = this._getDragEndLayoutComplete( elem, item );
 
   if ( item.needsPositioning ) {
+    // Check to see if the item being positioned is overlapping a stamped item.
+    var overlapStampped = false;
+    for(i = 0; i < this.stamps.length; i++) {
+      if(this.stamps[i] == item.element) {
+          // The currently moving item is stamped as well, so just ignore that one.
+          continue;
+      }
+      // Note: the stamped item MUST be an actual "item" so we can get the rect.x,rect.y coordinates.
+      // Otherwise the stamped item is just a DOM element.
+      var stamped = this.getItem(this.stamps[i]);
+      if(stamped &&
+         ((stamped.rect.x <= item.placeRect.x) && (item.placeRect.x < (stamped.rect.x + stamped.rect.width))) &&
+         ((stamped.rect.y <= item.placeRect.y) && (item.placeRect.y < (stamped.rect.y + stamped.rect.height)))) {
+          overlapStampped = true;
+          break;
+      }
+    }
+
     item.on( 'layout', onLayoutComplete );
-    item.moveTo( item.placeRect.x, item.placeRect.y );
+    if(overlapStampped) {
+        // The item overlaps, so simulate a drag of the item back to its original position.
+        item.dragMove( item.rect.x, item.rect.y );
+        item.moveTo( item.rect.x, item.rect.y );
+    } else {
+        item.moveTo( item.placeRect.x, item.placeRect.y );
+    }
   } else if ( item ) {
     // item didn't need placement
     item.copyPlaceRectPosition();
