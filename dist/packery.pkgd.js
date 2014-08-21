@@ -1,5 +1,5 @@
 /*!
- * Packery PACKAGED v1.2.3
+ * Packery PACKAGED v1.2.4
  * bin-packing layout library
  * http://packery.metafizzy.co
  *
@@ -150,8 +150,10 @@ if ( typeof define === 'function' && define.amd ) {
 })( window );
 
 /*!
- * classie - class helper functions
+ * classie v1.0.1
+ * class helper functions
  * from bonzo https://github.com/ded/bonzo
+ * MIT license
  * 
  * classie.has( elem, 'my-class' ) -> true/false
  * classie.add( elem, 'my-new-class' )
@@ -159,8 +161,8 @@ if ( typeof define === 'function' && define.amd ) {
  * classie.toggle( elem, 'my-class' )
  */
 
-/*jshint browser: true, strict: true, undef: true */
-/*global define: false */
+/*jshint browser: true, strict: true, undef: true, unused: true */
+/*global define: false, module: false */
 
 ( function( window ) {
 
@@ -223,6 +225,9 @@ var classie = {
 if ( typeof define === 'function' && define.amd ) {
   // AMD
   define( 'classie/classie',classie );
+} else if ( typeof exports === 'object' ) {
+  // CommonJS
+  module.exports = classie;
 } else {
   // browser global
   window.classie = classie;
@@ -584,8 +589,9 @@ if ( typeof define === 'function' && define.amd ) {
 })( this );
 
 /*!
- * docReady
+ * docReady v1.0.3
  * Cross browser DOMContentLoaded event emitter
+ * MIT license
  */
 
 /*jshint browser: true, strict: true, undef: true, unused: true*/
@@ -646,12 +652,14 @@ if ( typeof define === 'function' && define.amd ) {
   // if RequireJS, then doc is already ready
   docReady.isReady = typeof requirejs === 'function';
   define( 'doc-ready/doc-ready',[ 'eventie/eventie' ], defineDocReady );
+} else if ( typeof exports === 'object' ) {
+  module.exports = defineDocReady( require('eventie') );
 } else {
   // browser global
   window.docReady = defineDocReady( window.eventie );
 }
 
-})( this );
+})( window );
 
 /*!
  * EventEmitter v4.2.7 - git.io/ee
@@ -1127,17 +1135,15 @@ if ( typeof define === 'function' && define.amd ) {
 }.call(this));
 
 /**
- * matchesSelector helper v1.0.1
- *
- * @name matchesSelector
- *   @param {Element} elem
- *   @param {String} selector
+ * matchesSelector v1.0.2
+ * matchesSelector( element, '.selector' )
+ * MIT license
  */
 
 /*jshint browser: true, strict: true, undef: true, unused: true */
-/*global define: false */
+/*global define: false, module: false */
 
-( function( global, ElemProto ) {
+( function( ElemProto ) {
 
   
 
@@ -1222,12 +1228,15 @@ if ( typeof define === 'function' && define.amd ) {
     define( 'matches-selector/matches-selector',[],function() {
       return matchesSelector;
     });
-  } else {
+  } else if ( typeof exports === 'object' ) {
+    module.exports = matchesSelector;
+  }
+  else {
     // browser global
     window.matchesSelector = matchesSelector;
   }
 
-})( this, Element.prototype );
+})( Element.prototype );
 
 /**
  * Outlayer Item
@@ -1239,11 +1248,10 @@ if ( typeof define === 'function' && define.amd ) {
 
 // ----- get style ----- //
 
-var defView = document.defaultView;
-
-var getStyle = defView && defView.getComputedStyle ?
+var getComputedStyle = window.getComputedStyle;
+var getStyle = getComputedStyle ?
   function( elem ) {
-    return defView.getComputedStyle( elem, null );
+    return getComputedStyle( elem, null );
   } :
   function( elem ) {
     return elem.currentStyle;
@@ -1755,7 +1763,7 @@ if ( typeof define === 'function' && define.amd ) {
 })( window );
 
 /*!
- * Outlayer v1.1.10
+ * Outlayer v1.2.0
  * the brains and guts of a layout library
  * MIT license
  */
@@ -1875,7 +1883,7 @@ function Outlayer( element, options ) {
   this.element = element;
 
   // options
-  this.options = extend( {}, this.options );
+  this.options = extend( {}, this.constructor.defaults );
   this.option( options );
 
   // add id for Outlayer.getFromElement
@@ -1896,7 +1904,7 @@ Outlayer.namespace = 'outlayer';
 Outlayer.Item = Item;
 
 // default options
-Outlayer.prototype.options = {
+Outlayer.defaults = {
   containerStyle: {
     position: 'relative'
   },
@@ -1904,6 +1912,7 @@ Outlayer.prototype.options = {
   isOriginLeft: true,
   isOriginTop: true,
   isResizeBound: true,
+  isResizingContainer: true,
   // item options
   transitionDuration: '0.4s',
   hiddenStyle: {
@@ -2190,6 +2199,13 @@ Outlayer.prototype._positionItem = function( item, x, y, isInstant ) {
  * i.e. size the container
  */
 Outlayer.prototype._postLayout = function() {
+  this.resizeContainer();
+};
+
+Outlayer.prototype.resizeContainer = function() {
+  if ( !this.options.isResizingContainer ) {
+    return;
+  }
   var size = this._getContainerSize();
   if ( size ) {
     this._setContainerMeasure( size.width, true );
@@ -2198,6 +2214,7 @@ Outlayer.prototype._postLayout = function() {
 };
 
 /**
+ * Sets width or height of container if returned
  * @returns {Object} size
  *   @param {Number} width
  *   @param {Number} height
@@ -2407,7 +2424,9 @@ Outlayer.prototype.bindResize = function() {
  * Unbind layout to window resizing
  */
 Outlayer.prototype.unbindResize = function() {
-  eventie.unbind( window, 'resize', this );
+  if ( this.isResizeBound ) {
+    eventie.unbind( window, 'resize', this );
+  }
   this.isResizeBound = false;
 };
 
@@ -2432,17 +2451,25 @@ Outlayer.prototype.onresize = function() {
 // debounced, layout on resize
 Outlayer.prototype.resize = function() {
   // don't trigger if size did not change
-  var size = getSize( this.element );
-  // check that this.size and size are there
-  // IE8 triggers resize on body size change, so they might not be
-  var hasSizes = this.size && size;
-  if ( hasSizes && size.innerWidth === this.size.innerWidth ) {
+  // or if resize was unbound. See #9
+  if ( !this.isResizeBound || !this.needsResizeLayout() ) {
     return;
   }
 
   this.layout();
 };
 
+/**
+ * check if layout is needed post layout
+ * @returns Boolean
+ */
+Outlayer.prototype.needsResizeLayout = function() {
+  var size = getSize( this.element );
+  // check that this.size and size are there
+  // IE8 triggers resize on body size change, so they might not be
+  var hasSizes = this.size && size;
+  return hasSizes && size.innerWidth !== this.size.innerWidth;
+};
 
 // -------------------------- methods -------------------------- //
 
@@ -2626,12 +2653,6 @@ Outlayer.data = function( elem ) {
   return id && instances[ id ];
 };
 
-// --------------------------  -------------------------- //
-
-// copy an object on the Outlayer prototype to new object
-function copyOutlayerProto( obj, property ) {
-  obj.prototype[ property ] = extend( {}, Outlayer.prototype[ property ] );
-}
 
 // -------------------------- create Outlayer class -------------------------- //
 
@@ -2653,10 +2674,11 @@ Outlayer.create = function( namespace, options ) {
   // set contructor, used for namespace and Item
   Layout.prototype.constructor = Layout;
 
-  // copy default options so Outlayer.options don't get touched
-  copyOutlayerProto( Layout, 'options' );
+  Layout.defaults = extend( {}, Outlayer.defaults );
   // apply new options
-  extend( Layout.prototype.options, options );
+  extend( Layout.defaults, options );
+  // keep prototype.settings for backwards compatibility (Packery v1.2.0)
+  Layout.prototype.settings = {};
 
   Layout.namespace = namespace;
 
@@ -3234,7 +3256,7 @@ if ( typeof define === 'function' && define.amd ) {
 })( window );
 
 /*!
- * Packery v1.2.3
+ * Packery v1.2.4
  * bin-packing layout library
  * http://packery.metafizzy.co
  *
