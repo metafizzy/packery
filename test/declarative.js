@@ -9,7 +9,7 @@ test( 'declarative', function() {
   var container1 = document.querySelector('#declarative');
   var pckry1 = Packery.data( container1 );
   ok( pckry1 instanceof Packery, 'Packery instance retrieved from element' );
-  deepEqual( pckry1.options, Packery.prototype.options, 'options match defaults' );
+  deepEqual( pckry1.options, Packery.defaults, 'options match defaults' );
   ok( pckry1._isLayoutInited, 'Packer was initialized' );
 
   // has data-packery-options, but bad JSON
