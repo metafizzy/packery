@@ -139,6 +139,18 @@ Item.prototype.copyPlaceRectPosition = function() {
   this.rect.y = this.placeRect.y;
 };
 
+// -----  ----- //
+
+// remove element from DOM
+Item.prototype.removeElem = function() {
+  this.element.parentNode.removeChild( this.element );
+  // add space back to packer
+  this.layout.packer.addSpace( this.rect );
+  this.emitEvent( 'remove', [ this ] );
+};
+
+// -----  ----- //
+
 return Item;
 
 }
