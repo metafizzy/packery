@@ -77,10 +77,19 @@ Packer.prototype.placed = function( rect ) {
 
   this.spaces = revisedSpaces;
 
+  this.mergeSortSpaces();
+};
+
+Packer.prototype.mergeSortSpaces = function() {
   // remove redundant spaces
   Packer.mergeRects( this.spaces );
-
   this.spaces.sort( this.sorter );
+};
+
+// add a space back
+Packer.prototype.addSpace = function( rect ) {
+  this.spaces.push( rect );
+  this.mergeSortSpaces();
 };
 
 // -------------------------- utility functions -------------------------- //
