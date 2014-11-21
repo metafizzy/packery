@@ -1,5 +1,10 @@
 # Changelog
 
+### v1.3.0
+
++ Add CommonJS and npm support for Browserify [#167](https://github.com/metafizzy/packery/pull/167) [#199](https://github.com/metafizzy/packery/issues/199)
++ Update Outlayer to v1.3.0
+
 ### v1.2.5
 
 + Add space after item removed [#218](https://github.com/metafizzy/packery/issues/218)
