@@ -150,6 +150,9 @@ return Rect;
 if ( typeof define === 'function' && define.amd ) {
   // AMD
   define( rectDefinition );
+} else if ( typeof exports === 'object' ) {
+  // CommonJS
+  module.exports = rectDefinition();
 } else {
   // browser global
   window.Packery = window.Packery || {};

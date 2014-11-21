@@ -6,6 +6,8 @@
   "unused": true,
   "predef": {
     "Packery": true,
-    "define": false
+    "define": false,
+    "module": false,
+    "require": false
   }
 }
