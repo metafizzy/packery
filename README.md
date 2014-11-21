@@ -13,6 +13,8 @@ Download a packaged source file:
 
 Install with [Bower :bird:](http://bower.io): `bower install packery`
 
+[Install with npm](https://www.npmjs.org/package/packery): `npm install packery`
+
 ## Commercial license
 
 Packery may be used in commercial projects and applications with the one-time purchase of a commercial license. If you are paid to do your job, and part of your job is implementing Packery, a commercial license is required.
