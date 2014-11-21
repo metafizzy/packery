@@ -12,6 +12,7 @@
   "devDependencies": {
     "draggabilly": "1.x",
     "jquery": "~1",
+    "jquery-bridget": "1.1.x",
     "qunitjs": "^1.15",
     "grunt": "~0.4.0",
     "grunt-contrib-jshint": "~0.4.1",
@@ -30,6 +31,8 @@
     "url": "git://github.com/metafizzy/packery.git"
   },
   "keywords": [
+    "DOM",
+    "browser",
     "layout",
     "bin",
     "binpacking",

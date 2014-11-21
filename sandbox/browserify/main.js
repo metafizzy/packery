@@ -21,5 +21,3 @@ for ( var i=0, len = pckry.items.length; i < len; i++ ) {
 pckry.on( 'dragItemPositioned', function( pckry, item ) {
   console.log( 'drag item positioned', item.position.x, item.position.y );
 });
-
-// ----- jQuery ----- //
