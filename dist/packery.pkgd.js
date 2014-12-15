@@ -1,5 +1,5 @@
 /*!
- * Packery PACKAGED v1.3.0
+ * Packery PACKAGED v1.3.1
  * bin-packing layout library
  * http://packery.metafizzy.co
  *
@@ -709,13 +709,13 @@ if ( typeof define === 'function' && define.amd ) {
 })( window );
 
 /*!
- * EventEmitter v4.2.9 - git.io/ee
- * Oliver Caldwell
- * MIT license
+ * EventEmitter v4.2.11 - git.io/ee
+ * Unlicense - http://unlicense.org/
+ * Oliver Caldwell - http://oli.me.uk/
  * @preserve
  */
 
-(function () {
+;(function () {
     
 
     /**
@@ -3357,7 +3357,7 @@ if ( typeof define === 'function' && define.amd ) {
 })( window );
 
 /*!
- * Packery v1.3.0
+ * Packery v1.3.1
  * bin-packing layout library
  * http://packery.metafizzy.co
  *

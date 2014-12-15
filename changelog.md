@@ -1,5 +1,9 @@
 # Changelog
 
+### v1.3.1
+
+Update [getSize](https://github.com/desandro/get-size) to v1.2.1 to fix IE8 bug
+
 ### v1.3.0
 
 + Add CommonJS and npm support for Browserify [#167](https://github.com/metafizzy/packery/pull/167) [#199](https://github.com/metafizzy/packery/issues/199)
