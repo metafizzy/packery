@@ -142,11 +142,31 @@ Packery.prototype._setRectSize = function( elem, rect ) {
   // size for columnWidth and rowHeight, if available
   // only check if size is non-zero, #177
   if ( w || h ) {
-    var colW = this.columnWidth + this.gutter;
-    var rowH = this.rowHeight + this.gutter;
-    w = this.columnWidth ? Math.ceil( w / colW ) * colW : w + this.gutter;
-    h = this.rowHeight ? Math.ceil( h / rowH ) * rowH : h + this.gutter;
+    var remainder, mathMethod;
+
+    if ( this.columnWidth ) {
+      // fit item to columnWidth
+      var colW = this.columnWidth + this.gutter;
+      // round if off by 1 pixel, otherwise use ceil. #42, #227
+      remainder = w % colW;
+      mathMethod = remainder && remainder < 1 ? 'round' : 'ceil';
+      w = Math[ mathMethod ]( w / colW ) * colW;
+    } else {
+      w += this.gutter;
+    }
+
+    if ( this.rowHeight ) {
+      // fit item to rowHeight
+      var rowH = this.rowHeight + this.gutter;
+      // round if off by 1 pixel, otherwise use ceil
+      remainder = h % rowH;
+      mathMethod = remainder && remainder < 1 ? 'round' : 'ceil';
+      h = Math[ mathMethod ]( h / rowH ) * rowH;
+    } else {
+      h += this.gutter;
+    }
   }
+
   // rect must fit in packer
   rect.width = Math.min( w, this.packer.width );
   rect.height = Math.min( h, this.packer.height );
