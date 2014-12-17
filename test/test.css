@@ -96,3 +96,18 @@ body {
 #hidden-items .hidden {
   display: none;
 }
+
+#sub-pixel-fit {
+  width: 290px;
+}
+
+#sub-pixel-fit .item,
+#sub-pixel-fit .grid-sizer {
+  width: 20%;
+}
+
+#sub-pixel-fit .item {
+  margin: 0;
+}
+
+#sub-pixel-fit .item.w2 { width: 40%; }
