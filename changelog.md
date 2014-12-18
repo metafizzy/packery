@@ -1,5 +1,9 @@
 # Changelog
 
+### v1.3.2
+
+Add 1px wiggle room in `Rect.canFit` and calculations with `columnWidth` & `rowHeight` to allow for pixel rounding errors and JS fractional quirkiness [#42](https://github.com/metafizzy/packery/issues/42) [#227](https://github.com/metafizzy/packery/issues/227)
+
 ### v1.3.1
 
 Update [getSize](https://github.com/desandro/get-size) to v1.2.1 to fix IE8 bug
