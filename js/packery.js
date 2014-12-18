@@ -15,10 +15,17 @@
 
 'use strict';
 
-// -------------------------- Packery -------------------------- //
-
 // used for AMD definition and requires
 function packeryDefinition( classie, getSize, Outlayer, Rect, Packer, Item ) {
+
+// ----- Rect ----- //
+
+// allow for pixel rounding errors IE8-IE11 & Firefox; #227
+Rect.prototype.canFit = function( rect ) {
+  return this.width >= rect.width - 1 && this.height >= rect.height - 1;
+};
+
+// -------------------------- Packery -------------------------- //
 
 // create an Outlayer layout class
 var Packery = Outlayer.create('packery');
