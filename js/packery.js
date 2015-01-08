@@ -1,5 +1,5 @@
 /*!
- * Packery v1.3.1
+ * Packery v1.3.2
  * bin-packing layout library
  * http://packery.metafizzy.co
  *
@@ -8,7 +8,7 @@
  *
  * Non-commercial use is licensed under the GPL v3 License
  *
- * Copyright 2014 Metafizzy
+ * Copyright 2015 Metafizzy
  */
 
 ( function( window ) {
