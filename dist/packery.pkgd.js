@@ -3252,8 +3252,37 @@ Item.prototype.dragStop = function() {
  * @param {Boolean} isMaxYContained
  */
 Item.prototype.positionPlaceRect = function( x, y, isMaxYOpen ) {
-  this.placeRect.x = this.getPlaceRectCoord( x, true );
-  this.placeRect.y = this.getPlaceRectCoord( y, false, isMaxYOpen );
+  
+  var stampsData = [];
+  var _this = this;
+  for(var i=0;i<this.layout.stamps.length -1;i++ ){ //exlude last stamp 
+    var stamp = this.layout.stamps[i];
+    var size = stamp.getBoundingClientRect();
+    stampsData.push({
+      tileW : size.width,
+      tileH : size.height,
+      x : _this.getPlaceRectCoord( parseInt(stamp.offsetLeft,10), true ),
+      y : _this.getPlaceRectCoord( parseInt(stamp.offsetTop,10), false, isMaxYOpen )
+    });
+  }
+
+  var placeRectX = this.getPlaceRectCoord( x, true );
+  var placeRectY = this.getPlaceRectCoord( y, false, isMaxYOpen );
+
+  var onStamp = false;
+  stampsData.forEach(function(stamp) {
+    if(
+      placeRectX >= stamp.x && placeRectX < (stamp.x + stamp.tileW) &&
+      placeRectY >= stamp.y && placeRectY < (stamp.y + stamp.tileH)
+    ){
+      onStamp = true;
+    }    
+  });
+
+  if(!onStamp){
+    this.placeRect.x = placeRectX;
+    this.placeRect.y = placeRectY;
+  }
 };
 
 /**
