@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.4.0
+
++ Changed `bower.json` `main` to just `js/packery.js`
++ Upgraded Outlayer to `v1.4.0`
+  - enabled `percentPosition` option
+  - removed `instance` argument from `layoutComplete` and `removeComplete`
+
 ### v1.3.2
 
 Add 1px wiggle room in `Rect.canFit` and calculations with `columnWidth` & `rowHeight` to allow for pixel rounding errors and JS fractional quirkiness [#42](https://github.com/metafizzy/packery/issues/42) [#227](https://github.com/metafizzy/packery/issues/227)

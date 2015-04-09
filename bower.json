@@ -3,17 +3,12 @@
   "version": "1.3.2",
   "author": "David DeSandro / Metafizzy",
   "description": "bin-packing layout library",
-  "main": [
-    "js/rect.js",
-    "js/packer.js",
-    "js/item.js",
-    "js/packery.js"
-  ],
+  "main": "js/packery.js",
   "dependencies": {
     "classie": "1.x",
     "get-style-property": "1.x",
     "get-size": "1.2.x",
-    "outlayer": "1.3.x"
+    "outlayer": "1.4.x"
   },
   "devDependencies": {
     "draggabilly": "1.x",
