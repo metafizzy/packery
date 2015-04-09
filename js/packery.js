@@ -74,14 +74,14 @@ Packery.prototype._create = function() {
   // create drag handlers
   var _this = this;
   this.handleDraggabilly = {
-    dragStart: function( draggie ) {
-      _this.itemDragStart( draggie.element );
+    dragStart: function() {
+      _this.itemDragStart( this.element );
     },
-    dragMove: function( draggie ) {
-      _this.itemDragMove( draggie.element, draggie.position.x, draggie.position.y );
+    dragMove: function() {
+      _this.itemDragMove( this.element, this.position.x, this.position.y );
     },
-    dragEnd: function( draggie ) {
-      _this.itemDragEnd( draggie.element );
+    dragEnd: function() {
+      _this.itemDragEnd( this.element );
     }
   };
 
