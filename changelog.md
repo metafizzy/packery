@@ -1,5 +1,9 @@
 # Changelog
 
+### v1.4.1
+
++ Remove `instance` argument from `dragItemPositioned` and `fitComplete` events
+
 ## v1.4.0
 
 + Upgraded Outlayer to `v1.4.0`

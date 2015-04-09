@@ -34,9 +34,8 @@ test( '.fit()', function() {
     after( then1, fit2 );
   }
 
-  pckry.on( 'fitComplete', function( pckryInstance, item ) {
+  pckry.on( 'fitComplete', function( item ) {
     ok( true, 'fitComplete event emitted' );
-    equal( pckryInstance, pckry, 'packery instance returned' );
     equal( item, item3, 'item argument returned' );
     equal( elem3.style.left, '30px', 'elem3.style.left = 30px' );
     isFit = true;
