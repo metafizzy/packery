@@ -1,5 +1,5 @@
 /*!
- * Packery v1.4.0
+ * Packery v1.4.1
  * bin-packing layout library
  *
  * Licensed GPLv3 for open source use
@@ -318,7 +318,7 @@ Packery.prototype._bindFitEvents = function( item ) {
     if ( ticks != 2 ) {
       return;
     }
-    _this.emitEvent( 'fitComplete', [ _this, item ] );
+    _this.emitEvent( 'fitComplete', [ item ] );
   }
   // when item is laid out
   item.on( 'layout', function() {
@@ -463,7 +463,7 @@ Packery.prototype._getDragEndLayoutComplete = function( elem, item ) {
 
     // emit item drag event now that everything is done
     if ( itemNeedsPositioning ) {
-      _this.emitEvent( 'dragItemPositioned', [ _this, item ] );
+      _this.emitEvent( 'dragItemPositioned', [ item ] );
     }
     // listen once
     return true;

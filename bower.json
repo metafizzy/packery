@@ -1,6 +1,6 @@
 {
   "name": "packery",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "author": "Metafizzy",
   "description": "bin-packing layout library",
   "main": "js/packery.js",
