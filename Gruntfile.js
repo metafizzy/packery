@@ -63,7 +63,7 @@ module.exports = function( grunt ) {
     var outFile = grunt.config.get('requirejs.pkgd.options.out');
     var contents = grunt.file.read( outFile );
     // get requireJS definition code
-    var definitionRE = /define\(\s*'packery\/js\/packery'(.|\n)+packeryDefinition\s*\)/;
+    var definitionRE = /define\(\s*'packery\/js\/packery'(.|\n)+factory\s*\)/;
     var definition = contents.match( definitionRE )[0];
     // remove name module
     var fixDefinition = definition.replace( "'packery/js/packery',", '' )

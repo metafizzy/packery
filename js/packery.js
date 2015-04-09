@@ -1,5 +1,5 @@
 /*!
- * Packery v1.3.2
+ * Packery v1.4.0
  * bin-packing layout library
  *
  * Licensed GPLv3 for open source use
