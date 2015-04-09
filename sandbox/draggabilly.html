@@ -84,8 +84,10 @@
 <script src="../bower_components/classie/classie.js"></script>
 <script src="../bower_components/eventEmitter/EventEmitter.js"></script>
 <script src="../bower_components/doc-ready/doc-ready.js"></script>
-<script src="../bower_components/draggabilly/draggabilly.js"></script>
 <script src="../bower_components/fizzy-ui-utils/utils.js"></script>
+<script src="../bower_components/unipointer/unipointer.js"></script>
+<script src="../bower_components/unidragger/unidragger.js"></script>
+<script src="../bower_components/draggabilly/draggabilly.js"></script>
 <script src="../bower_components/outlayer/item.js"></script>
 <script src="../bower_components/outlayer/outlayer.js"></script>
 <script src="../js/rect.js"></script>
@@ -145,20 +147,20 @@ window.onload = function() {
     var draggies = bindDraggies( packery4 );
 
     // when clicked toggle expanded
-    function onDragEnd( draggie ) {
-      var p1 = draggie.position;
-      var p2 = draggie.startPosition;
+    function onDragEnd() {
+      var p1 = this.position;
+      var p2 = this.startPosition;
       // only proceed if stuff has moved
       if ( p1.x !== p2.x || p1.y !== p2.y ) {
         return;
       }
       // dragger didn't move
-      var isExpanded = classie.has( draggie.element, 'expanded' );
-      classie.toggle( draggie.element, 'expanded' );
+      var isExpanded = classie.has( this.element, 'expanded' );
+      classie.toggle( this.element, 'expanded' );
       if ( !isExpanded ) {
         // HACK unplace first
-        packery4.unplace( draggie.element );
-        packery4.fit( draggie.element );
+        packery4.unplace( this.element );
+        packery4.fit( this.element );
       } else {
         packery4.layout();
       }

@@ -2,10 +2,11 @@
 
 ## v1.4.0
 
-+ Changed `bower.json` `main` to just `js/packery.js`
 + Upgraded Outlayer to `v1.4.0`
-  - enabled `percentPosition` option
+  - enabled `percentPosition` option. Fixed [#236](https://github.com/metafizzy/packery/issues/236)
   - removed `instance` argument from `layoutComplete` and `removeComplete`
++ Fixed bugs with Draggabilly v1.2. Fixed [#246](https://github.com/metafizzy/packery/issues/246)
++ Changed `bower.json` `main` to just `js/packery.js`
 
 ### v1.3.2
 
