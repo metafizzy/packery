@@ -9,12 +9,44 @@
  * Copyright 2015 Metafizzy
  */
 
-( function( window ) {
+( function( window, factory ) {
+  'use strict';
+  // universal module definition
+  if ( typeof define == 'function' && define.amd ) {
+    // AMD
+    define( [
+        'classie/classie',
+        'get-size/get-size',
+        'outlayer/outlayer',
+        './rect',
+        './packer',
+        './item'
+      ],
+      factory );
+  } else if ( typeof exports == 'object' ) {
+    // CommonJS
+    module.exports = factory(
+      require('desandro-classie'),
+      require('get-size'),
+      require('outlayer'),
+      require('./rect'),
+      require('./packer'),
+      require('./item')
+    );
+  } else {
+    // browser global
+    window.Packery = factory(
+      window.classie,
+      window.getSize,
+      window.Outlayer,
+      window.Packery.Rect,
+      window.Packery.Packer,
+      window.Packery.Item
+    );
+  }
 
+}( window, function factory( classie, getSize, Outlayer, Rect, Packer, Item ) {
 'use strict';
-
-// used for AMD definition and requires
-function packeryDefinition( classie, getSize, Outlayer, Rect, Packer, Item ) {
 
 // ----- Rect ----- //
 
@@ -283,7 +315,7 @@ Packery.prototype._bindFitEvents = function( item ) {
   var ticks = 0;
   function tick() {
     ticks++;
-    if ( ticks !== 2 ) {
+    if ( ticks != 2 ) {
       return;
     }
     _this.emitEvent( 'fitComplete', [ _this, item ] );
@@ -310,7 +342,7 @@ Packery.prototype.resize = function() {
   // IE8 triggers resize on body size change, so they might not be
   var hasSizes = this.size && size;
   var innerSize = this.options.isHorizontal ? 'innerHeight' : 'innerWidth';
-  if ( hasSizes && size[ innerSize ] === this.size[ innerSize ] ) {
+  if ( hasSizes && size[ innerSize ] == this.size[ innerSize ] ) {
     return;
   }
 
@@ -415,7 +447,7 @@ Packery.prototype._getDragEndLayoutComplete = function( elem, item ) {
   return function onLayoutComplete() {
     completeCount++;
     // don't proceed if not complete
-    if ( completeCount !== asyncCount ) {
+    if ( completeCount != asyncCount ) {
       return true;
     }
     // reset item
@@ -464,41 +496,4 @@ Packery.Packer = Packer;
 
 return Packery;
 
-}
-
-// -------------------------- transport -------------------------- //
-
-if ( typeof define === 'function' && define.amd ) {
-  // AMD
-  define( [
-      'classie/classie',
-      'get-size/get-size',
-      'outlayer/outlayer',
-      './rect',
-      './packer',
-      './item'
-    ],
-    packeryDefinition );
-} else if ( typeof exports === 'object' ) {
-  // CommonJS
-  module.exports = packeryDefinition(
-    require('desandro-classie'),
-    require('get-size'),
-    require('outlayer'),
-    require('./rect'),
-    require('./packer'),
-    require('./item')
-  );
-} else {
-  // browser global
-  window.Packery = packeryDefinition(
-    window.classie,
-    window.getSize,
-    window.Outlayer,
-    window.Packery.Rect,
-    window.Packery.Packer,
-    window.Packery.Item
-  );
-}
-
-})( window );
+}));
