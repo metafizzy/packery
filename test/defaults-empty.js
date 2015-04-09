@@ -11,7 +11,7 @@ test( 'defaults / empty', function() {
   equal( Packery.data( empty ), pckry, 'data method returns instance' );
   ok( pckry.isResizeBound, 'isResizeBound' );
 
-  pckry.on( 'layoutComplete', function( obj, items ) {
+  pckry.on( 'layoutComplete', function( items ) {
     ok( true, 'layoutComplete triggered with no items' );
     equal( items.length, 0, 'no items' );
     start();

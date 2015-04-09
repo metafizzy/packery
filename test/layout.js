@@ -26,9 +26,8 @@ test( 'layout', function() {
   elem0.style.width = '18px';
   elem3.style.height = '58px';
   var items = pckry._getItemsForLayout( pckry.items );
-  pckry.on( 'layoutComplete', function( obj, completeItems ) {
+  pckry.on( 'layoutComplete', function( completeItems ) {
     equal( true, true, 'layoutComplete event did fire' );
-    equal( obj, pckry, 'event-emitted argument matches Packery instance' );
     equal( completeItems.length, items.length, 'event-emitted items matches layout items length' );
     strictEqual( completeItems[0], items[0], 'event-emitted items has same first item' );
     var len = completeItems.length - 1;
@@ -36,7 +35,7 @@ test( 'layout', function() {
     checkItemPosition( elem1, 20, 0, '2nd item' );
     checkItemPosition( elem2, 40, 0, '3nd item' );
 
-    setTimeout( checkHorizontal, 10 )
+    setTimeout( checkHorizontal, 10 );
     return true;
   });
 
