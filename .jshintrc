@@ -4,7 +4,7 @@
   "strict": true,
   "undef": true,
   "unused": true,
-  "predef": {
+  "globals": {
     "Packery": true,
     "define": false,
     "module": false,
