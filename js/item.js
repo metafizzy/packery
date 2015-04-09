@@ -2,13 +2,38 @@
  * Packery Item Element
 **/
 
-( function( window ) {
+( function( window, factory ) {
+  'use strict';
+  // universal module definition
 
+  if ( typeof define == 'function' && define.amd ) {
+    // AMD
+    define( [
+        'get-style-property/get-style-property',
+        'outlayer/outlayer',
+        './rect'
+      ],
+      factory );
+  } else if ( typeof exports == 'object' ) {
+    // CommonJS
+    module.exports = factory(
+      require('desandro-get-style-property'),
+      require('outlayer'),
+      require('./rect')
+    );
+  } else {
+    // browser global
+    window.Packery.Item = factory(
+      window.getStyleProperty,
+      window.Outlayer,
+      window.Packery.Rect
+    );
+  }
+
+}( window, function factory( getStyleProperty, Outlayer, Rect ) {
 'use strict';
 
 // -------------------------- Item -------------------------- //
-
-function itemDefinition( getStyleProperty, Outlayer, Rect ) {
 
 var transformProperty = getStyleProperty('transform');
 
@@ -62,8 +87,8 @@ Item.prototype.dragMove = function( x, y ) {
 
 Item.prototype.dragStop = function() {
   this.getPosition();
-  var isDiffX = this.position.x !== this.placeRect.x;
-  var isDiffY = this.position.y !== this.placeRect.y;
+  var isDiffX = this.position.x != this.placeRect.x;
+  var isDiffY = this.position.y != this.placeRect.y;
   // set post-drag positioning flag
   this.needsPositioning = isDiffX || isDiffY;
   // reset flag
@@ -153,32 +178,4 @@ Item.prototype.removeElem = function() {
 
 return Item;
 
-}
-
-// -------------------------- transport -------------------------- //
-
-if ( typeof define === 'function' && define.amd ) {
-  // AMD
-  define( [
-      'get-style-property/get-style-property',
-      'outlayer/outlayer',
-      './rect'
-    ],
-    itemDefinition );
-} else if ( typeof exports === 'object' ) {
-  // CommonJS
-  module.exports = itemDefinition(
-    require('desandro-get-style-property'),
-    require('outlayer'),
-    require('./rect')
-  );
-} else {
-  // browser global
-  window.Packery.Item = itemDefinition(
-    window.getStyleProperty,
-    window.Outlayer,
-    window.Packery.Rect
-  );
-}
-
-})( window );
+}));

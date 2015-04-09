@@ -3,13 +3,27 @@
  * bin-packing algorithm
  */
 
-( function( window ) {
+( function( window, factory ) {
+  'use strict';
+  // universal module definition
+  if ( typeof define == 'function' && define.amd ) {
+    // AMD
+    define( [ './rect' ], factory );
+  } else if ( typeof exports == 'object' ) {
+    // CommonJS
+    module.exports = factory(
+      require('./rect')
+    );
+  } else {
+    // browser global
+    var Packery = window.Packery = window.Packery || {};
+    Packery.Packer = factory( Packery.Rect );
+  }
 
+}( window, function factory( Rect ) {
 'use strict';
 
 // -------------------------- Packer -------------------------- //
-
-function packerDefinition( Rect ) {
 
 /**
  * @param {Number} width
@@ -149,22 +163,4 @@ var sorters = {
 
 return Packer;
 
-}
-
-// -------------------------- transport -------------------------- //
-
-if ( typeof define === 'function' && define.amd ) {
-  // AMD
-  define( [ './rect' ], packerDefinition );
-} else if ( typeof exports === 'object' ) {
-  // CommonJS
-  module.exports = packerDefinition(
-    require('./rect')
-  );
-} else {
-  // browser global
-  var Packery = window.Packery = window.Packery || {};
-  Packery.Packer = packerDefinition( Packery.Rect );
-}
-
-})( window );
+}));
