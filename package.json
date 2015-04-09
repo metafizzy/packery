@@ -1,6 +1,6 @@
 {
   "name": "packery",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "description": "bin-packing layout library",
   "main": "js/packery.js",
   "dependencies": {
@@ -39,7 +39,7 @@
     "packing",
     "masonry"
   ],
-  "author": "David DeSandro / Metafizzy",
+  "author": "Metafizzy",
   "bugs": {
     "url": "https://github.com/metafizzy/packery/issues"
   },
