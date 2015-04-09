@@ -1,13 +1,11 @@
 /*!
  * Packery v1.3.2
  * bin-packing layout library
+ *
+ * Licensed GPLv3 for open source use
+ * or Flickity Commercial License for commercial use
+ *
  * http://packery.metafizzy.co
- *
- * Commercial use requires one-time purchase of a commercial license
- * http://packery.metafizzy.co/license.html
- *
- * Non-commercial use is licensed under the GPL v3 License
- *
  * Copyright 2015 Metafizzy
  */
 

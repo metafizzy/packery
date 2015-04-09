@@ -11,17 +11,21 @@ Download a packaged source file:
 + [packery.pkgd.js](http://packeryjs.com/packery.pkgd.js)
 + [packery.pkgd.min.js](http://packeryjs.com/packery.pkgd.min.js)
 
-Install with [Bower :bird:](http://bower.io): `bower install packery`
+Install with [Bower :bird:](http://bower.io): `bower install packery --save`
 
-[Install with npm](https://www.npmjs.org/package/packery): `npm install packery`
+[Install with npm](https://www.npmjs.com/package/packery): `npm install packery`
 
-## Commercial license
+## License
 
-Packery may be used in commercial projects and applications with the one-time purchase of a commercial license. If you are paid to do your job, and part of your job is implementing Packery, a commercial license is required.
+### Commerical license
 
-http://packery.metafizzy.co/license.html
+If you want to use Packery to develop commercial sites, themes, projects, and applications, the Commercial license is the appropriate license. With this option, your source code is kept proprietary. Purchase a Packery Commercial License at [packery.metafizzy.co](http://packery.metafizzy.co/#commerical-license)
 
-For non-commercial, personal, or open source projects and applications, you may use Packery under the terms of the [GPL v3 License](http://choosealicense.com/licenses/gpl-v3/). You may use Packery for free.
+### Open source license
+
+If you are creating an open source application under a license compatible with the [GNU GPL license v3](https://www.gnu.org/licenses/gpl-3.0.html), you may use Packery under the terms of the GPLv3.
+
+[Read more about Packery's license](http://packery.metafizzy.co/packery.html).
 
 ## Initialize
 
