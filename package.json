@@ -11,13 +11,13 @@
   },
   "devDependencies": {
     "draggabilly": "1.x",
-    "jquery": "~1",
-    "jquery-bridget": "1.1.x",
-    "qunitjs": "^1.15",
     "grunt": "~0.4.0",
     "grunt-contrib-jshint": "~0.4.1",
-    "grunt-contrib-uglify": "~0.1.1",
-    "grunt-requirejs": "~0.4.0"
+    "grunt-contrib-uglify": "^0.9.1",
+    "grunt-requirejs": "~0.4.0",
+    "jquery": "~1",
+    "jquery-bridget": "1.1.x",
+    "qunitjs": "^1.15"
   },
   "directories": {
     "example": "examples",
