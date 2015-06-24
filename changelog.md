@@ -1,5 +1,7 @@
 # Changelog
 
++ Fixed bug with HTML5 drag & drop. Fixed [#206](https://github.com/metafizzy/packery/issues/206)
+
 ### v1.4.1
 
 + Remove `instance` argument from `dragItemPositioned` and `fitComplete` events

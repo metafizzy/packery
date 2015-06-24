@@ -86,13 +86,23 @@ Packery.prototype._create = function() {
   };
 
   this.handleUIDraggable = {
-    start: function handleUIDraggableStart( event ) {
+    start: function handleUIDraggableStart( event, ui ) {
+      // HTML5 may trigger dragstart, dismiss HTML5 dragging
+      if ( !ui ) {
+        return;
+      }
       _this.itemDragStart( event.currentTarget );
     },
     drag: function handleUIDraggableDrag( event, ui ) {
+      if ( !ui ) {
+        return;
+      }
       _this.itemDragMove( event.currentTarget, ui.position.left, ui.position.top );
     },
-    stop: function handleUIDraggableStop( event ) {
+    stop: function handleUIDraggableStop( event, ui ) {
+      if ( !ui ) {
+        return;
+      }
       _this.itemDragEnd( event.currentTarget );
     }
   };
