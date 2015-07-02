@@ -2,18 +2,30 @@
 
 _Bin-packing layout library_
 
-See http://packery.metafizzy.co for complete docs and demos
+See [packery.metafizzy.co](http://packery.metafizzy.co) for complete docs and demos
 
 ## Install
 
-Download a packaged source file:
+### Download
 
-+ [packery.pkgd.js](http://packeryjs.com/packery.pkgd.js)
-+ [packery.pkgd.min.js](http://packeryjs.com/packery.pkgd.min.js)
++ [packery.pkgd.js](https://github.com/metafizzy/packery/raw/master/dist/packery.pkgd.js) un-minified, or
++ [packery.pkgd.min.js](https://github.com/metafizzy/packery/raw/master/dist/packery.pkgd.min.js) minified
 
-Install with [Bower :bird:](http://bower.io): `bower install packery --save`
+### CDN
 
-[Install with npm](https://www.npmjs.com/package/packery): `npm install packery`
+Link directly to [Packery files on cdnjs](https://cdnjs.com/libraries/packery).
+
+``` html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/packery/1.4.2/packery.pkgd.js"></script>
+<!-- or -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/packery/1.4.2/packery.pkgd.min.js"></script>
+```
+
+### Package managers
+
+Bower: `bower install packery --save`
+
+[npm](https://www.npmjs.com/package/packery): `npm install packery --save`
 
 ## License
 
@@ -29,21 +41,35 @@ If you are creating an open source application under a license compatible with t
 
 ## Initialize
 
-### in JavaScript
+With jQuery
 
 ``` js
-var container = document.querySelector('#container');
-var myPackery = new Packery( container, {
+$('.grid').packery({
   // options...
+  itemSelector: '.grid-item'
 });
 ```
 
-### in HTML
+With vanilla JavaScript
+
+``` js
+// vanilla JS
+var grid = document.querySelector('.grid');
+var pckry = new Packery( grid, {
+  // options...
+  itemSelector: '.grid-item'
+});
+```
+
+With HTML
 
 Add a class of `js-packery` to your element. Options can be set in JSON in `data-packery-options`.
 
 ``` html
-<div class="js-packery" data-packery-options='{ "itemSelector": ".item" }'>
+<div class="grid js-packery"
+  data-packery-options='{ "itemSelector": ".grid-item" }'>
+  <div class="grid-item"></div>
+  <div class="grid-item"></div>
   ...
 </div>
 ```

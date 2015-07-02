@@ -1,6 +1,6 @@
 {
   "name": "packery",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "author": "Metafizzy",
   "description": "bin-packing layout library",
   "main": "js/packery.js",
@@ -8,7 +8,7 @@
     "classie": "1.x",
     "get-style-property": "1.x",
     "get-size": "1.2.x",
-    "outlayer": "1.4.x"
+    "outlayer": "~1.4.1"
   },
   "devDependencies": {
     "draggabilly": "1.x",
