@@ -75,7 +75,8 @@ $( function() {
   var itemElems = $ex4.packery('getItemElements');
   var $itemElems = $( itemElems ).draggable();
 
-  function orderItems() {
+  function orderItems( event ) {
+    // console.log( event.type, arguments );
     var itemElems = $ex4.packery('getItemElements');
     $( itemElems ).each( function( i, elem ) {
       $(elem).text( i+1 );
@@ -83,8 +84,8 @@ $( function() {
   }
 
   $ex4.packery( 'bindUIDraggableEvents', $itemElems );
-  $ex4.packery( 'on', 'dragItemPositioned', orderItems );
-  $ex4.packery( 'on', 'layoutComplete', orderItems );
+  $ex4.on( 'dragItemPositioned', orderItems );
+  $ex4.on( 'layoutComplete', orderItems );
 
   // ----- random sized ----- //
 

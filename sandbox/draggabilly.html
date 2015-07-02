@@ -109,10 +109,10 @@ function bindDraggies( packery ) {
     draggies.push( draggie );
 
   }
-  return draggies;
-  packery.on( 'dragItemPositioned', function( pckry, item ) {
+  packery.on( 'dragItemPositioned', function( item ) {
     console.log( 'drag item positioned', item.position.x, item.position.y );
   });
+  return draggies;
 
 }
 
