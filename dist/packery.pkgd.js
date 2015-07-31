@@ -633,7 +633,7 @@ if ( typeof define === 'function' && define.amd ) {
  */
 
 ;(function () {
-    
+    'use strict';
 
     /**
      * Class for managing events.
@@ -1190,7 +1190,7 @@ if ( typeof define === 'function' && define.amd ) {
 
 ( function( ElemProto ) {
 
-  
+  'use strict';
 
   var matchesMethod = ( function() {
     // check for the standard method name first
@@ -1296,7 +1296,7 @@ if ( typeof define === 'function' && define.amd ) {
 
 ( function( window, factory ) {
   /*global define: false, module: false, require: false */
-  
+  'use strict';
   // universal module definition
 
   if ( typeof define == 'function' && define.amd ) {
@@ -1563,7 +1563,7 @@ return utils;
  */
 
 ( function( window, factory ) {
-  
+  'use strict';
   // universal module definition
   if ( typeof define === 'function' && define.amd ) {
     // AMD
@@ -1599,7 +1599,7 @@ return utils;
   }
 
 }( window, function factory( window, EventEmitter, getSize, getStyleProperty, utils ) {
-
+'use strict';
 
 // ----- helpers ----- //
 
@@ -2152,7 +2152,7 @@ return Item;
  */
 
 ( function( window, factory ) {
-  
+  'use strict';
   // universal module definition
 
   if ( typeof define == 'function' && define.amd ) {
@@ -2191,7 +2191,7 @@ return Item;
   }
 
 }( window, function factory( window, eventie, EventEmitter, getSize, utils, Item ) {
-
+'use strict';
 
 // ----- vars ----- //
 
@@ -3078,7 +3078,7 @@ return Outlayer;
  */
 
 ( function( window, factory ) {
-  
+  'use strict';
   // universal module definition
   if ( typeof define == 'function' && define.amd ) {
     // AMD
@@ -3093,7 +3093,7 @@ return Outlayer;
   }
 
 }( window, function factory() {
-
+'use strict';
 
 // -------------------------- Packery -------------------------- //
 
@@ -3237,7 +3237,7 @@ return Rect;
  */
 
 ( function( window, factory ) {
-  
+  'use strict';
   // universal module definition
   if ( typeof define == 'function' && define.amd ) {
     // AMD
@@ -3254,7 +3254,7 @@ return Rect;
   }
 
 }( window, function factory( Rect ) {
-
+'use strict';
 
 // -------------------------- Packer -------------------------- //
 
@@ -3402,7 +3402,7 @@ return Packer;
 **/
 
 ( function( window, factory ) {
-  
+  'use strict';
   // universal module definition
 
   if ( typeof define == 'function' && define.amd ) {
@@ -3430,7 +3430,7 @@ return Packer;
   }
 
 }( window, function factory( getStyleProperty, Outlayer, Rect ) {
-
+'use strict';
 
 // -------------------------- Item -------------------------- //
 
@@ -3591,7 +3591,7 @@ return Item;
  */
 
 ( function( window, factory ) {
-  
+  'use strict';
   // universal module definition
   if ( typeof define == 'function' && define.amd ) {
     // AMD
@@ -3627,7 +3627,7 @@ return Item;
   }
 
 }( window, function factory( classie, getSize, Outlayer, Rect, Packer, Item ) {
-
+'use strict';
 
 // ----- Rect ----- //
 
@@ -4010,6 +4010,37 @@ Packery.prototype.itemDragEnd = function( elem ) {
   var onLayoutComplete = this._getDragEndLayoutComplete( elem, item );
 
   if ( item.needsPositioning ) {
+    // Check to see if the item being positioned is overlapping a stamped item.
+    var overlapStamped = false,
+        i;
+    for(i = 0; i < this.stamps.length; i++) {
+      if(this.stamps[i] == item.element) {
+          // The currently moving item is stamped as well, so just ignore that one.
+          continue;
+      }
+      // Note: the stamped item MUST be an actual "item" so we can get the rect.x,rect.y coordinates.
+      // Otherwise the stamped item is just a DOM element.
+      var stamped = this.getItem(this.stamps[i]);
+
+      // Unfortunately, the position/size are not always set.
+      stamped.getPosition();
+      var stampRect = new Rect({
+        x: stamped.position.x,
+        y: stamped.position.y
+      });
+      this._setRectSize(stamped.element, stampRect);
+      // Cannot use stamp.overlaps() because the logic in that function is different.  It does not
+      // accurately determine if one rect overlaps another.
+      if(stamped &&
+         ((stampRect.x <= item.placeRect.x) && (item.placeRect.x < (stampRect.x + stampRect.width))) &&
+         ((stampRect.y <= item.placeRect.y) && (item.placeRect.y < (stampRect.y + stampRect.height)))) {
+          overlapStamped = true;
+        // The item overlaps, so simulate a drag of the item back to its original position.
+        item.positionPlaceRect(item.rect.x, item.rect.y);
+          break;
+      }
+    }
+
     item.on( 'layout', onLayoutComplete );
     item.moveTo( item.placeRect.x, item.placeRect.y );
   } else if ( item ) {
