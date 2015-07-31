@@ -103,7 +103,7 @@ test( 'draggable2, cannot drop over stamped item', function() {
   stop();
 
   pckry.itemDragStart( dragElem );
-  pckry.itemDragMove( dragElem, stampItem.position.x, stampItem.position.y );
+  pckry.itemDragMove( dragElem, stampItem.position.x + 1, stampItem.position.y + 1 );
   pckry.itemDragEnd( dragElem );
 });
 

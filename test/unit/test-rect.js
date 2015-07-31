@@ -133,36 +133,19 @@ test( 'overlaps', function() {
   rectB.x = 0;
   rectB.y = 0;
 
-  strictEqual( rectA.overlaps( rectB ), true,
-    'B bottom right corner meets A top left corner, A DOES overlap B by one pixel' );
-  strictEqual( rectB.overlaps( rectA ), true,
-    'B bottom right corner meets A top left corner, B DOES overlap A by one pixel' );
-
-  rectB.width -= 1;
-  rectB.height -= 1;
-
   strictEqual( rectA.overlaps( rectB ), false,
-      'B bottom right corner meets A top left corner, A DOES NOT overlap B' );
+    'B bottom right corner meets A top left corner, A DOES NOT overlap B' );
   strictEqual( rectB.overlaps( rectA ), false,
-      'B bottom right corner meets A top left corner, B DOES NOT overlap A' );
+    'B bottom right corner meets A top left corner, B DOES NOT overlap A' );
 
-  rectB.width += 1;
   rectB.x = rectA.x - rectB.width;
   rectB.y = rectA.y;
   rectB.height = rectA.height;
 
-  strictEqual( rectA.overlaps( rectB ), true,
-    'B is completely adjacent to A, A DOES overlap B by one pixel' );
-  strictEqual( rectB.overlaps( rectA ), true,
-    'B is completely adjacent to A, B DOES overlap A by one pixel' );
-
-  rectB.width -= 1;
-  rectB.height -= 1;
-
   strictEqual( rectA.overlaps( rectB ), false,
-      'B is completely adjacent to A, A DOES NOT overlap B' );
+    'B is completely adjacent to A, A DOES NOT overlap B' );
   strictEqual( rectB.overlaps( rectA ), false,
-      'B is completely adjacent to A, B DOES NOT overlap A' );
+    'B is completely adjacent to A, B DOES NOT overlap A' );
 
 });
 

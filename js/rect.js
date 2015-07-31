@@ -77,11 +77,10 @@ Rect.prototype.overlaps = function( rect ) {
   var rectBottom = rect.y + rect.height;
 
   // http://stackoverflow.com/a/306332
-  // Modified < to be <= to handle single pixel overlap as mentioned in Note 2 of the above link.
-  return this.x <= rectRight &&
-    thisRight >= rect.x &&
-    this.y <= rectBottom &&
-    thisBottom >= rect.y;
+  return this.x < rectRight &&
+    thisRight > rect.x &&
+    this.y < rectBottom &&
+    thisBottom > rect.y;
 };
 
 /**

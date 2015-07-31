@@ -3151,11 +3151,10 @@ Rect.prototype.overlaps = function( rect ) {
   var rectBottom = rect.y + rect.height;
 
   // http://stackoverflow.com/a/306332
-  // Modified < to be <= to handle single pixel overlap as mentioned in Note 2 of the above link.
-  return this.x <= rectRight &&
-    thisRight >= rect.x &&
-    this.y <= rectBottom &&
-    thisBottom >= rect.y;
+  return this.x < rectRight &&
+    thisRight > rect.x &&
+    this.y < rectBottom &&
+    thisBottom > rect.y;
 };
 
 /**
@@ -4030,7 +4029,7 @@ Packery.prototype.itemDragEnd = function( elem ) {
       });
       this._setRectSize(stamped.element, stampRect);
 
-      // Modified Rect.overlaps() to handle single pixel overlap so that the below test works reliably.
+      // Rect.overlap() does not return true if the two item are identical in size and position.
       if(stamped && item.placeRect.overlaps(stampRect)) {
         // The item overlaps, so simulate a drag of the item back to its original position.
         item.positionPlaceRect(item.rect.x, item.rect.y);

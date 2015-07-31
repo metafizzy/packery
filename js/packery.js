@@ -448,7 +448,7 @@ Packery.prototype.itemDragEnd = function( elem ) {
       });
       this._setRectSize(stamped.element, stampRect);
 
-      // Modified Rect.overlaps() to handle single pixel overlap so that the below test works reliably.
+      // Rect.overlap() does not return true if the two item are identical in size and position.
       if(stamped && item.placeRect.overlaps(stampRect)) {
         // The item overlaps, so simulate a drag of the item back to its original position.
         item.positionPlaceRect(item.rect.x, item.rect.y);
