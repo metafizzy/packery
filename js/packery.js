@@ -430,9 +430,7 @@ Packery.prototype.itemDragEnd = function( elem ) {
 
   if ( item.needsPositioning ) {
     // Check to see if the item being positioned is overlapping a stamped item.
-    var overlapStamped = false,
-        i;
-    for(i = 0; i < this.stamps.length; i++) {
+    for(var i = 0; i < this.stamps.length; i++) {
       if(this.stamps[i] == item.element) {
           // The currently moving item is stamped as well, so just ignore that one.
           continue;
@@ -448,12 +446,8 @@ Packery.prototype.itemDragEnd = function( elem ) {
         y: stamped.position.y
       });
       this._setRectSize(stamped.element, stampRect);
-      // Cannot use stamp.overlaps() because the logic in that function is different.  It does not
-      // accurately determine if one rect overlaps another.
-      if(stamped &&
-         ((stampRect.x <= item.placeRect.x) && (item.placeRect.x < (stampRect.x + stampRect.width))) &&
-         ((stampRect.y <= item.placeRect.y) && (item.placeRect.y < (stampRect.y + stampRect.height)))) {
-          overlapStamped = true;
+      // Modified Rect.overlaps() to handle single pixel overlap so that the below test works reliably.
+      if(stamped && item.placeRect.overlaps(stampRect)) {
         // The item overlaps, so simulate a drag of the item back to its original position.
         item.positionPlaceRect(item.rect.x, item.rect.y);
           break;
