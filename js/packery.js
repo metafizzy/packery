@@ -430,7 +430,8 @@ Packery.prototype.itemDragEnd = function( elem ) {
 
   if ( item.needsPositioning ) {
     // Check to see if the item being positioned is overlapping a stamped item.
-    var overlapStampped = false;
+    var overlapStamped = false,
+        i;
     for(i = 0; i < this.stamps.length; i++) {
       if(this.stamps[i] == item.element) {
           // The currently moving item is stamped as well, so just ignore that one.
@@ -439,22 +440,28 @@ Packery.prototype.itemDragEnd = function( elem ) {
       // Note: the stamped item MUST be an actual "item" so we can get the rect.x,rect.y coordinates.
       // Otherwise the stamped item is just a DOM element.
       var stamped = this.getItem(this.stamps[i]);
+
+      // Unfortunately, the position/size are not always set.
+      stamped.getPosition();
+      var stampRect = new Rect({
+        x: stamped.position.x,
+        y: stamped.position.y
+      });
+      this._setRectSize(stamped.element, stampRect);
+      // Cannot use stamp.overlaps() because the logic in that function is different.  It does not
+      // accurately determine if one rect overlaps another.
       if(stamped &&
-         ((stamped.rect.x <= item.placeRect.x) && (item.placeRect.x < (stamped.rect.x + stamped.rect.width))) &&
-         ((stamped.rect.y <= item.placeRect.y) && (item.placeRect.y < (stamped.rect.y + stamped.rect.height)))) {
-          overlapStampped = true;
+         ((stampRect.x <= item.placeRect.x) && (item.placeRect.x < (stampRect.x + stampRect.width))) &&
+         ((stampRect.y <= item.placeRect.y) && (item.placeRect.y < (stampRect.y + stampRect.height)))) {
+          overlapStamped = true;
+        // The item overlaps, so simulate a drag of the item back to its original position.
+        item.positionPlaceRect(item.rect.x, item.rect.y);
           break;
       }
     }
 
     item.on( 'layout', onLayoutComplete );
-    if(overlapStampped) {
-        // The item overlaps, so simulate a drag of the item back to its original position.
-        item.dragMove( item.rect.x, item.rect.y );
-        item.moveTo( item.rect.x, item.rect.y );
-    } else {
-        item.moveTo( item.placeRect.x, item.placeRect.y );
-    }
+    item.moveTo( item.placeRect.x, item.placeRect.y );
   } else if ( item ) {
     // item didn't need placement
     item.copyPlaceRectPosition();
