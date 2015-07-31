@@ -4021,7 +4021,6 @@ Packery.prototype.itemDragEnd = function( elem ) {
       // Otherwise the stamped item is just a DOM element.
       var stamped = this.getItem(this.stamps[i]);
 
-      /*
       // Unfortunately, the position/size are not always set.
       stamped.getPosition();
       var stampRect = new Rect({
@@ -4029,9 +4028,8 @@ Packery.prototype.itemDragEnd = function( elem ) {
         y: stamped.position.y
       });
       this._setRectSize(stamped.element, stampRect);
-      */
       // Modified Rect.overlaps() to handle single pixel overlap so that the below test works reliably.
-      if(stamped && item.placeRect.overlaps(stamped.rect)) {
+      if(stamped && item.placeRect.overlaps(stampRect)) {
         // The item overlaps, so simulate a drag of the item back to its original position.
         item.positionPlaceRect(item.rect.x, item.rect.y);
         break;
