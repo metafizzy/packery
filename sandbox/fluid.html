@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+
+  <title>fluid</title>
+
+  <style>
+  * {
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+  }
+
+  body {
+    font-family: sans-serif;
+  }
+
+  .grid {
+    margin-bottom: 20px;
+    background: #EEE;
+    /*padding: 20px 5%;*/
+  }
+
+  .grid-item {
+    float: left;
+    width: 25%;
+    height: 80px;
+    border: 1px solid;
+    background: #ACE;
+  }
+
+  .grid-item.w2 { width: 50%; }
+  .grid-item.w3 { width: 75%; }
+
+  .grid-item.h2 { height: 160px; }
+  .grid-item.h3 { height: 240px; }
+  </style>
+
+</head>
+<body>
+
+  <h1>fluid</h1>
+
+  <div class="grid js-packery" data-packery-options='{ "percentPosition": true }'>
+    <div class="grid-item w2"></div>
+    <div class="grid-item h2"></div>
+    <div class="grid-item"></div>
+    <div class="grid-item w3"></div>
+    <div class="grid-item"></div>
+    <div class="grid-item h3"></div>
+    <div class="grid-item w2 h2"></div>
+    <div class="grid-item"></div>
+    <div class="grid-item"></div>
+  </div>
+
+  <h2>Draggable</h2>
+
+  <div class="grid grid--draggable">
+    <div class="grid-item w2"></div>
+    <div class="grid-item h2"></div>
+    <div class="grid-item"></div>
+    <div class="grid-item w3"></div>
+    <div class="grid-item"></div>
+    <div class="grid-item h3"></div>
+    <div class="grid-item w2 h2"></div>
+    <div class="grid-item"></div>
+    <div class="grid-item"></div>
+  </div>
+
+<script src="../bower_components/get-style-property/get-style-property.js"></script>
+<script src="../bower_components/get-size/get-size.js"></script>
+<script src="../bower_components/matches-selector/matches-selector.js"></script>
+<script src="../bower_components/eventEmitter/EventEmitter.js"></script>
+<script src="../bower_components/eventie/eventie.js"></script>
+<script src="../bower_components/doc-ready/doc-ready.js"></script>
+<script src="../bower_components/classie/classie.js"></script>
+<script src="../bower_components/fizzy-ui-utils/utils.js"></script>
+<script src="../bower_components/outlayer/item.js"></script>
+<script src="../bower_components/outlayer/outlayer.js"></script>
+
+<script src="../bower_components/unipointer/unipointer.js"></script>
+<script src="../bower_components/unidragger/unidragger.js"></script>
+<script src="../bower_components/draggabilly/draggabilly.js"></script>
+
+<script src="../js/rect.js"></script>
+<script src="../js/packer.js"></script>
+<script src="../js/item.js"></script>
+<script src="../js/packery.js"></script>
+
+<script>
+docReady( function() {
+  var pckry = new Packery( '.grid--draggable', {
+    percentPosition: true
+  });
+
+  var dragElems = document.querySelectorAll('.grid--draggable .grid-item');
+
+  for ( var i=0, len = dragElems.length; i < len; i++ ) {
+    var dragElem = dragElems[i];
+    var draggie = new Draggabilly( dragElem );
+    pckry.bindDraggabillyEvents( draggie );
+  }
+});
+
+
+</script>
+
+</body>
+</html>
