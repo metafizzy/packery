@@ -16,9 +16,9 @@ See [packery.metafizzy.co](http://packery.metafizzy.co) for complete docs and de
 Link directly to [Packery files on cdnjs](https://cdnjs.com/libraries/packery).
 
 ``` html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/packery/1.4.2/packery.pkgd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/packery/1.4.3/packery.pkgd.js"></script>
 <!-- or -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/packery/1.4.2/packery.pkgd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/packery/1.4.3/packery.pkgd.min.js"></script>
 ```
 
 ### Package managers
