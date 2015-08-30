@@ -1,5 +1,9 @@
 # Changelog
 
+### v1.4.3
+
+Updated Outlayer to v1.4.2 for percent position bug fixes. Fixed [#284](https://github.com/metafizzy/packery/issues/284).
+
 ### v1.4.2
 
 + Updated Outlayer to v1.4.1.
