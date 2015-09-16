@@ -3,7 +3,7 @@
  * bin-packing layout library
  *
  * Licensed GPLv3 for open source use
- * or Flickity Commercial License for commercial use
+ * or Packery Commercial License for commercial use
  *
  * http://packery.metafizzy.co
  * Copyright 2015 Metafizzy
