@@ -29,9 +29,9 @@ Bower: `bower install packery --save`
 
 ## License
 
-### Commerical license
+### Commercial license
 
-If you want to use Packery to develop commercial sites, themes, projects, and applications, the Commercial license is the appropriate license. With this option, your source code is kept proprietary. Purchase a Packery Commercial License at [packery.metafizzy.co](http://packery.metafizzy.co/#commerical-license)
+If you want to use Packery to develop commercial sites, themes, projects, and applications, the Commercial license is the appropriate license. With this option, your source code is kept proprietary. Purchase a Packery Commercial License at [packery.metafizzy.co](http://packery.metafizzy.co/#commercial-license)
 
 ### Open source license
 
