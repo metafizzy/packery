@@ -101,11 +101,11 @@ Item.prototype.dragStop = function() {
  * position a rect that will occupy space in the packer
  * @param {Number} x
  * @param {Number} y
- * @param {Boolean} isMaxYContained
+ * @param {Boolean} isMaxContained
  */
-Item.prototype.positionPlaceRect = function( x, y, isMaxYOpen ) {
-  this.placeRect.x = this.getPlaceRectCoord( x, true );
-  this.placeRect.y = this.getPlaceRectCoord( y, false, isMaxYOpen );
+Item.prototype.positionPlaceRect = function( x, y, isMaxOpen ) {
+  this.placeRect.x = this.getPlaceRectCoord( x, true, isMaxOpen );
+  this.placeRect.y = this.getPlaceRectCoord( y, false, isMaxOpen );
 };
 
 /**
