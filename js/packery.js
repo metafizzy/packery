@@ -429,6 +429,33 @@ Packery.prototype.itemDragEnd = function( elem ) {
   var onLayoutComplete = this._getDragEndLayoutComplete( elem, item );
 
   if ( item.needsPositioning ) {
+    // Check to see if the item being positioned is overlapping a stamped item.
+    for(var i = 0; i < this.stamps.length; i++) {
+      if(this.stamps[i] == item.element) {
+          // The currently moving item is stamped as well, so just ignore that one.
+          continue;
+      }
+      // Note: the stamped item MUST be an actual "item" so we can get the rect.x,rect.y coordinates.
+      // Otherwise the stamped item is just a DOM element.
+      var stamped = this.getItem(this.stamps[i]);
+
+      // Unfortunately, the position/size are not always set.  Not sure why, but this way we get the current
+      // position and size of the stamp prior to checking for overlaps.
+      stamped.getPosition();
+      var stampRect = new Rect({
+        x: stamped.position.x,
+        y: stamped.position.y
+      });
+      this._setRectSize(stamped.element, stampRect);
+
+      // Rect.overlap() does not return true if the two item are identical in size and position.
+      if(stamped && item.placeRect.overlaps(stampRect)) {
+        // The item overlaps, so simulate a drag of the item back to its original position.
+        item.positionPlaceRect(item.rect.x, item.rect.y);
+        break;
+      }
+    }
+
     item.on( 'layout', onLayoutComplete );
     item.moveTo( item.placeRect.x, item.placeRect.y );
   } else if ( item ) {

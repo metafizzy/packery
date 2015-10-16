@@ -633,7 +633,7 @@ if ( typeof define === 'function' && define.amd ) {
  */
 
 ;(function () {
-    
+    'use strict';
 
     /**
      * Class for managing events.
@@ -1190,7 +1190,7 @@ if ( typeof define === 'function' && define.amd ) {
 
 ( function( ElemProto ) {
 
-  
+  'use strict';
 
   var matchesMethod = ( function() {
     // check for the standard method name first
@@ -1296,7 +1296,7 @@ if ( typeof define === 'function' && define.amd ) {
 
 ( function( window, factory ) {
   /*global define: false, module: false, require: false */
-  
+  'use strict';
   // universal module definition
 
   if ( typeof define == 'function' && define.amd ) {
@@ -1563,7 +1563,7 @@ return utils;
  */
 
 ( function( window, factory ) {
-  
+  'use strict';
   // universal module definition
   if ( typeof define === 'function' && define.amd ) {
     // AMD
@@ -1599,7 +1599,7 @@ return utils;
   }
 
 }( window, function factory( window, EventEmitter, getSize, getStyleProperty, utils ) {
-
+'use strict';
 
 // ----- helpers ----- //
 
@@ -1724,12 +1724,12 @@ Item.prototype.getPosition = function() {
   var isOriginTop = layoutOptions.isOriginTop;
   var xValue = style[ isOriginLeft ? 'left' : 'right' ];
   var yValue = style[ isOriginTop ? 'top' : 'bottom' ];
+  var x = parseInt( xValue, 10 );
+  var y = parseInt( yValue, 10 );
   // convert percent to pixels
   var layoutSize = this.layout.size;
-  var x = xValue.indexOf('%') != -1 ?
-    ( parseFloat( xValue ) / 100 ) * layoutSize.width : parseInt( xValue, 10 );
-  var y = yValue.indexOf('%') != -1 ?
-    ( parseFloat( yValue ) / 100 ) * layoutSize.height : parseInt( yValue, 10 );
+  x = xValue.indexOf('%') != -1 ? ( x / 100 ) * layoutSize.width : x;
+  y = yValue.indexOf('%') != -1 ? ( y / 100 ) * layoutSize.height : y;
 
   // clean up 'auto' or other non-integer values
   x = isNaN( x ) ? 0 : x;
@@ -1825,12 +1825,14 @@ Item.prototype.getTranslate = function( x, y ) {
   var layoutOptions = this.layout.options;
   x = layoutOptions.isOriginLeft ? x : -x;
   y = layoutOptions.isOriginTop ? y : -y;
+  x = this.getXValue( x );
+  y = this.getYValue( y );
 
   if ( is3d ) {
-    return 'translate3d(' + x + 'px, ' + y + 'px, 0)';
+    return 'translate3d(' + x + ', ' + y + ', 0)';
   }
 
-  return 'translate(' + x + 'px, ' + y + 'px)';
+  return 'translate(' + x + ', ' + y + ')';
 };
 
 // non transition + transform support
@@ -2144,13 +2146,13 @@ return Item;
 }));
 
 /*!
- * Outlayer v1.4.2
+ * Outlayer v1.4.1
  * the brains and guts of a layout library
  * MIT license
  */
 
 ( function( window, factory ) {
-  
+  'use strict';
   // universal module definition
 
   if ( typeof define == 'function' && define.amd ) {
@@ -2189,7 +2191,7 @@ return Item;
   }
 
 }( window, function factory( window, eventie, EventEmitter, getSize, utils, Item ) {
-
+'use strict';
 
 // ----- vars ----- //
 
@@ -3076,7 +3078,7 @@ return Outlayer;
  */
 
 ( function( window, factory ) {
-  
+  'use strict';
   // universal module definition
   if ( typeof define == 'function' && define.amd ) {
     // AMD
@@ -3091,7 +3093,7 @@ return Outlayer;
   }
 
 }( window, function factory() {
-
+'use strict';
 
 // -------------------------- Packery -------------------------- //
 
@@ -3235,7 +3237,7 @@ return Rect;
  */
 
 ( function( window, factory ) {
-  
+  'use strict';
   // universal module definition
   if ( typeof define == 'function' && define.amd ) {
     // AMD
@@ -3252,7 +3254,7 @@ return Rect;
   }
 
 }( window, function factory( Rect ) {
-
+'use strict';
 
 // -------------------------- Packer -------------------------- //
 
@@ -3400,7 +3402,7 @@ return Packer;
 **/
 
 ( function( window, factory ) {
-  
+  'use strict';
   // universal module definition
 
   if ( typeof define == 'function' && define.amd ) {
@@ -3428,7 +3430,7 @@ return Packer;
   }
 
 }( window, function factory( getStyleProperty, Outlayer, Rect ) {
-
+'use strict';
 
 // -------------------------- Item -------------------------- //
 
@@ -3589,7 +3591,7 @@ return Item;
  */
 
 ( function( window, factory ) {
-  
+  'use strict';
   // universal module definition
   if ( typeof define == 'function' && define.amd ) {
     // AMD
@@ -3625,7 +3627,7 @@ return Item;
   }
 
 }( window, function factory( classie, getSize, Outlayer, Rect, Packer, Item ) {
-
+'use strict';
 
 // ----- Rect ----- //
 
@@ -4008,6 +4010,33 @@ Packery.prototype.itemDragEnd = function( elem ) {
   var onLayoutComplete = this._getDragEndLayoutComplete( elem, item );
 
   if ( item.needsPositioning ) {
+    // Check to see if the item being positioned is overlapping a stamped item.
+    for(var i = 0; i < this.stamps.length; i++) {
+      if(this.stamps[i] == item.element) {
+          // The currently moving item is stamped as well, so just ignore that one.
+          continue;
+      }
+      // Note: the stamped item MUST be an actual "item" so we can get the rect.x,rect.y coordinates.
+      // Otherwise the stamped item is just a DOM element.
+      var stamped = this.getItem(this.stamps[i]);
+
+      // Unfortunately, the position/size are not always set.  Not sure why, but this way we get the current
+      // position and size of the stamp prior to checking for overlaps.
+      stamped.getPosition();
+      var stampRect = new Rect({
+        x: stamped.position.x,
+        y: stamped.position.y
+      });
+      this._setRectSize(stamped.element, stampRect);
+
+      // Rect.overlap() does not return true if the two item are identical in size and position.
+      if(stamped && item.placeRect.overlaps(stampRect)) {
+        // The item overlaps, so simulate a drag of the item back to its original position.
+        item.positionPlaceRect(item.rect.x, item.rect.y);
+        break;
+      }
+    }
+
     item.on( 'layout', onLayoutComplete );
     item.moveTo( item.placeRect.x, item.placeRect.y );
   } else if ( item ) {

@@ -75,5 +75,37 @@ test( 'draggable', function() {
 
 });
 
+test( 'draggable2, cannot drop over stamped item', function() {
+  var container = document.querySelector('#drag2');
+  var dragElem = container.querySelector('.dragger');
+  var stampElem = container.querySelector('.stamp');
+
+
+  var pckry = new Packery( container, {
+    itemSelector: '.item',
+    stamp: '.stamp'
+  });
+  var dragItem = pckry.getItem(dragElem);
+  var originalPositionX = dragItem.position.x;
+  var originalPositionY = dragItem.position.y;
+  var stampItem = pckry.getItem(stampElem);
+  // If I don't call getPosition, then it doesn't work right.
+  stampItem.getPosition();
+
+  pckry.on( 'layoutComplete', function() {
+    equal( dragItem.position.x, originalPositionX, 'dragged 3rd item x over stamped item, returned to original' +
+        ' x' );
+    equal( dragItem.position.y, originalPositionY, 'dragged 3rd item y over stamped item, returned to original' +
+        ' y' );
+    start();
+    return true; // bind once
+  });
+  stop();
+
+  pckry.itemDragStart( dragElem );
+  pckry.itemDragMove( dragElem, stampItem.position.x + 1, stampItem.position.y + 1 );
+  pckry.itemDragEnd( dragElem );
+});
+
 
 })();
