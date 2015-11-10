@@ -331,15 +331,9 @@ Packery.prototype._bindFitEvents = function( item ) {
     _this.dispatchEvent( 'fitComplete', null, [ item ] );
   }
   // when item is laid out
-  item.on( 'layout', function() {
-    tick();
-    return true;
-  });
+  item.once( 'layout', tick );
   // when all items are laid out
-  this.on( 'layoutComplete', function() {
-    tick();
-    return true;
-  });
+  this.once( 'layoutComplete', tick );
 };
 
 // -------------------------- resize -------------------------- //
@@ -429,7 +423,7 @@ Packery.prototype.itemDragEnd = function( elem ) {
   var onLayoutComplete = this._getDragEndLayoutComplete( elem, item );
 
   if ( item.needsPositioning ) {
-    item.on( 'layout', onLayoutComplete );
+    item.once( 'layout', onLayoutComplete );
     item.moveTo( item.placeRect.x, item.placeRect.y );
   } else if ( item ) {
     // item didn't need placement
@@ -437,7 +431,7 @@ Packery.prototype.itemDragEnd = function( elem ) {
   }
 
   this.clearDragTimeout();
-  this.on( 'layoutComplete', onLayoutComplete );
+  this.once( 'layoutComplete', onLayoutComplete );
   this.layout();
 
 };
@@ -458,7 +452,7 @@ Packery.prototype._getDragEndLayoutComplete = function( elem, item ) {
     completeCount++;
     // don't proceed if not complete
     if ( completeCount != asyncCount ) {
-      return true;
+      return;
     }
     // reset item
     if ( item ) {
@@ -475,8 +469,6 @@ Packery.prototype._getDragEndLayoutComplete = function( elem, item ) {
     if ( itemNeedsPositioning ) {
       _this.dispatchEvent( 'dragItemPositioned', null, [ item ] );
     }
-    // listen once
-    return true;
   };
 };
 

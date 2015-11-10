@@ -34,20 +34,18 @@ test( '.fit()', function() {
     after( then1, fit2 );
   }
 
-  pckry.on( 'fitComplete', function( item ) {
+  pckry.once( 'fitComplete', function( item ) {
     ok( true, 'fitComplete event emitted' );
     equal( item, item3, 'item argument returned' );
     equal( elem3.style.left, '30px', 'elem3.style.left = 30px' );
     isFit = true;
     ready1();
-    return true;
   });
 
-  pckry.on( 'layoutComplete', function() {
+  pckry.once( 'layoutComplete', function() {
     ok( true, 'layoutComplete event emitted' );
     isLaidOut = true;
     ready1();
-    return true;
   });
 
   // fit it
@@ -70,20 +68,18 @@ test( '.fit()', function() {
     elem3.style.width = '18px';
     elem3.style.height = '18px';
 
-    pckry.on( 'fitComplete', function() {
+    pckry.once( 'fitComplete', function() {
       ok( true, 'fitComplete event emitted' );
       equal( elem3.style.left, '40px', 'elem3.style.left = 40px' );
       equal( elem3.style.top, '20px', 'elem3.style.top = 20px' );
       isFit = true;
       ready2();
-      return true;
     });
 
-    pckry.on( 'layoutComplete', function() {
+    pckry.once( 'layoutComplete', function() {
       ok( true, 'layoutComplete event emitted' );
       isLaidOut = true;
       ready2();
-      return true;
     });
 
     pckry.fit( elem3, 40, 20 );
@@ -103,18 +99,16 @@ test( '.fit()', function() {
 
   var then3;
   function fit3() {
-    pckry.on( 'fitComplete', function() {
+    pckry.once( 'fitComplete', function() {
 
       equal( elem3.style.left, '60px', 'x value limited' );
       equal( elem3.style.top, '120px', 'y value NOT limited' );
       isFit = true;
       ready3();
-      return true;
     });
-    pckry.on( 'layoutComplete', function() {
+    pckry.once( 'layoutComplete', function() {
       isLaidOut = true;
       ready3();
-      return true;
     });
     // try to position item outside container
     pckry.fit( elem3, 120, 120 );
