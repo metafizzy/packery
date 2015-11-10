@@ -389,13 +389,41 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
   var _this = this;
   // debounce triggering layout
   function delayed() {
-    _this.layout();
+    _this.onDebouncedItemDragMove( item );
     delete _this.dragTimeout;
   }
 
   this.clearDragTimeout();
 
   this.dragTimeout = setTimeout( delayed, 40 );
+};
+
+Packery.prototype.onDebouncedItemDragMove = function( dragItem ) {
+  var overlapItems = [];
+  for ( var i=0; i < this.items.length; i++ ) {
+    var item = this.items[i];
+    if ( item == dragItem ) {
+      continue;
+    }
+    if ( dragItem.placeRect.overlaps( item.rect ) ) {
+      item.placeRect.x = item.rect.x;
+      item.placeRect.y = item.rect.y + dragItem.placeRect.height + this.gutter;
+      item.moveTo( item.placeRect.x, item.placeRect.y );
+      this.stamp( item.element );
+      item.isPlacing = true;
+      // item.isIgnored = true;
+      overlapItems.push( item );
+    }
+  }
+
+  this.layout();
+
+  for ( i=0; i < overlapItems.length; i++ ) {
+    var overlapItem = overlapItems[i];
+    overlapItem.isPlacing = false;
+    this.unstamp( overlapItem.element );
+    // delete overlapItems[i].isIgnored;
+  }
 };
 
 Packery.prototype.clearDragTimeout = function() {

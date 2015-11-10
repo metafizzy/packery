@@ -63,6 +63,7 @@ Item.prototype.dragStart = function() {
     this.element.style[ transformProperty ] = 'none';
   }
   this.getSize();
+  this.layout._setRectSize( this.element, this.placeRect );
   // create place rect, used for position when dragged then dropped
   // or when positioning
   this.isPlacing = true;
