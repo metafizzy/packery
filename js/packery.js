@@ -411,7 +411,6 @@ Packery.prototype.onDebouncedItemDragMove = function( dragItem ) {
       item.moveTo( item.placeRect.x, item.placeRect.y );
       this.stamp( item.element );
       item.isPlacing = true;
-      // item.isIgnored = true;
       overlapItems.push( item );
     }
   }
@@ -422,8 +421,9 @@ Packery.prototype.onDebouncedItemDragMove = function( dragItem ) {
     var overlapItem = overlapItems[i];
     overlapItem.isPlacing = false;
     this.unstamp( overlapItem.element );
-    // delete overlapItems[i].isIgnored;
   }
+
+  this.sortItemsByPosition();
 };
 
 Packery.prototype.clearDragTimeout = function() {
