@@ -3,7 +3,7 @@
   "version": "1.4.3",
   "author": "Metafizzy",
   "description": "bin-packing layout library",
-  "main": "js/packery.js",
+  "main": ["./js/rect.js", "./js/packery.js"],
   "dependencies": {
     "classie": "1.x",
     "get-style-property": "1.x",
