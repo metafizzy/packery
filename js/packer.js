@@ -66,6 +66,19 @@ Packer.prototype.pack = function( rect ) {
   }
 };
 
+Packer.prototype.columnPack = function( rect ) {
+  for ( var i=0, len = this.spaces.length; i < len; i++ ) {
+    var space = this.spaces[i];
+    var canFitInSpaceColumn = space.x <= rect.x &&
+      space.x + space.width >= rect.x + rect.width;
+    if ( canFitInSpaceColumn ) {
+      rect.y = space.y;
+      this.placed( rect );
+      break;
+    }
+  }
+};
+
 Packer.prototype.placeInSpace = function( rect, space ) {
   // place rect in space
   rect.x = space.x;

@@ -71,6 +71,8 @@ Packery.prototype._create = function() {
   // Left over from v1.0
   this.stamp( this.options.stamped );
 
+  this.dragItemCount = 0;
+
   // create drag handlers
   var _this = this;
   this.handleDraggabilly = {
@@ -151,7 +153,11 @@ Packery.prototype._getMeasurements = function() {
 };
 
 Packery.prototype._getItemLayoutPosition = function( item ) {
-  this._packItem( item );
+  if ( this.dragItemCount > 0 ) {
+    this._dragPackItem( item );
+  } else {
+    this._packItem( item );
+  }
   return item.rect;
 };
 
@@ -164,6 +170,12 @@ Packery.prototype._packItem = function( item ) {
   this._setRectSize( item.element, item.rect );
   // pack the rect in the packer
   this.packer.pack( item.rect );
+  this._setMaxXY( item.rect );
+};
+
+Packery.prototype._dragPackItem = function( item ) {
+  this._setRectSize( item.element, item.rect );
+  this.packer.columnPack( item.rect );
   this._setMaxXY( item.rect );
 };
 
@@ -370,6 +382,7 @@ Packery.prototype.itemDragStart = function( elem ) {
   var item = this.getItem( elem );
   if ( item ) {
     item.dragStart();
+    this.dragItemCount++;
   }
 };
 
@@ -389,41 +402,13 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
   var _this = this;
   // debounce triggering layout
   function delayed() {
-    _this.onDebouncedItemDragMove( item );
+    _this.layout();
     delete _this.dragTimeout;
   }
 
   this.clearDragTimeout();
 
   this.dragTimeout = setTimeout( delayed, 40 );
-};
-
-Packery.prototype.onDebouncedItemDragMove = function( dragItem ) {
-  var overlapItems = [];
-  for ( var i=0; i < this.items.length; i++ ) {
-    var item = this.items[i];
-    if ( item == dragItem ) {
-      continue;
-    }
-    if ( dragItem.placeRect.overlaps( item.rect ) ) {
-      item.placeRect.x = item.rect.x;
-      item.placeRect.y = item.rect.y + dragItem.placeRect.height + this.gutter;
-      item.moveTo( item.placeRect.x, item.placeRect.y );
-      this.stamp( item.element );
-      item.isPlacing = true;
-      overlapItems.push( item );
-    }
-  }
-
-  this.layout();
-
-  for ( i=0; i < overlapItems.length; i++ ) {
-    var overlapItem = overlapItems[i];
-    overlapItem.isPlacing = false;
-    this.unstamp( overlapItem.element );
-  }
-
-  this.sortItemsByPosition();
 };
 
 Packery.prototype.clearDragTimeout = function() {
@@ -437,6 +422,7 @@ Packery.prototype.clearDragTimeout = function() {
  * @param {Element} elem
  */
 Packery.prototype.itemDragEnd = function( elem ) {
+  this.dragItemCount = Math.max( 0, this.dragItemCount - 1 );
   var item = this.getItem( elem );
   var itemDidDrag;
   if ( item ) {
