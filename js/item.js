@@ -70,7 +70,7 @@ Item.prototype.dragStart = function() {
   this.needsPositioning = false;
   this.positionPlaceRect( this.position.x, this.position.y );
   this.isTransitioning = false;
-  this.didDrag = false;
+  this.didDrag = true;
 };
 
 /**
@@ -79,10 +79,6 @@ Item.prototype.dragStart = function() {
  * @param {Number} y - vertical position of dragged item
  */
 Item.prototype.dragMove = function( x, y ) {
-  this.didDrag = true;
-  var packerySize = this.layout.size;
-  x -= packerySize.paddingLeft;
-  y -= packerySize.paddingTop;
   this.positionPlaceRect( x, y );
 };
 

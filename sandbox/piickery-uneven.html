@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+
+  <title>piickery uneven</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+.grid {
+  background: #EEE;
+  width: 400px;
+}
+
+.grid-item {
+  width: 100px;
+  height: 60px;
+  border: 1px solid;
+  background: #8BE;
+}
+
+.grid-item.is-dragging,
+.grid-item.is-positioning-post-drag {
+  z-index: 2;
+  opacity: 0.8;
+}
+
+.grid-item.w2 { width: 200px; }
+.grid-item.h2 { height: 100px; }
+.grid-item.h3 { height: 140px; }
+</style>
+
+</head>
+<body>
+
+  <h1>piickery uneven</h1>
+
+<div class="grid">
+  <div class="grid-item w2 h2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item h3"></div>
+  <div class="grid-item h2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item w2 h3"></div>
+  <div class="grid-item h2"></div>
+  <div class="grid-item h3"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item h2"></div>
+  <div class="grid-item w2 h2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item"></div>
+</div>
+
+<script src="../bower_components/get-style-property/get-style-property.js"></script>
+<script src="../bower_components/get-size/get-size.js"></script>
+<script src="../bower_components/matches-selector/matches-selector.js"></script>
+<script src="../bower_components/eventie/eventie.js"></script>
+<script src="../bower_components/classie/classie.js"></script>
+<script src="../bower_components/eventEmitter/EventEmitter.js"></script>
+<script src="../bower_components/doc-ready/doc-ready.js"></script>
+<script src="../bower_components/fizzy-ui-utils/utils.js"></script>
+<script src="../bower_components/unipointer/unipointer.js"></script>
+<script src="../bower_components/unidragger/unidragger.js"></script>
+<script src="../bower_components/draggabilly/draggabilly.js"></script>
+<script src="../bower_components/outlayer/item.js"></script>
+<script src="../bower_components/outlayer/outlayer.js"></script>
+<script src="../js/rect.js"></script>
+<script src="../js/packer.js"></script>
+<script src="../js/item.js"></script>
+<script src="../js/packery.js"></script>
+
+<script>
+var gridElem = document.querySelector('.grid');
+var pckry = new Packery( gridElem, {
+  columnWidth: 100
+});
+
+var itemElems = gridElem.querySelectorAll('.grid-item');
+
+for ( var i=0; i < itemElems.length; i++ ) {
+  var itemElem = itemElems[i];
+  var draggie = new Draggabilly( itemElem );
+  pckry.bindDraggabillyEvents( draggie );
+}
+
+</script>
+
+</body>
+</html>

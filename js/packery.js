@@ -386,6 +386,8 @@ Packery.prototype.itemDragStart = function( elem ) {
   }
 };
 
+// -------------------------- drag move -------------------------- //
+
 /**
  * handle an item drag move event
  * @param {Element} elem
@@ -394,20 +396,25 @@ Packery.prototype.itemDragStart = function( elem ) {
  */
 Packery.prototype.itemDragMove = function( elem, x, y ) {
   var item = this.getItem( elem );
-  if ( item ) {
-    item.dragMove( x, y );
+  if ( !item ) {
+    return;
   }
+
+  x -= this.size.paddingLeft;
+  y -= this.size.paddingTop;
+
+  item.dragMove( x, y );
 
   // debounce
   var _this = this;
   // debounce triggering layout
   function delayed() {
     _this.layout();
+    // _this.onDebouncedItemDragMove( item )
     delete _this.dragTimeout;
   }
 
   this.clearDragTimeout();
-
   this.dragTimeout = setTimeout( delayed, 40 );
 };
 
@@ -416,6 +423,8 @@ Packery.prototype.clearDragTimeout = function() {
     clearTimeout( this.dragTimeout );
   }
 };
+
+// -------------------------- drag end -------------------------- //
 
 /**
  * handle an item drag end event
