@@ -67,6 +67,8 @@ Packery.prototype._create = function() {
 
   // initial properties
   this.packer = new Packer();
+  // packer for drop targets
+  this.dropPacker = new Packer();
 
   // Left over from v1.0
   this.stamp( this.options.stamped );
@@ -123,19 +125,23 @@ Packery.prototype._resetLayout = function() {
   this._getMeasurements();
 
   // reset packer
-  var packer = this.packer;
+  var width, height, sortDirection;
   // packer settings, if horizontal or vertical
   if ( this.options.isHorizontal ) {
-    packer.width = Number.POSITIVE_INFINITY;
-    packer.height = this.size.innerHeight + this.gutter;
-    packer.sortDirection = 'rightwardTopToBottom';
+    width = Number.POSITIVE_INFINITY;
+    height = this.size.innerHeight + this.gutter;
+    sortDirection = 'rightwardTopToBottom';
   } else {
-    packer.width = this.size.innerWidth + this.gutter;
-    packer.height = Number.POSITIVE_INFINITY;
-    packer.sortDirection = 'downwardLeftToRight';
+    width = this.size.innerWidth + this.gutter;
+    height = Number.POSITIVE_INFINITY;
+    sortDirection = 'downwardLeftToRight';
   }
 
-  packer.reset();
+  this.packer.width = this.dropPacker.width = width;
+  this.packer.height = this.dropPacker.height = height;
+  this.packer.sortDirection = this.dropPacker.sortDirection = sortDirection;
+
+  this.packer.reset();
 
   // layout
   this.maxY = 0;
@@ -379,10 +385,54 @@ Packery.prototype.resize = function() {
  */
 Packery.prototype.itemDragStart = function( elem ) {
   this.stamp( elem );
+  // this.ignore( elem );
   var item = this.getItem( elem );
-  if ( item ) {
-    item.dragStart();
-    this.dragItemCount++;
+  if ( !item ) {
+    return;
+  }
+
+  item.dragStart();
+  this.dragItemCount++;
+
+  this.layoutDropPacker();
+
+  item.positionPlaceRect( item.position.x, item.position.y );
+};
+
+Packery.prototype.layoutDropPacker = function() {
+  this.dropPacker.reset();
+
+  // pack stamps
+  this._getBoundingRect();
+  this.stamps.forEach( function( stamp ) {
+    var offset = this._getElementOffset( stamp );
+    var rect = new Rect({
+      x: this.options.isOriginLeft ? offset.left : offset.right,
+      y: this.options.isOriginTop ? offset.top : offset.bottom
+    });
+    this._setRectSize( stamp, rect );
+    // save its space in the packer
+    this.dropPacker.placed( rect );
+  }, this );
+
+  var items = this._getItemsForLayout( this.items );
+  items.forEach( function( item ) {
+    this._setRectSize( item.element, item.rect );
+    this.dropPacker.pack( item.rect );
+    // console.log( item.rect.x, item.rect.y );
+  }, this );
+};
+
+Outlayer.prototype._manageStamps = function() {
+  if ( !this.stamps || !this.stamps.length ) {
+    return;
+  }
+
+  this._getBoundingRect();
+
+  for ( var i=0, len = this.stamps.length; i < len; i++ ) {
+    var stamp = this.stamps[i];
+    this._manageStamp( stamp );
   }
 };
 
