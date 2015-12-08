@@ -70,7 +70,8 @@ Packer.prototype.columnPack = function( rect ) {
   for ( var i=0, len = this.spaces.length; i < len; i++ ) {
     var space = this.spaces[i];
     var canFitInSpaceColumn = space.x <= rect.x &&
-      space.x + space.width >= rect.x + rect.width;
+      space.x + space.width >= rect.x + rect.width &&
+      space.height >= rect.height;
     if ( canFitInSpaceColumn ) {
       rect.y = space.y;
       this.placed( rect );

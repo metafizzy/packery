@@ -422,7 +422,6 @@ Packery.prototype.clearDragTimeout = function() {
  * @param {Element} elem
  */
 Packery.prototype.itemDragEnd = function( elem ) {
-  this.dragItemCount = Math.max( 0, this.dragItemCount - 1 );
   var item = this.getItem( elem );
   var itemDidDrag;
   if ( item ) {
@@ -451,9 +450,9 @@ Packery.prototype.itemDragEnd = function( elem ) {
   }
 
   this.clearDragTimeout();
-  this.on( 'layoutComplete', onLayoutComplete );
+  this.once( 'layoutComplete', onLayoutComplete );
   this.layout();
-
+  this.dragItemCount = Math.max( 0, this.dragItemCount - 1 );
 };
 
 /**
@@ -489,8 +488,6 @@ Packery.prototype._getDragEndLayoutComplete = function( elem, item ) {
     if ( itemNeedsPositioning ) {
       _this.dispatchEvent( 'dragItemPositioned', null, [ item ] );
     }
-    // listen once
-    return true;
   };
 };
 
