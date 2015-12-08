@@ -111,6 +111,10 @@ Packery.prototype._create = function() {
     }
   };
 
+  this.debugCanvas = document.createElement('canvas');
+  this.debugCtx = this.debugCanvas.getContext('2d');
+  document.body.insertBefore( this.debugCanvas, document.body.firstChild );
+
 };
 
 
@@ -160,7 +164,7 @@ Packery.prototype._getMeasurements = function() {
 
 Packery.prototype._getItemLayoutPosition = function( item ) {
   if ( this.dragItemCount > 0 ) {
-    this._dragPackItem( item );
+    this._columnPackItem( item );
   } else {
     this._packItem( item );
   }
@@ -179,7 +183,7 @@ Packery.prototype._packItem = function( item ) {
   this._setMaxXY( item.rect );
 };
 
-Packery.prototype._dragPackItem = function( item ) {
+Packery.prototype._columnPackItem = function( item ) {
   this._setRectSize( item.element, item.rect );
   this.packer.columnPack( item.rect );
   this._setMaxXY( item.rect );
@@ -384,8 +388,8 @@ Packery.prototype.resize = function() {
  * @param {Element} elem
  */
 Packery.prototype.itemDragStart = function( elem ) {
-  this.stamp( elem );
-  // this.ignore( elem );
+  // this.stamp( elem );
+  this.ignore( elem );
   var item = this.getItem( elem );
   if ( !item ) {
     return;
@@ -416,24 +420,49 @@ Packery.prototype.layoutDropPacker = function() {
   }, this );
 
   var items = this._getItemsForLayout( this.items );
+  var ctx = this.debugCtx;
+  ctx.clearRect( 0, 0, this.dropPacker.width, 700 );
+
+  this.debugCanvas.width = this.dropPacker.width;
+  this.debugCanvas.height = 700;
+
+  ctx.fillStyle = '#DEF';
+  ctx.strokeStyle = 'black';
+  function drawItem( item ) {
+    var rect = item.rect;
+    ctx.beginPath();
+    ctx.moveTo( rect.x, rect.y );
+    ctx.lineTo( rect.x + rect.width, rect.y );
+    ctx.lineTo( rect.x + rect.width, rect.y + rect.height );
+    ctx.lineTo( rect.x, rect.y + rect.height );
+    ctx.lineTo( rect.x, rect.y );
+    ctx.stroke();
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  this.dropTargetKeys = [];
+  this.dropTargets = [];
+
   items.forEach( function( item ) {
     this._setRectSize( item.element, item.rect );
-    this.dropPacker.pack( item.rect );
-    // console.log( item.rect.x, item.rect.y );
+    this.dropPacker.columnPack( item.rect );
+    drawItem( item );
+    this.addDropTarget( item.rect.x, item.rect.y );
+    this.addDropTarget( item.rect.x, item.rect.y + item.rect.height );
   }, this );
+
 };
 
-Outlayer.prototype._manageStamps = function() {
-  if ( !this.stamps || !this.stamps.length ) {
+Packery.prototype.addDropTarget = function( x, y ) {
+  // create string for a key, easier to keep track of what targets
+  var key = x + ',' + y;
+  var hasKey = this.dropTargetKeys.indexOf( key ) != -1;
+  if ( hasKey ) {
     return;
   }
-
-  this._getBoundingRect();
-
-  for ( var i=0, len = this.stamps.length; i < len; i++ ) {
-    var stamp = this.stamps[i];
-    this._manageStamp( stamp );
-  }
+  this.dropTargetKeys.push( key );
+  this.dropTargets.push({ x: x, y: y });
 };
 
 // -------------------------- drag move -------------------------- //
