@@ -69,7 +69,6 @@ Item.prototype.dragStart = function() {
   this.isDragging = true;
   this.isPlacing = true;
   this.needsPositioning = false;
-  this.positionPlaceRect( this.position.x, this.position.y );
   this.isTransitioning = false;
   this.didDrag = true;
 };

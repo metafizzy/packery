@@ -388,8 +388,8 @@ Packery.prototype.resize = function() {
  * @param {Element} elem
  */
 Packery.prototype.itemDragStart = function( elem ) {
-  // this.stamp( elem );
-  this.ignore( elem );
+  this.stamp( elem );
+  // this.ignore( elem );
   var item = this.getItem( elem );
   if ( !item ) {
     return;
@@ -400,7 +400,9 @@ Packery.prototype.itemDragStart = function( elem ) {
 
   this.layoutDropPacker();
 
-  item.positionPlaceRect( item.position.x, item.position.y );
+  // this.dropItem( item, item.position.x, item.position.y );
+  //
+  // item.positionPlaceRect( item.position.x, item.position.y );
 };
 
 Packery.prototype.layoutDropPacker = function() {
@@ -409,6 +411,11 @@ Packery.prototype.layoutDropPacker = function() {
   // pack stamps
   this._getBoundingRect();
   this.stamps.forEach( function( stamp ) {
+    // ignore dragged item
+    var item = this.getItem( stamp );
+    if ( item && item.isDragging ) {
+      return;
+    }
     var offset = this._getElementOffset( stamp );
     var rect = new Rect({
       x: this.options.isOriginLeft ? offset.left : offset.right,
@@ -465,6 +472,29 @@ Packery.prototype.addDropTarget = function( x, y ) {
   this.dropTargets.push({ x: x, y: y });
 };
 
+// -------------------------- drop -------------------------- //
+
+Packery.prototype.placeDropPosition = function( item, x, y ) {
+  var dropPosition;
+  var minDistance = Number.POSITIVE_INFINITY;
+  var position = { x: x, y: y };
+  this.dropTargets.forEach( function( target ) {
+    var distance = getDistance( target, position );
+    if ( distance < minDistance ) {
+      dropPosition = target;
+      minDistance = distance;
+    }
+  });
+  item.placeRect.x = dropPosition.x;
+  item.placeRect.y = dropPosition.y;
+};
+
+function getDistance( a, b ) {
+  var dx = b.x - a.x;
+  var dy = b.y - a.y;
+  return Math.sqrt( dx * dx + dy * dy );
+}
+
 // -------------------------- drag move -------------------------- //
 
 /**
@@ -482,14 +512,15 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
   x -= this.size.paddingLeft;
   y -= this.size.paddingTop;
 
-  item.dragMove( x, y );
+  this.placeDropPosition( item, x, y );
+
+  // item.dragMove( x, y );
 
   // debounce
   var _this = this;
   // debounce triggering layout
   function delayed() {
     _this.layout();
-    // _this.onDebouncedItemDragMove( item )
     delete _this.dragTimeout;
   }
 
@@ -565,6 +596,7 @@ Packery.prototype._getDragEndLayoutComplete = function( elem, item ) {
     if ( item ) {
       classie.remove( item.element, 'is-positioning-post-drag' );
       item.isPlacing = false;
+      item.isDragging = false;
       item.copyPlaceRectPosition();
     }
 
