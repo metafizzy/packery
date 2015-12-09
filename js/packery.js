@@ -398,14 +398,14 @@ Packery.prototype.itemDragStart = function( elem ) {
   item.dragStart();
   this.dragItemCount++;
 
-  this.layoutDropPacker();
+  this.layoutDropPacker( item );
 
   // this.dropItem( item, item.position.x, item.position.y );
   //
   // item.positionPlaceRect( item.position.x, item.position.y );
 };
 
-Packery.prototype.layoutDropPacker = function() {
+Packery.prototype.layoutDropPacker = function( dropItem ) {
   this.dropPacker.reset();
 
   // pack stamps
@@ -437,21 +437,25 @@ Packery.prototype.layoutDropPacker = function() {
   this.dropTargetKeys = [];
   this.dropTargets = [];
   var segment = this.columnWidth + this.gutter;
-  var cols = Math.ceil( this.dropPacker.width / segment );
-  for ( var i=0; i < cols - 1; i++ ) {
-    this.addDropTarget( i * segment, 0 );
+  var colSpan = dropItem.rect.width / segment;
+  var cols = Math.floor( ( this.dropPacker.width + this.gutter ) / segment );
+  var boundsWidth = ( cols - ( colSpan - 1 ) ) * segment;
+  // add targets on top
+  for ( var i=0; i < cols; i++ ) {
+    this.addDropTarget( i * segment, 0, boundsWidth );
   }
 
   // pack each item to measure where dropTargets are
   items.forEach( function( item ) {
-    this._setRectSize( item.element, item.rect );
-    this.dropPacker.columnPack( item.rect );
-    drawRect( ctx, item.rect );
-    var colSpan = Math.round( item.rect.width / segment );
+    var rect = item.rect;
+    this._setRectSize( item.element, rect );
+    this.dropPacker.columnPack( rect );
+    drawRect( ctx, rect );
+    var colSpan = Math.round( rect.width / segment );
     for ( var i=0; i < colSpan; i++ ) {
-      var x = item.rect.x + segment * i;
-      this.addDropTarget( x, item.rect.y );
-      this.addDropTarget( x, item.rect.y + item.rect.height );
+      var x = rect.x + segment * i;
+      this.addDropTarget( x, rect.y, boundsWidth );
+      this.addDropTarget( x, rect.y + rect.height, boundsWidth );
     }
   }, this );
 
@@ -483,7 +487,10 @@ function drawTarget( ctx, target ) {
   ctx.closePath();
 }
 
-Packery.prototype.addDropTarget = function( x, y ) {
+Packery.prototype.addDropTarget = function( x, y, boundsWidth ) {
+  if ( x >= boundsWidth ) {
+    return;
+  }
   // create string for a key, easier to keep track of what targets
   var key = x + ',' + y;
   var hasKey = this.dropTargetKeys.indexOf( key ) != -1;
@@ -500,15 +507,7 @@ Packery.prototype.placeDropPosition = function( item, x, y ) {
   var dropPosition;
   var minDistance = Number.POSITIVE_INFINITY;
   var position = { x: x, y: y };
-  var colSpan = item.rect.width / this.columnWidth;
-  var boundsWidth = this.dropPacker.width - this.columnWidth * colSpan;
-  // console.log( colSpan, boundsWidth );
   this.dropTargets.forEach( function( target ) {
-    var isOutOfBounds = target.x > boundsWidth;
-    // do not place big items outside of container
-    if ( colSpan > 1 && isOutOfBounds ) {
-      return;
-    }
     var distance = getDistance( target, position );
     if ( distance < minDistance ) {
       dropPosition = target;
