@@ -13,7 +13,7 @@
 
 .grid {
   background: #EEE;
-  width: 400px;
+  width: 460px;
 }
 
 .grid-item {
@@ -29,7 +29,7 @@
   opacity: 0.8;
 }
 
-.grid-item.w2 { width: 200px; }
+.grid-item.w2 { width: 220px; }
 .grid-item.h2 { height: 100px; }
 .grid-item.h3 { height: 140px; }
 
@@ -82,7 +82,8 @@ canvas {
 <script>
 var gridElem = document.querySelector('.grid');
 var pckry = new Packery( gridElem, {
-  columnWidth: 100
+  columnWidth: 100,
+  gutter: 20
 });
 
 var itemElems = gridElem.querySelectorAll('.grid-item');

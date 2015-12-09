@@ -436,18 +436,20 @@ Packery.prototype.layoutDropPacker = function() {
   // reset dropTargets
   this.dropTargetKeys = [];
   this.dropTargets = [];
-  var cols = Math.ceil( this.dropPacker.width / this.columnWidth );
+  var segment = this.columnWidth + this.gutter;
+  var cols = Math.ceil( this.dropPacker.width / segment );
   for ( var i=0; i < cols - 1; i++ ) {
-    this.addDropTarget( i * this.columnWidth, 0 );
+    this.addDropTarget( i * segment, 0 );
   }
+
   // pack each item to measure where dropTargets are
   items.forEach( function( item ) {
     this._setRectSize( item.element, item.rect );
     this.dropPacker.columnPack( item.rect );
     drawRect( ctx, item.rect );
-    var colSpan = Math.round( item.rect.width / this.columnWidth );
+    var colSpan = Math.round( item.rect.width / segment );
     for ( var i=0; i < colSpan; i++ ) {
-      var x = item.rect.x + this.columnWidth * i;
+      var x = item.rect.x + segment * i;
       this.addDropTarget( x, item.rect.y );
       this.addDropTarget( x, item.rect.y + item.rect.height );
     }
