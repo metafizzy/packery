@@ -163,7 +163,7 @@ Packery.prototype._getMeasurements = function() {
 };
 
 Packery.prototype._getItemLayoutPosition = function( item ) {
-  if ( this.dragItemCount > 0 ) {
+  if ( this.isFitting || this.dragItemCount > 0 ) {
     this._columnPackItem( item );
   } else {
     this._packItem( item );
@@ -307,34 +307,26 @@ Packery.prototype.fit = function( elem, x, y ) {
     return;
   }
 
-  // prepare internal properties
-  this._getMeasurements();
-
   // stamp item to get it out of layout
   this.stamp( item.element );
-  // required for positionPlaceRect
-  item.getSize();
   // set placing flag
-  item.isPlacing = true;
+  item.enablePlacing();
+  this.layoutDropPacker( item );
   // fall back to current position for fitting
   x = x === undefined ? item.rect.x: x;
   y = y === undefined ? item.rect.y: y;
-
   // position it best at its destination
-  item.positionPlaceRect( x, y, true );
-
+  this.placeDropPosition( item, x, y );
   this._bindFitEvents( item );
-  item.moveTo( item.placeRect.x, item.placeRect.y );
+  item.moveTo( item.rect.x, item.rect.y );
   // layout everything else
+  this.isFitting = true;
   this.layout();
-
+  delete this.isFitting;
   // return back to regularly scheduled programming
   this.unstamp( item.element );
   this.sortItemsByPosition();
-  // un set placing flag, back to normal
-  item.isPlacing = false;
-  // copy place rect position
-  item.copyPlaceRectPosition();
+  item.disablePlacing();
 };
 
 /**
@@ -345,7 +337,7 @@ Packery.prototype.fit = function( elem, x, y ) {
 Packery.prototype._bindFitEvents = function( item ) {
   var _this = this;
   var ticks = 0;
-  function tick() {
+  function onLayout() {
     ticks++;
     if ( ticks != 2 ) {
       return;
@@ -353,15 +345,9 @@ Packery.prototype._bindFitEvents = function( item ) {
     _this.dispatchEvent( 'fitComplete', null, [ item ] );
   }
   // when item is laid out
-  item.on( 'layout', function() {
-    tick();
-    return true;
-  });
+  item.once( 'layout', onLayout );
   // when all items are laid out
-  this.on( 'layoutComplete', function() {
-    tick();
-    return true;
-  });
+  this.on( 'layoutComplete', onLayout );
 };
 
 // -------------------------- resize -------------------------- //
@@ -409,7 +395,7 @@ Packery.prototype.layoutDropPacker = function( dropItem ) {
   this.stamps.forEach( function( stamp ) {
     // ignore dragged item
     var item = this.getItem( stamp );
-    if ( item && item.isDragging ) {
+    if ( item && item.isPlacing ) {
       return;
     }
     var offset = this._getElementOffset( stamp );
@@ -432,13 +418,18 @@ Packery.prototype.layoutDropPacker = function( dropItem ) {
   // reset dropTargets
   this.dropTargetKeys = [];
   this.dropTargets = [];
-  var segment = this.columnWidth + this.gutter;
-  var colSpan = dropItem.rect.width / segment;
-  var cols = Math.floor( ( this.dropPacker.width + this.gutter ) / segment );
-  var boundsWidth = ( cols - ( colSpan - 1 ) ) * segment;
-  // add targets on top
-  for ( var i=0; i < cols; i++ ) {
-    this.addDropTarget( i * segment, 0, boundsWidth );
+  var boundsWidth;
+  if ( this.columnWidth ) {
+    var segment = this.columnWidth + this.gutter;
+    var colSpan = dropItem.rect.width / segment;
+    var cols = Math.floor( ( this.dropPacker.width + this.gutter ) / segment );
+    boundsWidth = ( cols - ( colSpan - 1 ) ) * segment;
+    // add targets on top
+    for ( var i=0; i < cols; i++ ) {
+      this.addDropTarget( i * segment, 0, boundsWidth );
+    }
+  } else {
+    boundsWidth = ( this.dropPacker.width + this.gutter ) - dropItem.rect.width;
   }
 
   // pack each item to measure where dropTargets are
@@ -447,11 +438,16 @@ Packery.prototype.layoutDropPacker = function( dropItem ) {
     this._setRectSize( item.element, rect );
     this.dropPacker.columnPack( rect );
     drawRect( ctx, rect );
-    var colSpan = Math.round( rect.width / segment );
-    for ( var i=0; i < colSpan; i++ ) {
-      var x = rect.x + segment * i;
-      this.addDropTarget( x, rect.y, boundsWidth );
-      this.addDropTarget( x, rect.y + rect.height, boundsWidth );
+    if ( this.columnWidth ) {
+      var colSpan = Math.round( rect.width / segment );
+      for ( var i=0; i < colSpan; i++ ) {
+        var x = rect.x + segment * i;
+        this.addDropTarget( x, rect.y, boundsWidth );
+        this.addDropTarget( x, rect.y + rect.height, boundsWidth );
+      }
+    } else {
+      this.addDropTarget( rect.x, rect.y, boundsWidth );
+      this.addDropTarget( rect.x, rect.y + rect.height, boundsWidth );
     }
   }, this );
 
@@ -484,7 +480,7 @@ function drawTarget( ctx, target ) {
 }
 
 Packery.prototype.addDropTarget = function( x, y, boundsWidth ) {
-  if ( x >= boundsWidth ) {
+  if ( x !== 0 && x >= boundsWidth ) {
     return;
   }
   // create string for a key, easier to keep track of what targets
