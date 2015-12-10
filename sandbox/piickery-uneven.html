@@ -13,7 +13,7 @@
 
 .grid {
   background: #EEE;
-  width: 490px;
+  width: 400px;
 }
 
 .grid-item {
@@ -29,9 +29,10 @@
   opacity: 0.8;
 }
 
-.grid-item.w2 { width: 220px; }
+.grid-item.w2 { width: 200px; }
 .grid-item.h2 { height: 100px; }
 .grid-item.h3 { height: 140px; }
+.grid-item.h4 { height: 240px; }
 
 canvas {
   position: absolute;
@@ -45,7 +46,10 @@ canvas {
 
   <h1>piickery uneven</h1>
 
+<p><button class="button-layout">Layout</button></p>
+
 <div class="grid">
+  <div class="grid-item w2 h4"></div>
   <div class="grid-item w2 h2"></div>
   <div class="grid-item"></div>
   <div class="grid-item h3"></div>
@@ -83,7 +87,7 @@ canvas {
 var gridElem = document.querySelector('.grid');
 var pckry = new Packery( gridElem, {
   columnWidth: 100,
-  gutter: 20
+  // gutter: 20
 });
 
 var itemElems = gridElem.querySelectorAll('.grid-item');
@@ -93,6 +97,10 @@ for ( var i=0; i < itemElems.length; i++ ) {
   var draggie = new Draggabilly( itemElem );
   pckry.bindDraggabillyEvents( draggie );
 }
+
+document.querySelector('.button-layout').onclick = function() {
+  pckry.layout();
+};
 
 </script>
 

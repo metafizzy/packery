@@ -55,41 +55,20 @@ Item.prototype._create = function() {
 
 // -------------------------- drag -------------------------- //
 
-Item.prototype.dragStart = function() {
-  this.getPosition();
+Item.prototype.enablePlacing = function() {
   this.removeTransitionStyles();
   // remove transform property from transition
   if ( this.isTransitioning && transformProperty ) {
     this.element.style[ transformProperty ] = 'none';
   }
-  this.getSize();
-  this.layout._setRectSize( this.element, this.placeRect );
-  // create place rect, used for position when dragged then dropped
-  // or when positioning
-  this.isDragging = true;
-  this.isPlacing = true;
-  this.needsPositioning = false;
   this.isTransitioning = false;
-  this.didDrag = true;
+  this.getSize();
+  this.layout._setRectSize( this.element, this.rect );
+  this.isPlacing = true;
 };
 
-/**
- * handle item when it is dragged
- * @param {Number} x - horizontal position of dragged item
- * @param {Number} y - vertical position of dragged item
- */
-Item.prototype.dragMove = function( x, y ) {
-  this.positionPlaceRect( x, y );
-};
-
-Item.prototype.dragStop = function() {
-  this.getPosition();
-  var isDiffX = this.position.x != this.placeRect.x;
-  var isDiffY = this.position.y != this.placeRect.y;
-  // set post-drag positioning flag
-  this.needsPositioning = isDiffX || isDiffY;
-  // reset flag
-  this.didDrag = false;
+Item.prototype.disablePlacing = function() {
+  this.isPlacing = false;
 };
 
 // -------------------------- placing -------------------------- //

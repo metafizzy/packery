@@ -262,7 +262,7 @@ Packery.prototype._manageStamp = function( elem ) {
   var item = this.getItem( elem );
   var rect;
   if ( item && item.isPlacing ) {
-    rect = item.placeRect;
+    rect = item.rect;
   } else {
     var offset = this._getElementOffset( elem );
     rect = new Rect({
@@ -395,14 +395,10 @@ Packery.prototype.itemDragStart = function( elem ) {
     return;
   }
 
-  item.dragStart();
+  item.isDragging = true;
+  item.enablePlacing();
   this.dragItemCount++;
-
   this.layoutDropPacker( item );
-
-  // this.dropItem( item, item.position.x, item.position.y );
-  //
-  // item.positionPlaceRect( item.position.x, item.position.y );
 };
 
 Packery.prototype.layoutDropPacker = function( dropItem ) {
@@ -514,8 +510,8 @@ Packery.prototype.placeDropPosition = function( item, x, y ) {
       minDistance = distance;
     }
   });
-  item.placeRect.x = dropPosition.x;
-  item.placeRect.y = dropPosition.y;
+  item.rect.x = dropPosition.x;
+  item.rect.y = dropPosition.y;
 };
 
 function getDistance( a, b ) {
@@ -543,11 +539,8 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
 
   this.placeDropPosition( item, x, y );
 
-  // item.dragMove( x, y );
-
-  // debounce
-  var _this = this;
   // debounce triggering layout
+  var _this = this;
   function delayed() {
     _this.layout();
     delete _this.dragTimeout;
@@ -571,73 +564,35 @@ Packery.prototype.clearDragTimeout = function() {
  */
 Packery.prototype.itemDragEnd = function( elem ) {
   var item = this.getItem( elem );
-  var itemDidDrag;
-  if ( item ) {
-    itemDidDrag = item.didDrag;
-    item.dragStop();
-  }
-  // if elem didn't move, or if it doesn't need positioning
-  // unignore and unstamp and call it a day
-  if ( !item || ( !itemDidDrag && !item.needsPositioning ) ) {
-    this.unstamp( elem );
+  if ( !item ) {
     return;
-  }
-  // procced with dragged item
-
-  classie.add( item.element, 'is-positioning-post-drag' );
-
-  // save this var, as it could get reset in dragStart
-  var onLayoutComplete = this._getDragEndLayoutComplete( elem, item );
-
-  if ( item.needsPositioning ) {
-    item.on( 'layout', onLayoutComplete );
-    item.moveTo( item.placeRect.x, item.placeRect.y );
-  } else if ( item ) {
-    // item didn't need placement
-    item.copyPlaceRectPosition();
   }
 
   this.clearDragTimeout();
-  this.once( 'layoutComplete', onLayoutComplete );
+  classie.add( item.element, 'is-positioning-post-drag' );
+
+  var completeCount = 0;
+  var _this = this;
+  function onDragEndLayoutComplete() {
+    completeCount++;
+    if ( completeCount != 2 ) {
+      return;
+    }
+    // reset drag item
+    _this.unstamp( item.element );
+    classie.remove( item.element, 'is-positioning-post-drag' );
+    item.disablePlacing();
+    item.isDragging = false;
+    //
+    _this.sortItemsByPosition();
+    _this.dispatchEvent( 'dragItemPositioned', null, [ item ] );
+  }
+
+  item.once( 'layout', onDragEndLayoutComplete );
+  this.once( 'layoutComplete', onDragEndLayoutComplete );
+  item.moveTo( item.rect.x, item.rect.y );
   this.layout();
   this.dragItemCount = Math.max( 0, this.dragItemCount - 1 );
-};
-
-/**
- * get drag end callback
- * @param {Element} elem
- * @param {Packery.Item} item
- * @returns {Function} onLayoutComplete
- */
-Packery.prototype._getDragEndLayoutComplete = function( elem, item ) {
-  var itemNeedsPositioning = item && item.needsPositioning;
-  var completeCount = 0;
-  var asyncCount = itemNeedsPositioning ? 2 : 1;
-  var _this = this;
-
-  return function onLayoutComplete() {
-    completeCount++;
-    // don't proceed if not complete
-    if ( completeCount != asyncCount ) {
-      return true;
-    }
-    // reset item
-    if ( item ) {
-      classie.remove( item.element, 'is-positioning-post-drag' );
-      item.isPlacing = false;
-      item.isDragging = false;
-      item.copyPlaceRectPosition();
-    }
-
-    _this.unstamp( elem );
-    // only sort when item moved
-    _this.sortItemsByPosition();
-
-    // emit item drag event now that everything is done
-    if ( itemNeedsPositioning ) {
-      _this.dispatchEvent( 'dragItemPositioned', null, [ item ] );
-    }
-  };
 };
 
 /**
