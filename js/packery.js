@@ -68,7 +68,7 @@ Packery.prototype._create = function() {
   // initial properties
   this.packer = new Packer();
   // packer for drop targets
-  this.dropPacker = new Packer();
+  this.shiftPacker = new Packer();
 
   // Left over from v1.0
   this.stamp( this.options.stamped );
@@ -132,18 +132,18 @@ Packery.prototype._resetLayout = function() {
   var width, height, sortDirection;
   // packer settings, if horizontal or vertical
   if ( this.options.isHorizontal ) {
-    width = Number.POSITIVE_INFINITY;
+    width = Infinity;
     height = this.size.innerHeight + this.gutter;
     sortDirection = 'rightwardTopToBottom';
   } else {
     width = this.size.innerWidth + this.gutter;
-    height = Number.POSITIVE_INFINITY;
+    height = Infinity;
     sortDirection = 'downwardLeftToRight';
   }
 
-  this.packer.width = this.dropPacker.width = width;
-  this.packer.height = this.dropPacker.height = height;
-  this.packer.sortDirection = this.dropPacker.sortDirection = sortDirection;
+  this.packer.width = this.shiftPacker.width = width;
+  this.packer.height = this.shiftPacker.height = height;
+  this.packer.sortDirection = this.shiftPacker.sortDirection = sortDirection;
 
   this.packer.reset();
 
@@ -163,31 +163,23 @@ Packery.prototype._getMeasurements = function() {
 };
 
 Packery.prototype._getItemLayoutPosition = function( item ) {
-  if ( this.isFitting || this.dragItemCount > 0 ) {
-    this._columnPackItem( item );
+  this._setRectSize( item.element, item.rect );
+  if ( this.isShifting || this.dragItemCount > 0 ) {
+    this.packer.columnPack( item.rect );
   } else {
-    this._packItem( item );
+    this.packer.pack( item.rect );
   }
+
+  this._setMaxXY( item.rect );
   return item.rect;
 };
 
-
-/**
- * layout item in packer
- * @param {Packery.Item} item
- */
-Packery.prototype._packItem = function( item ) {
-  this._setRectSize( item.element, item.rect );
-  // pack the rect in the packer
-  this.packer.pack( item.rect );
-  this._setMaxXY( item.rect );
+Packery.prototype.shiftLayout = function() {
+  this.isShifting = true;
+  this.layout();
+  delete this.isShifting;
 };
 
-Packery.prototype._columnPackItem = function( item ) {
-  this._setRectSize( item.element, item.rect );
-  this.packer.columnPack( item.rect );
-  this._setMaxXY( item.rect );
-};
 
 /**
  * set max X and Y value, for size of container
@@ -311,18 +303,16 @@ Packery.prototype.fit = function( elem, x, y ) {
   this.stamp( item.element );
   // set placing flag
   item.enablePlacing();
-  this.layoutDropPacker( item );
+  this.updateShiftTargets( item );
   // fall back to current position for fitting
   x = x === undefined ? item.rect.x: x;
   y = y === undefined ? item.rect.y: y;
   // position it best at its destination
-  this.placeDropPosition( item, x, y );
+  this.shift( item, x, y );
   this._bindFitEvents( item );
   item.moveTo( item.rect.x, item.rect.y );
   // layout everything else
-  this.isFitting = true;
-  this.layout();
-  delete this.isFitting;
+  this.shiftLayout();
   // return back to regularly scheduled programming
   this.unstamp( item.element );
   this.sortItemsByPosition();
@@ -384,11 +374,11 @@ Packery.prototype.itemDragStart = function( elem ) {
   item.isDragging = true;
   item.enablePlacing();
   this.dragItemCount++;
-  this.layoutDropPacker( item );
+  this.updateShiftTargets( item );
 };
 
-Packery.prototype.layoutDropPacker = function( dropItem ) {
-  this.dropPacker.reset();
+Packery.prototype.updateShiftTargets = function( dropItem ) {
+  this.shiftPacker.reset();
 
   // pack stamps
   this._getBoundingRect();
@@ -405,53 +395,53 @@ Packery.prototype.layoutDropPacker = function( dropItem ) {
     });
     this._setRectSize( stamp, rect );
     // save its space in the packer
-    this.dropPacker.placed( rect );
+    this.shiftPacker.placed( rect );
   }, this );
 
   var items = this._getItemsForLayout( this.items );
   var ctx = this.debugCtx;
-  ctx.clearRect( 0, 0, this.dropPacker.width, 700 );
+  ctx.clearRect( 0, 0, this.shiftPacker.width, 700 );
 
-  this.debugCanvas.width = this.dropPacker.width;
+  this.debugCanvas.width = this.shiftPacker.width;
   this.debugCanvas.height = 700;
 
-  // reset dropTargets
-  this.dropTargetKeys = [];
-  this.dropTargets = [];
+  // reset shiftTargets
+  this.shiftTargetKeys = [];
+  this.shiftTargets = [];
   var boundsWidth;
   if ( this.columnWidth ) {
     var segment = this.columnWidth + this.gutter;
     var colSpan = dropItem.rect.width / segment;
-    var cols = Math.floor( ( this.dropPacker.width + this.gutter ) / segment );
+    var cols = Math.floor( ( this.shiftPacker.width + this.gutter ) / segment );
     boundsWidth = ( cols - ( colSpan - 1 ) ) * segment;
     // add targets on top
     for ( var i=0; i < cols; i++ ) {
-      this.addDropTarget( i * segment, 0, boundsWidth );
+      this.addShiftTarget( i * segment, 0, boundsWidth );
     }
   } else {
-    boundsWidth = ( this.dropPacker.width + this.gutter ) - dropItem.rect.width;
+    boundsWidth = ( this.shiftPacker.width + this.gutter ) - dropItem.rect.width;
   }
 
-  // pack each item to measure where dropTargets are
+  // pack each item to measure where shiftTargets are
   items.forEach( function( item ) {
     var rect = item.rect;
     this._setRectSize( item.element, rect );
-    this.dropPacker.columnPack( rect );
+    this.shiftPacker.columnPack( rect );
     drawRect( ctx, rect );
     if ( this.columnWidth ) {
       var colSpan = Math.round( rect.width / segment );
       for ( var i=0; i < colSpan; i++ ) {
         var x = rect.x + segment * i;
-        this.addDropTarget( x, rect.y, boundsWidth );
-        this.addDropTarget( x, rect.y + rect.height, boundsWidth );
+        this.addShiftTarget( x, rect.y, boundsWidth );
+        this.addShiftTarget( x, rect.y + rect.height, boundsWidth );
       }
     } else {
-      this.addDropTarget( rect.x, rect.y, boundsWidth );
-      this.addDropTarget( rect.x, rect.y + rect.height, boundsWidth );
+      this.addShiftTarget( rect.x, rect.y, boundsWidth );
+      this.addShiftTarget( rect.x, rect.y + rect.height, boundsWidth );
     }
   }, this );
 
-  this.dropTargets.forEach( function( target ) {
+  this.shiftTargets.forEach( function( target ) {
     drawTarget( ctx, target );
   });
 
@@ -479,35 +469,35 @@ function drawTarget( ctx, target ) {
   ctx.closePath();
 }
 
-Packery.prototype.addDropTarget = function( x, y, boundsWidth ) {
+Packery.prototype.addShiftTarget = function( x, y, boundsWidth ) {
   if ( x !== 0 && x >= boundsWidth ) {
     return;
   }
   // create string for a key, easier to keep track of what targets
   var key = x + ',' + y;
-  var hasKey = this.dropTargetKeys.indexOf( key ) != -1;
+  var hasKey = this.shiftTargetKeys.indexOf( key ) != -1;
   if ( hasKey ) {
     return;
   }
-  this.dropTargetKeys.push( key );
-  this.dropTargets.push({ x: x, y: y });
+  this.shiftTargetKeys.push( key );
+  this.shiftTargets.push({ x: x, y: y });
 };
 
 // -------------------------- drop -------------------------- //
 
-Packery.prototype.placeDropPosition = function( item, x, y ) {
-  var dropPosition;
-  var minDistance = Number.POSITIVE_INFINITY;
+Packery.prototype.shift = function( item, x, y ) {
+  var shiftPosition;
+  var minDistance = Infinity;
   var position = { x: x, y: y };
-  this.dropTargets.forEach( function( target ) {
+  this.shiftTargets.forEach( function( target ) {
     var distance = getDistance( target, position );
     if ( distance < minDistance ) {
-      dropPosition = target;
+      shiftPosition = target;
       minDistance = distance;
     }
   });
-  item.rect.x = dropPosition.x;
-  item.rect.y = dropPosition.y;
+  item.rect.x = shiftPosition.x;
+  item.rect.y = shiftPosition.y;
 };
 
 function getDistance( a, b ) {
@@ -533,7 +523,7 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
   x -= this.size.paddingLeft;
   y -= this.size.paddingTop;
 
-  this.placeDropPosition( item, x, y );
+  this.shift( item, x, y );
 
   // debounce triggering layout
   var _this = this;

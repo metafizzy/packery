@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+
+  <title>save positions</title>
+
+<style>
+* { box-sizing: border-box; }
+
+/* force scrollbar */
+html { overflow-y: scroll; }
+
+.grid {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.grid.is-img-loaded {
+  opacity: 1;
+}
+
+.grid-sizer, .grid-item {
+  width: 20%;
+}
+
+.grid-item {
+  float: left;
+}
+
+.grid-item--width2 {
+  width: 40%;
+}
+
+.grid-item img {
+  display: block;
+  max-width: 100%;
+}
+
+canvas {
+  display: none;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+</style>
+
+</head>
+<body>
+
+  <h1>save positions</h1>
+
+<div class="grid">
+  <div class="grid-sizer"></div>
+  <div class="grid-item grid-item--width2" data-item-id="1"><img src="http://i.imgur.com/9xYjgCk.jpg" /></div>
+  <div class="grid-item" data-item-id="2"><img src="http://i.imgur.com/OZmQIVL.jpg" /></div>
+  <div class="grid-item" data-item-id="3"><img src="http://i.imgur.com/lBKi66i.jpg" /></div>
+  <div class="grid-item" data-item-id="4"><img src="http://i.imgur.com/LFelADP.jpg" /></div>
+  <div class="grid-item" data-item-id="5"><img src="http://i.imgur.com/ERMbVdn.jpg" /></div>
+  <div class="grid-item" data-item-id="6"><img src="http://i.imgur.com/4ifgQaR.jpg" /></div>
+  <div class="grid-item grid-item--width2" data-item-id="7"><img src="http://i.imgur.com/8lEJtbg.jpg" /></div>
+  <div class="grid-item" data-item-id="8"><img src="http://i.imgur.com/LkmcILl.jpg" /></div>
+  <div class="grid-item" data-item-id="9"><img src="http://i.imgur.com/aboaFoB.jpg" /></div>
+  <div class="grid-item" data-item-id="10"><img src="http://i.imgur.com/PgmEBSB.jpg" /></div>
+  <div class="grid-item" data-item-id="11"><img src="http://i.imgur.com/bAZWoqx.jpg" /></div>
+  <div class="grid-item" data-item-id="12"><img src="http://i.imgur.com/UORFJ3w.jpg" /></div>
+  <div class="grid-item" data-item-id="13"><img src="http://i.imgur.com/hODreXI.jpg" /></div>
+  <div class="grid-item" data-item-id="14"><img src="http://i.imgur.com/bwy74ok.jpg" /></div>
+  <div class="grid-item" data-item-id="15"><img src="http://i.imgur.com/q9zO6tw.jpg" /></div>
+  <div class="grid-item" data-item-id="16"><img src="http://i.imgur.com/r8p3Xgq.jpg" /></div>
+  <div class="grid-item" data-item-id="17"><img src="http://i.imgur.com/4O7U1Ob.jpg" /></div>
+</div>
+
+<script src="../bower_components/get-style-property/get-style-property.js"></script>
+<script src="../bower_components/get-size/get-size.js"></script>
+<script src="../bower_components/matches-selector/matches-selector.js"></script>
+<script src="../bower_components/eventEmitter/EventEmitter.js"></script>
+<script src="../bower_components/eventie/eventie.js"></script>
+<script src="../bower_components/doc-ready/doc-ready.js"></script>
+<script src="../bower_components/classie/classie.js"></script>
+<script src="../bower_components/fizzy-ui-utils/utils.js"></script>
+<script src="../bower_components/outlayer/item.js"></script>
+<script src="../bower_components/outlayer/outlayer.js"></script>
+<script src="../js/rect.js"></script>
+<script src="../js/packer.js"></script>
+<script src="../js/item.js"></script>
+<script src="../js/packery.js"></script>
+
+<script src="http://imagesloaded.desandro.com/imagesloaded.pkgd.js"></script>
+
+
+<script src="../bower_components/unipointer/unipointer.js"></script>
+<script src="../bower_components/unidragger/unidragger.js"></script>
+<script src="../bower_components/draggabilly/draggabilly.js"></script>
+
+<script>
+
+var grid = document.querySelector('.grid');
+var pckry = new Packery( grid, {
+  itemSelector: '.grid-item',
+  columnWidth: '.grid-sizer',
+  percentPosition: true,
+  isInitLayout: false
+});
+
+var itemElems = grid.querySelectorAll('.grid-item');
+
+for ( var i=0; i < itemElems.length; i++ ) {
+  var itemElem = itemElems[i];
+  var draggie = new Draggabilly( itemElem );
+  pckry.bindDraggabillyEvents( draggie );
+}
+
+imagesLoaded( grid, function() {
+  grid.classList.add('is-img-loaded');
+  var itemPositions = localStorage.getItem( 'itemsShiftPositions' );
+  if ( itemPositions ) {
+    itemPositions = JSON.parse( itemPositions );
+    pckry._resetLayout();
+    // set item order and horizontal position from saved positions
+    pckry.items = itemPositions.map( function( itemPosition ) {
+      var itemElem = grid.querySelector('[data-item-id="' + itemPosition.id  + '"]');
+      var item = pckry.getItem( itemElem );
+      item.rect.x = parseFloat( itemPosition.x ) * pckry.packer.width;
+      return item;
+    });
+    pckry.shiftLayout();
+  } else {
+    // if no initial positions, run packery layout
+    pckry.layout();
+  }
+
+});
+
+pckry.on( 'layoutComplete', function() {
+  var positions = getItemsShiftPositions();
+  localStorage.setItem( 'itemsShiftPositions', JSON.stringify( positions ) );
+});
+
+function getItemsShiftPositions() {
+  return pckry.items.map( function( item ) {
+    return {
+      id: item.element.getAttribute('data-item-id'),
+      x: item.rect.x / pckry.packer.width
+    }
+  });
+}
+
+</script>
+
+</body>
+</html>
