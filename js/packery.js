@@ -358,29 +358,32 @@ Packery.prototype.resize = function() {
   }
 
   if ( this.options.shiftResize ) {
-    this.resizeShiftLayout( size );
+    this.resizeShiftLayout();
   } else {
     this.layout();
   }
 };
 
-Packery.prototype.resizeShiftLayout = function( size ) {
+Packery.prototype.resizeShiftLayout = function() {
   var items = this._getItemsForLayout( this.items );
-  var previousWidth = this.packer.width;
-  var previousSegment = this.columnWidth + this.gutter;
-  this._getMeasurement( 'gutter', 'width' );
-  this._getMeasurement( 'columnWidth', 'width' );
-  var currentWidth = size.innerWidth + this.gutter;
-  var currentSegment = this.columnWidth + this.gutter;
 
-  items.forEach( function( item ) {
-    if ( this.columnWidth ) {
+  // proportional re-align items
+  if ( this.columnWidth ) {
+    var previousSegment = this.columnWidth + this.gutter;
+    this._getMeasurement( 'gutter', 'width' );
+    this._getMeasurement( 'columnWidth', 'width' );
+    var currentSegment = this.columnWidth + this.gutter;
+    items.forEach( function( item ) {
       var col = Math.round( item.rect.x / previousSegment );
       item.rect.x = col * currentSegment;
-    } else {
+    });
+  } else {
+    var currentWidth = getSize( this.element ).innerWidth + this.gutter;
+    var previousWidth = this.packer.width;
+    items.forEach( function( item ) {
       item.rect.x = ( item.rect.x / previousWidth ) * currentWidth;
-    }
-  }, this );
+    });
+  }
 
   this.shiftLayout();
 };
