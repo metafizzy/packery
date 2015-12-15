@@ -357,7 +357,22 @@ Packery.prototype.resize = function() {
     return;
   }
 
-  this.layout();
+  if ( this.options.shiftResize ) {
+    this.resizeShiftLayout( size );
+  } else {
+    this.layout();
+  }
+};
+
+Packery.prototype.resizeShiftLayout = function( size ) {
+  var items = this._getItemsForLayout( this.items );
+  var previousWidth = this.packer.width;
+  this._getMeasurement( 'gutter', 'width' );
+  var currentWidth = size.innerWidth + this.gutter;
+  items.forEach( function( item ) {
+    item.rect.x = ( item.rect.x / previousWidth ) * currentWidth;
+  });
+  this.shiftLayout();
 };
 
 // -------------------------- drag -------------------------- //
