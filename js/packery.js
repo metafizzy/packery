@@ -367,11 +367,21 @@ Packery.prototype.resize = function() {
 Packery.prototype.resizeShiftLayout = function( size ) {
   var items = this._getItemsForLayout( this.items );
   var previousWidth = this.packer.width;
+  var previousSegment = this.columnWidth + this.gutter;
   this._getMeasurement( 'gutter', 'width' );
+  this._getMeasurement( 'columnWidth', 'width' );
   var currentWidth = size.innerWidth + this.gutter;
+  var currentSegment = this.columnWidth + this.gutter;
+
   items.forEach( function( item ) {
-    item.rect.x = ( item.rect.x / previousWidth ) * currentWidth;
-  });
+    if ( this.columnWidth ) {
+      var col = Math.round( item.rect.x / previousSegment );
+      item.rect.x = col * currentSegment;
+    } else {
+      item.rect.x = ( item.rect.x / previousWidth ) * currentWidth;
+    }
+  }, this );
+
   this.shiftLayout();
 };
 
