@@ -29,6 +29,12 @@ html { overflow-y: scroll; }
   float: left;
 }
 
+.grid-item.is-dragging,
+.grid-item.is-positioning-post-drag {
+  opacity: 0.8;
+  z-index: 2;
+}
+
 .grid-item--width2 {
   width: 40%;
 }
@@ -36,6 +42,13 @@ html { overflow-y: scroll; }
 .grid-item img {
   display: block;
   max-width: 100%;
+}
+
+.packery-drop-placeholder {
+  background: white;
+  opacity: 0.5;
+  outline: 3px dashed black;
+  outline-offset: -6px;
 }
 
 canvas {
@@ -100,6 +113,7 @@ var grid = document.querySelector('.grid');
 var pckry = new Packery( grid, {
   itemSelector: '.grid-item',
   columnWidth: '.grid-sizer',
+  transitionDuration: '0.3s',
   percentPosition: true,
   isInitLayout: false
 });
@@ -133,10 +147,13 @@ imagesLoaded( grid, function() {
 
 });
 
-pckry.on( 'layoutComplete', function() {
+pckry.on( 'layoutComplete', savePositions );
+pckry.on( 'dragItemPositioned', savePositions );
+
+function savePositions() {
   var positions = getItemsShiftPositions();
   localStorage.setItem( 'itemsShiftPositions', JSON.stringify( positions ) );
-});
+}
 
 function getItemsShiftPositions() {
   return pckry.items.map( function( item ) {

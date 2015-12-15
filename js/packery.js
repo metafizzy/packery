@@ -111,6 +111,14 @@ Packery.prototype._create = function() {
     }
   };
 
+  this.dropPlaceholder = document.createElement('div');
+  this.dropPlaceholder.className = 'packery-drop-placeholder';
+  var dropPlaceholderStyle = this.dropPlaceholder.style;
+  dropPlaceholderStyle.position = 'absolute';
+  var transitionValue = 'transform ' + this.options.transitionDuration;
+  dropPlaceholderStyle.WebkitTransition = '-webkit- ' + transitionValue;
+  dropPlaceholderStyle.transition = transitionValue;
+
   this.debugCanvas = document.createElement('canvas');
   this.debugCtx = this.debugCanvas.getContext('2d');
   document.body.insertBefore( this.debugCanvas, document.body.firstChild );
@@ -375,6 +383,10 @@ Packery.prototype.itemDragStart = function( elem ) {
   item.enablePlacing();
   this.dragItemCount++;
   this.updateShiftTargets( item );
+  var dropPlaceholderStyle = this.dropPlaceholder.style;
+  dropPlaceholderStyle.width = item.size.width + 'px';
+  dropPlaceholderStyle.height = item.size.height + 'px';
+  this.element.appendChild( this.dropPlaceholder );
 };
 
 Packery.prototype.updateShiftTargets = function( dropItem ) {
@@ -498,6 +510,8 @@ Packery.prototype.shift = function( item, x, y ) {
   });
   item.rect.x = shiftPosition.x;
   item.rect.y = shiftPosition.y;
+
+  this.positionDropPlaceholder( item );
 };
 
 function getDistance( a, b ) {
@@ -505,6 +519,15 @@ function getDistance( a, b ) {
   var dy = b.y - a.y;
   return Math.sqrt( dx * dx + dy * dy );
 }
+
+Packery.prototype.positionDropPlaceholder = function( item ) {
+  if ( !item.isDragging ) {
+    return;
+  }
+  var style = this.dropPlaceholder.style;
+  style.transform = style.WebkitTransform = 'translate(' + item.rect.x + 'px, ' +
+    item.rect.y + 'px)';
+};
 
 // -------------------------- drag move -------------------------- //
 
@@ -565,12 +588,10 @@ Packery.prototype.itemDragEnd = function( elem ) {
       return;
     }
     // reset drag item
-    _this.unstamp( item.element );
     classie.remove( item.element, 'is-positioning-post-drag' );
-    item.disablePlacing();
     item.isDragging = false;
+    _this.element.removeChild( _this.dropPlaceholder );
     //
-    _this.sortItemsByPosition();
     _this.dispatchEvent( 'dragItemPositioned', null, [ item ] );
   }
 
@@ -579,6 +600,9 @@ Packery.prototype.itemDragEnd = function( elem ) {
   item.moveTo( item.rect.x, item.rect.y );
   this.layout();
   this.dragItemCount = Math.max( 0, this.dragItemCount - 1 );
+  _this.sortItemsByPosition();
+  item.disablePlacing();
+  _this.unstamp( item.element );
 };
 
 /**

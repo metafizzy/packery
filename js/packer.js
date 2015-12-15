@@ -71,7 +71,7 @@ Packer.prototype.columnPack = function( rect ) {
     var space = this.spaces[i];
     var canFitInSpaceColumn = space.x <= rect.x &&
       space.x + space.width >= rect.x + rect.width &&
-      space.height >= rect.height;
+      space.height >= rect.height - 0.01; // fudge number for rounding error
     if ( canFitInSpaceColumn ) {
       rect.y = space.y;
       this.placed( rect );
