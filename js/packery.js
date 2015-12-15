@@ -110,7 +110,7 @@ Packery.prototype._create = function() {
       _this.itemDragEnd( event.currentTarget );
     }
   };
-
+  // style drop placeholder
   this.dropPlaceholder = document.createElement('div');
   this.dropPlaceholder.className = 'packery-drop-placeholder';
   var dropPlaceholderStyle = this.dropPlaceholder.style;
@@ -118,11 +118,6 @@ Packery.prototype._create = function() {
   var transitionValue = 'transform ' + this.options.transitionDuration;
   dropPlaceholderStyle.WebkitTransition = '-webkit- ' + transitionValue;
   dropPlaceholderStyle.transition = transitionValue;
-
-  this.debugCanvas = document.createElement('canvas');
-  this.debugCtx = this.debugCanvas.getContext('2d');
-  document.body.insertBefore( this.debugCanvas, document.body.firstChild );
-
 };
 
 
@@ -411,11 +406,6 @@ Packery.prototype.updateShiftTargets = function( dropItem ) {
   }, this );
 
   var items = this._getItemsForLayout( this.items );
-  var ctx = this.debugCtx;
-  ctx.clearRect( 0, 0, this.shiftPacker.width, 700 );
-
-  this.debugCanvas.width = this.shiftPacker.width;
-  this.debugCanvas.height = 700;
 
   // reset shiftTargets
   this.shiftTargetKeys = [];
@@ -439,47 +429,22 @@ Packery.prototype.updateShiftTargets = function( dropItem ) {
     var rect = item.rect;
     this._setRectSize( item.element, rect );
     this.shiftPacker.columnPack( rect );
-    drawRect( ctx, rect );
+    this.addShiftTarget( rect.x, rect.y + rect.height, boundsWidth );
+
     if ( this.columnWidth ) {
+      // add targets for each column on bottom
       var colSpan = Math.round( rect.width / segment );
-      for ( var i=0; i < colSpan; i++ ) {
+      for ( var i=1; i < colSpan; i++ ) {
         var x = rect.x + segment * i;
-        this.addShiftTarget( x, rect.y, boundsWidth );
         this.addShiftTarget( x, rect.y + rect.height, boundsWidth );
       }
     } else {
+      // add top left corner for non-grid, organic layouts
       this.addShiftTarget( rect.x, rect.y, boundsWidth );
-      this.addShiftTarget( rect.x, rect.y + rect.height, boundsWidth );
     }
   }, this );
 
-  this.shiftTargets.forEach( function( target ) {
-    drawTarget( ctx, target );
-  });
-
 };
-
-function drawRect( ctx, rect ) {
-  ctx.fillStyle = '#ADF';
-  ctx.strokeStyle = 'black';
-  ctx.beginPath();
-  ctx.moveTo( rect.x, rect.y );
-  ctx.lineTo( rect.x + rect.width, rect.y );
-  ctx.lineTo( rect.x + rect.width, rect.y + rect.height );
-  ctx.lineTo( rect.x, rect.y + rect.height );
-  ctx.lineTo( rect.x, rect.y );
-  ctx.stroke();
-  ctx.fill();
-  ctx.closePath();
-}
-
-function drawTarget( ctx, target ) {
-  ctx.fillStyle = '#D00';
-  ctx.beginPath();
-  ctx.arc( target.x, target.y, 5, 0, Math.PI * 2 );
-  ctx.fill();
-  ctx.closePath();
-}
 
 Packery.prototype.addShiftTarget = function( x, y, boundsWidth ) {
   if ( x !== 0 && x >= boundsWidth ) {
