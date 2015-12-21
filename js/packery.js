@@ -583,8 +583,12 @@ Packery.prototype.itemDragEnd = function( elem ) {
     // reset drag item
     classie.remove( item.element, 'is-positioning-post-drag' );
     item.isDragging = false;
-    _this.element.removeChild( _this.dropPlaceholder );
-    //
+    // check in case placeholder was already removed
+    var canRemovePlaceholder = _this.dragItemCount === 0 &&
+      _this.element.contains( _this.dropPlaceholder );
+    if ( canRemovePlaceholder ) {
+      _this.element.removeChild( _this.dropPlaceholder );
+    }
     _this.dispatchEvent( 'dragItemPositioned', null, [ item ] );
   }
 

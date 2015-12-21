@@ -57,7 +57,9 @@ Item.prototype.moveTo = function( x, y ) {
   var dx = Math.abs( this.position.x - x );
   var dy = Math.abs( this.position.y - y );
 
-  if ( this.layout.dragItemCount && !this.isPlacing && dx < 1 && dy < 1 ) {
+  var canHackGoTo = this.layout.dragItemCount && !this.isPlacing &&
+    !this.isTransitioning && dx < 1 && dy < 1;
+  if ( canHackGoTo ) {
     this.goTo( x, y );
     return;
   }
