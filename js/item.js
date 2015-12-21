@@ -51,6 +51,19 @@ Item.prototype._create = function() {
   this.rect = new Rect();
 };
 
+var _moveTo = Item.prototype.moveTo;
+Item.prototype.moveTo = function( x, y ) {
+  // don't shift 1px while dragging
+  var dx = Math.abs( this.position.x - x );
+  var dy = Math.abs( this.position.y - y );
+
+  if ( this.layout.dragItemCount && !this.isPlacing && dx < 1 && dy < 1 ) {
+    this.goTo( x, y );
+    return;
+  }
+  _moveTo.apply( this, arguments );
+};
+
 // -------------------------- placing -------------------------- //
 
 Item.prototype.enablePlacing = function() {
