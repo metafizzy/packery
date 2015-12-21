@@ -23,6 +23,7 @@
     "examples/",
     "contributing.md",
     "package.json",
-    "Gruntfile.js"
+    "Gruntfile.js",
+    "sandbox/"
   ]
 }
