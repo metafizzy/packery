@@ -11,11 +11,10 @@ test( 'defaults / empty', function() {
   equal( Packery.data( empty ), pckry, 'data method returns instance' );
   ok( pckry.isResizeBound, 'isResizeBound' );
 
-  pckry.on( 'layoutComplete', function( items ) {
+  pckry.once( 'layoutComplete', function( items ) {
     ok( true, 'layoutComplete triggered with no items' );
     equal( items.length, 0, 'no items' );
     start();
-    return true; // bind once
   });
   stop();
   // add gutter, to check that container size doesn't get negative number

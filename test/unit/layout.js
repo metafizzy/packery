@@ -6,8 +6,9 @@ test( 'layout', function() {
 
   function checkItemPosition( elem, left, top, message ) {
     message = message || '';
-    equal( elem.style.left, left + 'px', 'left: ' + left + 'px ' + message );
-    equal( elem.style.top, top + 'px', 'top: ' + top + 'px ' + message );
+    var actual = elem.style.left + ' ' + elem.style.top;
+    var expected = left + 'px ' + top + 'px';
+    equal( actual, expected, expected + ' ' + message );
   }
 
   var container = document.querySelector('#layout');
@@ -18,15 +19,15 @@ test( 'layout', function() {
   var elem3 = pckry.items[3].element;
 
   checkItemPosition( elem0, 0, 0, 'first item' );
-  checkItemPosition( elem1, 40, 0, 'first item' );
-  checkItemPosition( elem2, 0, 20, 'first item' );
+  checkItemPosition( elem1, 40, 0, '2nd item' );
+  checkItemPosition( elem2, 0, 20, '3rd item' );
   equal( container.style.height, '60px', 'height set' );
 
   // change size of elems to change layout
   elem0.style.width = '18px';
   elem3.style.height = '58px';
   var items = pckry._getItemsForLayout( pckry.items );
-  pckry.on( 'layoutComplete', function( completeItems ) {
+  pckry.once( 'layoutComplete', function( completeItems ) {
     equal( true, true, 'layoutComplete event did fire' );
     equal( completeItems.length, items.length, 'event-emitted items matches layout items length' );
     strictEqual( completeItems[0], items[0], 'event-emitted items has same first item' );
@@ -36,7 +37,6 @@ test( 'layout', function() {
     checkItemPosition( elem2, 40, 0, '3nd item' );
 
     setTimeout( checkHorizontal, 10 );
-    return true;
   });
 
   stop();

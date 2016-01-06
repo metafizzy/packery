@@ -37,10 +37,9 @@ test( 'layout with columnWidth and rowHeight', function() {
 
   pckry.options.columnWidth = gridSizer;
   pckry.options.rowHeight = gridSizer;
-  pckry.on( 'layoutComplete', function() {
+  pckry.once( 'layoutComplete', function() {
     checkPackeryGrid( pckry );
     after( then1, setGutter );
-    return true; // bind once
   });
   stop();
   pckry.layout();
@@ -50,10 +49,9 @@ test( 'layout with columnWidth and rowHeight', function() {
 
   function setGutter() {
     pckry.options.gutter = container.querySelector('.gutter-sizer');
-    pckry.on( 'layoutComplete', function() {
+    pckry.once( 'layoutComplete', function() {
       checkPackeryGrid( pckry );
       after( then2, setPercentageGrid );
-      return true; // bind once
     });
     pckry.layout();
     var then2 = true;
@@ -62,10 +60,9 @@ test( 'layout with columnWidth and rowHeight', function() {
 
   function setPercentageGrid() {
     gridSizer.style.width = '40%';
-    pckry.on( 'layoutComplete', function() {
+    pckry.once( 'layoutComplete', function() {
       checkPackeryGrid( pckry );
       start();
-      return true; // bind once
     });
     pckry.layout();
     equal( pckry.columnWidth, 32, 'columnWidth is set from element width, in percentage' );
