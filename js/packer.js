@@ -128,30 +128,32 @@ Packer.prototype.addSpace = function( rect ) {
  * @returns {Array} rects: an array of Rects
 **/
 Packer.mergeRects = function( rects ) {
-  for ( var i=0, len = rects.length; i < len; i++ ) {
-    var rect = rects[i];
-    // skip over this rect if it was already removed
-    if ( !rect ) {
-      continue;
-    }
-    // clone rects we're testing, remove this rect
-    var compareRects = rects.slice(0);
-    // do not compare with self
-    compareRects.splice( i, 1 );
-    // compare this rect with others
-    var removedCount = 0;
-    for ( var j=0, jLen = compareRects.length; j < jLen; j++ ) {
-      var compareRect = compareRects[j];
-      // if this rect contains another,
-      // remove that rect from test collection
-      var indexAdjust = i > j ? 0 : 1;
-      if ( rect.contains( compareRect ) ) {
-        // console.log( 'current test rects:' + testRects.length, testRects );
-        // console.log( i, j, indexAdjust, rect, compareRect );
-        rects.splice( j + indexAdjust - removedCount, 1 );
-        removedCount++;
+  var i = 0;
+  var rect = rects[i];
+
+  rectLoop:
+  while ( rect ) {
+    var j = 0;
+    var compareRect = rects[ i + j ];
+
+    while ( compareRect ) {
+      if  ( compareRect == rect ) {
+        j++; // next
+      } else if ( compareRect.contains( rect ) ) {
+        // remove rect
+        rects.splice( i, 1 );
+        rect = rects[i]; // set next rect
+        continue rectLoop; // bail on compareLoop
+      } else if ( rect.contains( compareRect ) ) {
+        // remove compareRect
+        rects.splice( i + j, 1 );
+      } else {
+        j++;
       }
+      compareRect = rects[ i + j ]; // set next compareRect
     }
+    i++;
+    rect = rects[i];
   }
 
   return rects;

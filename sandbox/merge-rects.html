@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+
+  <title>merge rects</title>
+
+</head>
+<body>
+
+  <h1>merge rects</h1>
+
+<p>
+  <button class="make-rects-button" onclick="makeRects();">make rects</button>
+  <button class="merge-rects-button" onclick="mergeRects();">merge rects</button>
+</p>
+
+<canvas width="400" height="400"></canvas>
+
+<script src="../js/rect.js"></script>
+<script src="../js/packer.js"></script>
+
+<script>
+function makeRect() {
+  var size = Math.floor( Math.random() * 12 ) + 1;
+  // var height = Math.floor( Math.random() * 9 ) + 1;
+  var x = Math.floor( Math.random() * ( 20 - size ) );
+  var y = Math.floor( Math.random() * ( 20 - size ) );
+  return new Packery.Rect({
+    x: x * 20,
+    y: y * 20,
+    width: size * 20,
+    height: size * 20,
+    hue: Math.floor( Math.random() * 6 ) * 360 / 6
+  });
+}
+
+var canvas = document.querySelector('canvas');
+var ctx = canvas.getContext('2d');
+
+var rects;
+
+function makeRects() {
+  rects = [];
+  for ( var i=0; i < 10; i++ ) {
+    rects.push( makeRect() );
+  }
+  render();
+}
+
+function renderRect( rect) {
+  var x = rect.x + 0.5;
+  var y = rect.y + 0.5;
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = 'hsla(' + rect.hue + ', 100%, 40%, 0.8)';
+  ctx.strokeRect( x, y, rect.width, rect.height );
+  ctx.fillStyle = 'hsla(' + rect.hue + ', 100%, 50%, 0.2)';
+  ctx.fillRect( x, y, rect.width, rect.height );
+}
+
+function render() {
+  ctx.clearRect( 0, 0, 400, 400 );
+  rects.forEach( renderRect );
+}
+
+makeRects();
+
+function mergeRects() {
+  rects = Packery.Packer.mergeRects( rects );
+  render();
+}
+
+</script>
+
+</body>
+</html>
