@@ -76,7 +76,7 @@ test( '.fit()', function() {
       ready2();
     });
 
-    pckry.on( 'layoutComplete', function() {
+    pckry.once( 'layoutComplete', function() {
       ok( true, 'layoutComplete event emitted' );
       isLaidOut = true;
       ready2();

@@ -340,7 +340,7 @@ Packery.prototype._bindFitEvents = function( item ) {
   // when item is laid out
   item.once( 'layout', onLayout );
   // when all items are laid out
-  this.on( 'layoutComplete', onLayout );
+  this.once( 'layoutComplete', onLayout );
 };
 
 // -------------------------- resize -------------------------- //
