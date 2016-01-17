@@ -138,21 +138,21 @@
   new Packery( '#top-right', {
     itemSelector: '.item',
     stamp: '.stamp',
-    isOriginLeft: false
+    originLeft: false
   });
 
   new Packery( '#bottom-left', {
     itemSelector: '.item',
     stamp: '.stamp',
-    isOriginTop: false
+    originTop: false
   });
 
   ( function() {
     var pckry = new Packery( '#bottom-right', {
       itemSelector: '.item',
       stamp: '.stamp',
-      isOriginLeft: false,
-      isOriginTop: false
+      originLeft: false,
+      originTop: false
     });
 
     for ( var i=0, len = pckry.items.length; i < len; i++ ) {

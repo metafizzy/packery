@@ -46,7 +46,7 @@ test( 'layout', function() {
   function checkHorizontal() {
     // disable transition
     pckry.options.transitionDuration = 0;
-    pckry.options.isHorizontal = true;
+    pckry.options.horizontal = true;
     pckry.layout();
     checkItemPosition( elem0, 0, 0, 'horizontal, first item' );
     checkItemPosition( elem1, 0, 20, 'horizontal, 2nd item' );

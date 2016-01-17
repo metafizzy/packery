@@ -131,7 +131,7 @@ Packery.prototype._resetLayout = function() {
   // reset packer
   var width, height, sortDirection;
   // packer settings, if horizontal or vertical
-  if ( this.options.isHorizontal ) {
+  if ( this._getOption('horizontal') ) {
     width = Infinity;
     height = this.size.innerHeight + this.gutter;
     sortDirection = 'rightwardTopToBottom';
@@ -231,7 +231,7 @@ Packery.prototype._applyGridGutter = function( measurement, gridSize ) {
 };
 
 Packery.prototype._getContainerSize = function() {
-  if ( this.options.isHorizontal ) {
+  if ( this._getOption('horizontal') ) {
     return {
       width: this.maxX - this.gutter
     };
@@ -258,8 +258,8 @@ Packery.prototype._manageStamp = function( elem ) {
   } else {
     var offset = this._getElementOffset( elem );
     rect = new Rect({
-      x: this.options.isOriginLeft ? offset.left : offset.right,
-      y: this.options.isOriginTop ? offset.top : offset.bottom
+      x: this._getOption('originLeft') ? offset.left : offset.right,
+      y: this._getOption('originTop') ? offset.top : offset.bottom
     });
   }
 
@@ -280,7 +280,7 @@ function horizontalSorter( a, b ) {
 }
 
 Packery.prototype.sortItemsByPosition = function() {
-  var sorter = this.options.isHorizontal ? horizontalSorter : verticalSorter;
+  var sorter = this._getOption('horizontal') ? horizontalSorter : verticalSorter;
   this.items.sort( sorter );
 };
 
@@ -349,7 +349,7 @@ Packery.prototype.resize = function() {
   // check that this.size and size are there
   // IE8 triggers resize on body size change, so they might not be
   var hasSizes = this.size && size;
-  var innerSize = this.options.isHorizontal ? 'innerHeight' : 'innerWidth';
+  var innerSize = this._getOption('horizontal') ? 'innerHeight' : 'innerWidth';
   if ( hasSizes && size[ innerSize ] == this.size[ innerSize ] ) {
     return;
   }
@@ -422,8 +422,8 @@ Packery.prototype.updateShiftTargets = function( dropItem ) {
     }
     var offset = this._getElementOffset( stamp );
     var rect = new Rect({
-      x: this.options.isOriginLeft ? offset.left : offset.right,
-      y: this.options.isOriginTop ? offset.top : offset.bottom
+      x: this._getOption('originLeft') ? offset.left : offset.right,
+      y: this._getOption('originTop') ? offset.top : offset.bottom
     });
     this._setRectSize( stamp, rect );
     // save its space in the packer
