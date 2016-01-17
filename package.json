@@ -1,22 +1,20 @@
 {
   "name": "packery",
-  "version": "1.4.3",
+  "version": "2.0.0",
   "description": "bin-packing layout library",
   "main": "js/packery.js",
   "dependencies": {
-    "desandro-classie": "1.x",
-    "desandro-get-style-property": "1.x",
-    "get-size": "1.2.x",
-    "outlayer": "~1.4.1"
+    "get-size": "~2.0.2",
+    "outlayer": "~2.0.0"
   },
   "devDependencies": {
-    "draggabilly": "1.x",
+    "draggabilly": ">=2.1.0 <3",
     "grunt": "~0.4.0",
     "grunt-contrib-jshint": "~0.4.1",
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-requirejs": "~0.4.0",
-    "jquery": "~1",
-    "jquery-bridget": "1.1.x",
+    "jquery": ">=2 <4",
+    "jquery-bridget": "~2.0.0",
     "qunitjs": "^1.15"
   },
   "directories": {

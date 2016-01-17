@@ -119,13 +119,9 @@
     <div class="item"></div>
   </div>
 
-<script src="../bower_components/get-style-property/get-style-property.js"></script>
 <script src="../bower_components/get-size/get-size.js"></script>
 <script src="../bower_components/matches-selector/matches-selector.js"></script>
-<script src="../bower_components/eventEmitter/EventEmitter.js"></script>
-<script src="../bower_components/eventie/eventie.js"></script>
-<script src="../bower_components/doc-ready/doc-ready.js"></script>
-<script src="../bower_components/classie/classie.js"></script>
+<script src="../bower_components/ev-emitter/ev-emitter.js"></script>
 <script src="../bower_components/fizzy-ui-utils/utils.js"></script>
 <script src="../bower_components/outlayer/item.js"></script>
 <script src="../bower_components/outlayer/outlayer.js"></script>
@@ -137,9 +133,8 @@
 <script src="examples.js"></script>
 <script>
 // everything horizontal on this page
-Packery.prototype.options.isHorizontal = true;
+Packery.defaults.isHorizontal = true;
 
-window.onload = function() {
   var ex1 = document.getElementById('ex1');
   var packery1 = new Packery( ex1 );
 
@@ -173,24 +168,23 @@ window.onload = function() {
       console.log('fit was completed ', item );
     });
 
-    eventie.bind( container, 'click', function( event ) {
+    container.addEventListener( 'click', function( event ) {
       // only care about item
       var elem = event.target;
-      if ( !classie.has( elem, 'item' ) ) {
+      if ( !matchesSelector( elem, '.item' ) ) {
         return;
       }
 
-      if ( !classie.has( elem, 'gigante') ) {
-        classie.add( elem, 'gigante' );
+      if ( !matchesSelector( elem, '.gigante') ) {
+        elem.classList.add('gigante' );
         pckry.fit( elem );
       } else {
-        classie.remove( elem, 'gigante' );
+        elem.classList.remove('gigante' );
         pckry.layout();
       }
     });
   })();
 
-};
 </script>
 
 </body>

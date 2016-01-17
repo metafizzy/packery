@@ -9,7 +9,6 @@
   if ( typeof define == 'function' && define.amd ) {
     // AMD
     define( [
-        'get-style-property/get-style-property',
         'outlayer/outlayer',
         './rect'
       ],
@@ -17,25 +16,26 @@
   } else if ( typeof exports == 'object' ) {
     // CommonJS
     module.exports = factory(
-      require('desandro-get-style-property'),
       require('outlayer'),
       require('./rect')
     );
   } else {
     // browser global
     window.Packery.Item = factory(
-      window.getStyleProperty,
       window.Outlayer,
       window.Packery.Rect
     );
   }
 
-}( window, function factory( getStyleProperty, Outlayer, Rect ) {
+}( window, function factory( Outlayer, Rect ) {
 'use strict';
 
 // -------------------------- Item -------------------------- //
 
-var transformProperty = getStyleProperty('transform');
+var docElemStyle = document.documentElement.style;
+
+var transformProperty = typeof docElemStyle.transform == 'string' ?
+  'transform' : 'WebkitTransform';
 
 // sub-class Item
 var Item = function PackeryItem() {

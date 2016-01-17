@@ -1,12 +1,12 @@
 /*!
- * Packery v1.4.3
+ * Packery v2.0.0
  * bin-packing layout library
  *
  * Licensed GPLv3 for open source use
  * or Packery Commercial License for commercial use
  *
  * http://packery.metafizzy.co
- * Copyright 2015 Metafizzy
+ * Copyright 2016 Metafizzy
  */
 
 ( function( window, factory ) {
@@ -15,7 +15,6 @@
   if ( typeof define == 'function' && define.amd ) {
     // AMD
     define( [
-        'classie/classie',
         'get-size/get-size',
         'outlayer/outlayer',
         './rect',
@@ -26,7 +25,6 @@
   } else if ( typeof exports == 'object' ) {
     // CommonJS
     module.exports = factory(
-      require('desandro-classie'),
       require('get-size'),
       require('outlayer'),
       require('./rect'),
@@ -36,7 +34,6 @@
   } else {
     // browser global
     window.Packery = factory(
-      window.classie,
       window.getSize,
       window.Outlayer,
       window.Packery.Rect,
@@ -45,7 +42,7 @@
     );
   }
 
-}( window, function factory( classie, getSize, Outlayer, Rect, Packer, Item ) {
+}( window, function factory( getSize, Outlayer, Rect, Packer, Item ) {
 'use strict';
 
 // ----- Rect ----- //
@@ -571,7 +568,7 @@ Packery.prototype.itemDragEnd = function( elem ) {
   }
 
   this.clearDragTimeout();
-  classie.add( item.element, 'is-positioning-post-drag' );
+  item.element.classList.add('is-positioning-post-drag');
 
   var completeCount = 0;
   var _this = this;
@@ -581,7 +578,7 @@ Packery.prototype.itemDragEnd = function( elem ) {
       return;
     }
     // reset drag item
-    classie.remove( item.element, 'is-positioning-post-drag' );
+    item.element.classList.remove('is-positioning-post-drag');
     item.isDragging = false;
     // check in case placeholder was already removed
     var canRemovePlaceholder = _this.dragItemCount === 0 &&

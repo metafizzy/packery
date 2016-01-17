@@ -1,20 +1,17 @@
 {
   "name": "packery",
-  "version": "1.4.3",
-  "author": "Metafizzy",
-  "description": "bin-packing layout library",
+  "author": "David DeSandro",
+  "description": "Gapless, draggable layout library",
   "main": "js/packery.js",
   "dependencies": {
-    "classie": "1.x",
-    "get-style-property": "1.x",
-    "get-size": "1.2.x",
-    "outlayer": "~1.4.1"
+    "get-size": "~2.0.2",
+    "outlayer": "~2.0.0"
   },
   "devDependencies": {
-    "draggabilly": "1.x",
-    "jquery": "~1",
+    "draggabilly": ">=2.1.0 <3",
+    "jquery": ">=2 <4",
     "jquery-ui-draggable": "https://gist.github.com/4985610.git",
-    "jquery-bridget": "1.1.x",
+    "jquery-bridget": "~2.0.0",
     "qunit": "^1.15"
   },
   "ignore": [

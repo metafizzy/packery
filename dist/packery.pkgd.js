@@ -139,7 +139,7 @@ return $.bridget;
 // transport
 if ( typeof define === 'function' && define.amd ) {
   // AMD
-  define( 'jquery-bridget/jquery.bridget',[ 'jquery' ], defineBridget );
+  define( 'jquery-bridget/jquery-bridget',[ 'jquery' ], defineBridget );
 } else if ( typeof exports === 'object' ) {
   defineBridget( require('jquery') );
 } else {
@@ -156,8 +156,8 @@ if ( typeof define === 'function' && define.amd ) {
  * MIT license
  * 
  * classie.has( elem, 'my-class' ) -> true/false
- * classie.add( elem, 'my-new-class' )
- * classie.remove( elem, 'my-unwanted-class' )
+ * elem.classList.add('my-new-class' )
+ * elem.classList.remove('my-unwanted-class' )
  * classie.toggle( elem, 'my-class' )
  */
 
@@ -4002,7 +4002,7 @@ Packery.prototype.itemDragEnd = function( elem ) {
   }
   // procced with dragged item
 
-  classie.add( item.element, 'is-positioning-post-drag' );
+  item.element.classList.add('is-positioning-post-drag' );
 
   // save this var, as it could get reset in dragStart
   var onLayoutComplete = this._getDragEndLayoutComplete( elem, item );
@@ -4041,7 +4041,7 @@ Packery.prototype._getDragEndLayoutComplete = function( elem, item ) {
     }
     // reset item
     if ( item ) {
-      classie.remove( item.element, 'is-positioning-post-drag' );
+      item.element.classList.remove('is-positioning-post-drag' );
       item.isPlacing = false;
       item.copyPlaceRectPosition();
     }

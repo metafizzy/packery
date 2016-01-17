@@ -26,7 +26,7 @@ module.exports = function( grunt ) {
         options: {
           baseUrl: 'bower_components',
           include: [
-            'jquery-bridget/jquery.bridget',
+            'jquery-bridget/jquery-bridget',
             'packery/js/packery'
           ],
           out: 'dist/packery.pkgd.js',
