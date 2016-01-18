@@ -3,15 +3,11 @@
 test( 'draggable', function() {
   var container = document.querySelector('#draggable');
   var itemElems = container.querySelectorAll('.item');
-  var pckry = new Packery( container, {
-    transitionDuration: '0.2s',
-    containerStyle: {
-      position: 'absolute',
-      left: 0,
-      top: 0
-    }
-  } );
   var dragElem = container.querySelector('.dragger');
+
+  var pckry = new Packery( container, {
+    transitionDuration: '0.2s'
+  });
 
   function simulateDrag( x, y ) {
     pckry.itemDragStart( dragElem );
@@ -60,11 +56,9 @@ test( 'draggable', function() {
   function dragWithGrid() {
     pckry.options.columnWidth = 25;
     pckry.options.rowHeight = 25;
-    // disable transition
+    // disable transition, layout, re-enable transition
     pckry.options.transitionDuration = 0;
-    pckry._getMeasurements();
     pckry.layout();
-    // reenable transition
     pckry.options.transitionDuration = '0.2s';
 
     pckry.once( 'dragItemPositioned', function() {

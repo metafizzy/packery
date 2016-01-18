@@ -2,42 +2,56 @@
 
 'use strict';
 
-var after = window.after;
-
 test( '.fit()', function() {
   var container = document.querySelector('#fitting');
-  var pckry = new Packery( container );
+  var pckry = new Packery( container, {
+    transitionDuration: '0.2s'
+  });
 
   var elem1 = container.querySelector('.i1');
   var elem2 = container.querySelector('.i2');
   var elem3 = container.querySelector('.i3');
+  var elem5 = container.querySelector('.i5');
+  var elem6 = container.querySelector('.i6');
   var item3 = pckry.getItem( elem3 );
+
+  function checkItemPosition( itemElem, x, y, message ) {
+    var actual = itemElem.style.left + ' ' + itemElem.style.top;
+    var expected = x + 'px ' + y + 'px';
+    message = message || 'item position';
+    equal( actual, expected, message );
+  }
+
   // expand item3
   elem3.style.width = '48px';
   elem3.style.height = '28px';
   elem3.style.background = 'blue';
 
   // quickie async
-  var isFit = false;
-  var isLaidOut = false;
+  var isFit, isLaidOut;
+  function resetAsync() {
+    isFit = false;
+    isLaidOut = false;
+  }
+
+  // -------------------------- fit -------------------------- //
+
   function ready1() {
     if ( !isFit || !isLaidOut ) {
       return;
     }
-    equal( elem1.style.left, '0px', 'elem1.style.left = 0' );
-    equal( elem1.style.top, '20px', 'elem1.style.top = 20px' );
-    equal( elem2.style.left, '20px', 'elem2.style.left = 20px' );
-    equal( elem2.style.top, '30px', 'elem2.style.top = 30px' );
-    isFit = false;
-    isLaidOut = false;
-    // trigger next thing
-    after( then1, fit2 );
+    checkItemPosition( elem1, 20, 30, 'elem1 shifted down' );
+    checkItemPosition( elem2, 40, 30, 'elem2 shifted down' );
+    checkItemPosition( elem5, 20, 50, 'elem5 shifted down, 2nd row' );
+    resetAsync();
+    // HACK setTimeout for Packery bug
+    setTimeout( fit2, 400 );
   }
 
   pckry.once( 'fitComplete', function( item ) {
     ok( true, 'fitComplete event emitted' );
     equal( item, item3, 'item argument returned' );
-    equal( elem3.style.left, '30px', 'elem3.style.left = 30px' );
+    checkItemPosition( elem3, 20, 0, 'fit elem3 shifted into 2nd spot' );
     isFit = true;
     ready1();
   });
@@ -50,59 +64,63 @@ test( '.fit()', function() {
 
   // fit it
   stop();
-  pckry.fit( elem3 );
-  var then1 = true;
+  setTimeout( function() {
+    pckry.fit( elem3 );
+  }, 500 );
+
+  // -------------------------- fit into spot -------------------------- //
 
   function ready2() {
     if ( !isFit || !isLaidOut ) {
       return;
     }
-    isFit = false;
-    isLaidOut = false;
-    // trigger next thing
-    after( then2, fit3 );
+    resetAsync();
+
+    setTimeout( fit3, 400 );
+    // after( then2, fit3 );
   }
 
-  var then2;
   function fit2() {
+    // reset small size
     elem3.style.width = '18px';
     elem3.style.height = '18px';
 
     pckry.once( 'fitComplete', function() {
       ok( true, 'fitComplete event emitted' );
-      equal( elem3.style.left, '40px', 'elem3.style.left = 40px' );
-      equal( elem3.style.top, '20px', 'elem3.style.top = 20px' );
+      checkItemPosition( elem3, 40, 20, 'fit item in 40, 20' );
       isFit = true;
       ready2();
     });
 
     pckry.once( 'layoutComplete', function() {
       ok( true, 'layoutComplete event emitted' );
+      checkItemPosition( elem3, 40, 20, 'fit item in 40, 20' );
+      checkItemPosition( elem1, 20, 0, 'elem1 shifted up' );
+      checkItemPosition( elem2, 40, 0, 'elem2 shifted up' );
+      checkItemPosition( elem5, 20, 20, 'elem5 shifted up' );
+      checkItemPosition( elem6, 40, 40, 'elem6 shifted down' );
       isLaidOut = true;
       ready2();
     });
 
+    // fit to spot
     pckry.fit( elem3, 40, 20 );
-    then2 = true;
   }
+
+  // -------------------------- fit outside container -------------------------- //
 
   function ready3() {
     if ( !isFit || !isLaidOut ) {
       return;
     }
-    isFit = false;
-    isLaidOut = false;
-    // trigger next thing
-    after( then3, fit4 );
-    // fit4();
+    resetAsync();
+
+    setTimeout( fit4, 400 );
   }
 
-  var then3;
   function fit3() {
     pckry.once( 'fitComplete', function() {
-
-      equal( elem3.style.left, '60px', 'x value limited' );
-      equal( elem3.style.top, '120px', 'y value NOT limited' );
+      checkItemPosition( elem3, 40, 40, 'fit elem in 3rd row, 3rd column' );
       isFit = true;
       ready3();
     });
@@ -110,28 +128,46 @@ test( '.fit()', function() {
       isLaidOut = true;
       ready3();
     });
+
     // try to position item outside container
     pckry.fit( elem3, 120, 120 );
-    then3 = true;
   }
+
+  // -------------------------- columnWidth & rowHeight -------------------------- //
 
   // fit with columnWidth and rowHeight
   function fit4() {
-    pckry.options.columnWidth = 30;
+    pckry.options.columnWidth = 25;
     pckry.options.rowHeight = 30;
+    // disable transition, trigger layout, re-enable transition
+    pckry.options.transitionDuration = 0;
+    pckry.layout();
+    pckry.options.transitionDuration = '0.2s';
+
+    function ready4() {
+      if ( !isFit || !isLaidOut ) {
+        return;
+      }
+      start();
+    }
 
     pckry.on( 'fitComplete', function() {
       ok( true, 'fitComplete event emitted' );
-      equal( elem3.style.left, '30px', 'with columnWidth, elem3.style.left = 30px' );
-      equal( elem3.style.top, '120px', 'with rowHeight, elem3.style.top = 120px' );
-      start();
+      checkItemPosition( elem3, 50, 30, 'fit item, 2nd row, 3rd column' );
+      isFit = true;
+      ready4();
     });
 
-    pckry.fit( elem3 );
+    pckry.on( 'layoutComplete', function() {
+      checkItemPosition( elem5, 50, 60, 'elem5 shifted down' );
+      isLaidOut = true;
+      ready4();
+    });
+
+    pckry.fit( elem3, 55, 28 );
   }
 
 });
 
 
 })();
-
