@@ -472,7 +472,7 @@ Packery.prototype.updateShiftTargets = function( dropItem ) {
 };
 
 Packery.prototype.addShiftTarget = function( x, y, boundsWidth ) {
-  if ( x !== 0 && x >= boundsWidth ) {
+  if ( x !== 0 && x > boundsWidth ) {
     return;
   }
   // create string for a key, easier to keep track of what targets
