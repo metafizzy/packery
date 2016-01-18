@@ -2,13 +2,13 @@
 
 'use strict';
 
-test( 'layout', function() {
+QUnit.test( 'layout', function( assert ) {
 
   function checkItemPosition( elem, left, top, message ) {
     message = message || '';
     var actual = elem.style.left + ' ' + elem.style.top;
     var expected = left + 'px ' + top + 'px';
-    equal( actual, expected, expected + ' ' + message );
+    assert.equal( actual, expected, expected + ' ' + message );
   }
 
   var container = document.querySelector('#layout');
@@ -21,18 +21,18 @@ test( 'layout', function() {
   checkItemPosition( elem0, 0, 0, 'first item' );
   checkItemPosition( elem1, 40, 0, '2nd item' );
   checkItemPosition( elem2, 0, 20, '3rd item' );
-  equal( container.style.height, '60px', 'height set' );
+  assert.equal( container.style.height, '60px', 'height set' );
 
   // change size of elems to change layout
   elem0.style.width = '18px';
   elem3.style.height = '58px';
   var items = pckry._getItemsForLayout( pckry.items );
   pckry.once( 'layoutComplete', function( completeItems ) {
-    equal( true, true, 'layoutComplete event did fire' );
-    equal( completeItems.length, items.length, 'event-emitted items matches layout items length' );
-    strictEqual( completeItems[0], items[0], 'event-emitted items has same first item' );
+    assert.equal( true, true, 'layoutComplete event did fire' );
+    assert.equal( completeItems.length, items.length, 'event-emitted items matches layout items length' );
+    assert.strictEqual( completeItems[0], items[0], 'event-emitted items has same first item' );
     var len = completeItems.length - 1;
-    strictEqual( completeItems[ len ], items[ len ], 'event-emitted items has same last item' );
+    assert.strictEqual( completeItems[ len ], items[ len ], 'event-emitted items has same last item' );
     checkItemPosition( elem1, 20, 0, '2nd item' );
     checkItemPosition( elem2, 40, 0, '3nd item' );
 
@@ -41,7 +41,7 @@ test( 'layout', function() {
 
   stop();
   pckry.layout();
-  equal( container.style.height, '80px', 'height set' );
+  assert.equal( container.style.height, '80px', 'height set' );
 
   function checkHorizontal() {
     // disable transition
@@ -51,7 +51,7 @@ test( 'layout', function() {
     checkItemPosition( elem0, 0, 0, 'horizontal, first item' );
     checkItemPosition( elem1, 0, 20, 'horizontal, 2nd item' );
     checkItemPosition( elem2, 0, 60, 'horizontal, 2nd item' );
-    equal( container.style.width, '60px', 'width set' );
+    assert.equal( container.style.width, '60px', 'width set' );
 
     start();
   }

@@ -1,12 +1,10 @@
-( function() {
-
-'use strict';
-
-test( '.fit()', function() {
+QUnit.test( '.fit()', function( assert ) {
   var container = document.querySelector('#fitting');
   var pckry = new Packery( container, {
     transitionDuration: '0.2s'
   });
+
+  var done = assert.async();
 
   var elem1 = container.querySelector('.i1');
   var elem2 = container.querySelector('.i2');
@@ -19,7 +17,7 @@ test( '.fit()', function() {
     var actual = itemElem.style.left + ' ' + itemElem.style.top;
     var expected = x + 'px ' + y + 'px';
     message = message || 'item position';
-    equal( actual, expected, message );
+    assert.equal( actual, expected, message );
   }
 
   // expand item3
@@ -45,28 +43,25 @@ test( '.fit()', function() {
     checkItemPosition( elem5, 20, 50, 'elem5 shifted down, 2nd row' );
     resetAsync();
     // HACK setTimeout for Packery bug
-    setTimeout( fit2, 400 );
+    setTimeout( fit2 );
   }
 
   pckry.once( 'fitComplete', function( item ) {
-    ok( true, 'fitComplete event emitted' );
-    equal( item, item3, 'item argument returned' );
+    assert.ok( true, 'fitComplete event emitted' );
+    assert.equal( item, item3, 'item argument returned' );
     checkItemPosition( elem3, 20, 0, 'fit elem3 shifted into 2nd spot' );
     isFit = true;
     ready1();
   });
 
   pckry.once( 'layoutComplete', function() {
-    ok( true, 'layoutComplete event emitted' );
+    assert.ok( true, 'layoutComplete event emitted' );
     isLaidOut = true;
     ready1();
   });
 
   // fit it
-  stop();
-  setTimeout( function() {
-    pckry.fit( elem3 );
-  }, 500 );
+  pckry.fit( elem3 );
 
   // -------------------------- fit into spot -------------------------- //
 
@@ -76,8 +71,7 @@ test( '.fit()', function() {
     }
     resetAsync();
 
-    setTimeout( fit3, 400 );
-    // after( then2, fit3 );
+    setTimeout( fit3 );
   }
 
   function fit2() {
@@ -86,14 +80,14 @@ test( '.fit()', function() {
     elem3.style.height = '18px';
 
     pckry.once( 'fitComplete', function() {
-      ok( true, 'fitComplete event emitted' );
+      assert.ok( true, 'fitComplete event emitted' );
       checkItemPosition( elem3, 40, 20, 'fit item in 40, 20' );
       isFit = true;
       ready2();
     });
 
     pckry.once( 'layoutComplete', function() {
-      ok( true, 'layoutComplete event emitted' );
+      assert.ok( true, 'layoutComplete event emitted' );
       checkItemPosition( elem3, 40, 20, 'fit item in 40, 20' );
       checkItemPosition( elem1, 20, 0, 'elem1 shifted up' );
       checkItemPosition( elem2, 40, 0, 'elem2 shifted up' );
@@ -115,7 +109,7 @@ test( '.fit()', function() {
     }
     resetAsync();
 
-    setTimeout( fit4, 400 );
+    setTimeout( fit4 );
   }
 
   function fit3() {
@@ -148,11 +142,11 @@ test( '.fit()', function() {
       if ( !isFit || !isLaidOut ) {
         return;
       }
-      start();
+      done();
     }
 
     pckry.on( 'fitComplete', function() {
-      ok( true, 'fitComplete event emitted' );
+      assert.ok( true, 'fitComplete event emitted' );
       checkItemPosition( elem3, 50, 30, 'fit item, 2nd row, 3rd column' );
       isFit = true;
       ready4();
@@ -168,6 +162,3 @@ test( '.fit()', function() {
   }
 
 });
-
-
-})();

@@ -26,15 +26,6 @@ window.appendRandomSizedItems = function( container ) {
   container.appendChild( frag );
 };
 
-// trigger next function if then flag has been set
-window.after = function( then, nextFn ) {
-  // if ( then ) {
-  //   nextFn();
-  // } else {
-    setTimeout( nextFn, 20 );
-  // }
-};
-
 window.gimmeAnItemElement = function() {
   var elem = document.createElement('div');
   elem.className = 'item';

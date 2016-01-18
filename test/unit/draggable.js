@@ -1,6 +1,4 @@
-( function() {
-
-test( 'draggable', function() {
+QUnit.test( 'draggable', function( assert ) {
   var container = document.querySelector('#draggable');
   var itemElems = container.querySelectorAll('.item');
   var dragElem = container.querySelector('.dragger');
@@ -8,6 +6,8 @@ test( 'draggable', function() {
   var pckry = new Packery( container, {
     transitionDuration: '0.2s'
   });
+
+  var done = assert.async();
 
   function simulateDrag( x, y ) {
     pckry.itemDragStart( dragElem );
@@ -19,33 +19,33 @@ test( 'draggable', function() {
     var actual = itemElem.style.left + ' ' + itemElem.style.top;
     var expected = x + 'px ' + y + 'px';
     message = message || 'item position';
-    equal( actual, expected, message );
+    assert.equal( actual, expected, message );
   }
 
   // simulate drag to middle
   pckry.once( 'dragItemPositioned', function() {
-    ok( true, 'dragItemPositioned did trigger, 4th item moved to 35, 15' );
+    assert.ok( true, 'dragItemPositioned did trigger, 4th item moved to 35, 15' );
     checkItemPosition( itemElems[0], 0, 0, '1st item' );
     checkItemPosition( itemElems[1], 20, 0, '2nd item' );
     checkItemPosition( itemElems[2], 40, 0, '3rd item' );
     checkItemPosition( itemElems[6], 40, 40, '7th item, moved down below dragged item' );
     checkItemPosition( itemElems[7], 60, 0, '8th item, moved up' );
     checkItemPosition( dragElem, 40, 20, 'drag item, 2nd row, 3rd column' );
-    equal( pckry.items[6].element, dragElem, 'dragged elem in now 7th in items' );
+    assert.equal( pckry.items[6].element, dragElem, 'dragged elem in now 7th in items' );
     // HACK setTimeout because of Packery bug
     setTimeout( dragOutside );
   });
-  stop();
+
   simulateDrag( 35, 15 );
 
   function dragOutside() {
     pckry.once( 'dragItemPositioned', function() {
-      ok( true, 'dragItemPositioned event did trigger' );
+      assert.ok( true, 'dragItemPositioned event did trigger' );
       checkItemPosition( dragElem, 60, 0, 'drag item, 1st row, 4th column' );
       checkItemPosition( itemElems[4], 0, 20, '5th item, did not move' );
       checkItemPosition( itemElems[6], 40, 20, '7th item, moved back up' );
       checkItemPosition( itemElems[7], 60, 20, '8th item, moved back down' );
-      equal( pckry.items[3].element, dragElem, 'dragged elem in now 4th in items' );
+      assert.equal( pckry.items[3].element, dragElem, 'dragged elem in now 4th in items' );
 
       setTimeout( dragWithGrid );
     });
@@ -76,12 +76,9 @@ test( 'draggable', function() {
   function dragOutsideWithGrid() {
     pckry.once( 'dragItemPositioned', function() {
       checkItemPosition( dragElem, 50, 0, 'dragged, top right corner in grid' );
-      start();
+      done();
     });
     simulateDrag( 300, -30 );
   }
 
 });
-
-
-})();

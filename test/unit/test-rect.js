@@ -2,36 +2,34 @@
  * Rect tests
 **/
 
-( function( window ) {
-
-'use strict';
+( function() {
 
 var Rect = Packery.Rect;
 
-module('Rect');
+QUnit.module('Rect');
 
-test( 'Rect defaults', function() {
+QUnit.test( 'Rect defaults', function( assert ) {
   var rect = new Rect();
-  equal( rect.x, 0, 'rect.x = 0' );
-  equal( rect.y, 0, 'rect.y = 0' );
-  equal( rect.width, 0, 'rect.width = 0' );
-  equal( rect.height, 0, 'rect.height = 0' );
+  assert.equal( rect.x, 0, 'rect.x = 0' );
+  assert.equal( rect.y, 0, 'rect.y = 0' );
+  assert.equal( rect.width, 0, 'rect.width = 0' );
+  assert.equal( rect.height, 0, 'rect.height = 0' );
 });
 
-test( 'set properties with initial argument object', function() {
+QUnit.test( 'set properties with initial argument object', function( assert ) {
   var rect = new Rect({
     x: 40,
     y: 390,
     width: 103,
     height: -4
   });
-  equal( rect.x, 40, 'x' );
-  equal( rect.y, 390, 'y' );
-  equal( rect.width, 103, 'width' );
-  equal( rect.height, -4, 'default height property' );
+  assert.equal( rect.x, 40, 'x' );
+  assert.equal( rect.y, 390, 'y' );
+  assert.equal( rect.width, 103, 'width' );
+  assert.equal( rect.height, -4, 'default height property' );
 });
 
-test( 'contains', function() {
+QUnit.test( 'contains', function( assert ) {
 
   var rectA = new Rect({
     x: 10,
@@ -47,7 +45,7 @@ test( 'contains', function() {
     height: 20
   });
 
-  strictEqual( rectA.contains( rectB ), true, 'A clearly contains B' );
+  assert.strictEqual( rectA.contains( rectB ), true, 'A clearly contains B' );
 
   rectB = new Rect({
     x: 500,
@@ -56,14 +54,14 @@ test( 'contains', function() {
     height: 20
   });
 
-  strictEqual( rectA.contains( rectB ), false, 'A clearly does not contain B' );
+  assert.strictEqual( rectA.contains( rectB ), false, 'A clearly does not contain B' );
 
   rectB = new Rect({
     x: 20,
     y: 40
   });
 
-  strictEqual( rectA.contains( rectB ), true,
+  assert.strictEqual( rectA.contains( rectB ), true,
     'A contains B, which has no width or height' );
 
   rectB = new Rect({
@@ -73,7 +71,7 @@ test( 'contains', function() {
     height: 150
   });
 
-  strictEqual( rectA.contains( rectB ), true, 'B is at upper left corner of A' );
+  assert.strictEqual( rectA.contains( rectB ), true, 'B is at upper left corner of A' );
 
   rectB = new Rect({
     x: rectA.x,
@@ -82,7 +80,7 @@ test( 'contains', function() {
     height: rectA.height
   });
 
-  strictEqual( rectA.contains( rectB ), true, 'A contains B. B is equal to A' );
+  assert.strictEqual( rectA.contains( rectB ), true, 'A contains B. B is equal to A' );
 
   rectB = new Rect({
     x: rectA.x - 20,
@@ -91,13 +89,13 @@ test( 'contains', function() {
     height: rectA.height
   });
 
-  strictEqual( rectA.contains( rectB ), false,
+  assert.strictEqual( rectA.contains( rectB ), false,
     'A does not contain B. B same size A, but offset' );
 
 });
 
 
-test( 'overlaps', function() {
+QUnit.test( 'overlaps', function( assert ) {
 
   var rectA = new Rect({
     x: 100,
@@ -113,40 +111,40 @@ test( 'overlaps', function() {
     height: 50
   });
 
-  strictEqual( rectA.overlaps( rectB ), true, 'B is inside A, A overlaps B' );
-  strictEqual( rectB.overlaps( rectA ), true, 'B is inside A, B overlaps A' );
+  assert.strictEqual( rectA.overlaps( rectB ), true, 'B is inside A, A overlaps B' );
+  assert.strictEqual( rectB.overlaps( rectA ), true, 'B is inside A, B overlaps A' );
 
   rectB.x = 50;
 
-  strictEqual( rectA.overlaps( rectB ), true,
+  assert.strictEqual( rectA.overlaps( rectB ), true,
     'B overlaps left edge of A, A overlaps B' );
-  strictEqual( rectB.overlaps( rectA ), true,
+  assert.strictEqual( rectB.overlaps( rectA ), true,
     'B overlaps left edge of A, B overlaps A' );
 
   rectB.y = 25;
 
-  strictEqual( rectA.overlaps( rectB ), true,
+  assert.strictEqual( rectA.overlaps( rectB ), true,
     'B overlaps left top corner of A, A overlaps B' );
-  strictEqual( rectB.overlaps( rectA ), true,
+  assert.strictEqual( rectB.overlaps( rectA ), true,
     'B overlaps left top corner of A, B overlaps A' );
 
   rectB.x = 0;
   rectB.y = 0;
 
-  strictEqual( rectA.overlaps( rectB ), false,
+  assert.strictEqual( rectA.overlaps( rectB ), false,
     'B bottom right corner meets A top left corner, A DOES NOT overlap B' );
-  strictEqual( rectB.overlaps( rectA ), false,
+  assert.strictEqual( rectB.overlaps( rectA ), false,
     'B bottom right corner meets A top left corner, B DOES NOT overlap A' );
 
   rectB.x = rectA.x - rectB.width;
   rectB.y = rectA.y;
   rectB.height = rectA.height;
 
-  strictEqual( rectA.overlaps( rectB ), false,
+  assert.strictEqual( rectA.overlaps( rectB ), false,
     'B is completely adjacent to A, A DOES NOT overlap B' );
-  strictEqual( rectB.overlaps( rectA ), false,
+  assert.strictEqual( rectB.overlaps( rectA ), false,
     'B is completely adjacent to A, B DOES NOT overlap A' );
 
 });
 
-})( window );
+})();

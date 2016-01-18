@@ -1,8 +1,4 @@
-( function() {
-
-'use strict';
-
-test( 'consecutive', function() {
+QUnit.test( 'consecutive', function( assert ) {
   var container = document.querySelector('#consecutive');
   var pckry = new Packery( container );
 
@@ -13,23 +9,23 @@ test( 'consecutive', function() {
   i1.style.height = '28px';
   i1.style.background = 'blue';
 
+  var done = assert.async();
+
   pckry.once( 'layoutComplete', function() {
-    ok( true, 'layoutComplete triggered' );
-    equal( i3.style.left, '0px', 'i3.style.left' );
-    equal( i3.style.top, '20px', 'i3.style.top' );
-    after( then, fit1 );
+    assert.ok( true, 'layoutComplete triggered' );
+    assert.equal( i3.style.left, '0px', 'i3.style.left' );
+    assert.equal( i3.style.top, '20px', 'i3.style.top' );
+    setTimeout( fit1 );
   });
 
-  stop();
   pckry.layout();
-  var then = true;
 
   function fit1() {
     pckry.once( 'layoutComplete', function() {
-      equal( i3.style.left, '60px', 'i3.style.left' );
-      equal( i3.style.top, '30px', 'i3.style.top' );
+      assert.equal( i3.style.left, '60px', 'i3.style.left' );
+      assert.equal( i3.style.top, '30px', 'i3.style.top' );
       // all done
-      start();
+      done();
     });
     i0.style.width = '38px';
     i0.style.height = '38px';
@@ -38,5 +34,3 @@ test( 'consecutive', function() {
   }
 
 });
-
-})();

@@ -2,22 +2,18 @@
  * Packer tests
  */
 
-( function( window ) {
+( function() {
 
-'use strict';
+QUnit.module('Packer');
 
-
-module('Packer');
-
-var Packery = window.Packery;
 var Packer = Packery.Packer;
 var Rect = Packery.Rect;
 
-test( 'basics', function() {
-  equal( typeof Packer === 'function', true, 'Packery is a function' );
+QUnit.test( 'basics', function( assert ) {
+  assert.equal( typeof Packer === 'function', true, 'Packery is a function' );
 });
 
-test( 'packing', function() {
+QUnit.test( 'packing', function( assert ) {
   var packr = new Packer( 30, 100 );
 
   // 112
@@ -38,27 +34,27 @@ test( 'packing', function() {
   packr.pack( rect4 );
   packr.pack( rect5 );
 
-  equal( rect1.x, 0, 'rect1.x top left' );
-  equal( rect1.y, 0, 'rect1.y top left' );
-  equal( rect2.x, 20, 'rect2.x top right' );
-  equal( rect2.y, 0, 'rect2.y top right' );
-  equal( rect3.x, 0, 'rect3.x bottom left' );
-  equal( rect3.y, 10, 'rect3.y bottom left' );
-  equal( rect4.x, 10, 'rect4.x bottom right' );
-  equal( rect4.y, 20, 'rect4.y bottom right' );
-  equal( rect5.x, 10, 'rect5.x packed in center' );
-  equal( rect5.y, 10, 'rect5.y packed in center' );
+  assert.equal( rect1.x, 0, 'rect1.x top left' );
+  assert.equal( rect1.y, 0, 'rect1.y top left' );
+  assert.equal( rect2.x, 20, 'rect2.x top right' );
+  assert.equal( rect2.y, 0, 'rect2.y top right' );
+  assert.equal( rect3.x, 0, 'rect3.x bottom left' );
+  assert.equal( rect3.y, 10, 'rect3.y bottom left' );
+  assert.equal( rect4.x, 10, 'rect4.x bottom right' );
+  assert.equal( rect4.y, 20, 'rect4.y bottom right' );
+  assert.equal( rect5.x, 10, 'rect5.x packed in center' );
+  assert.equal( rect5.y, 10, 'rect5.y packed in center' );
 
   // bottom space is open
-  equal( packr.spaces.length, 1, 'one space open' );
+  assert.equal( packr.spaces.length, 1, 'one space open' );
   var space = packr.spaces[0];
-  equal( space.width, 30, 'space.width' );
-  equal( space.height, 70, 'space.height' );
-  equal( space.x, 0, 'space.x' );
-  equal( space.y, 30, 'space.y' );
+  assert.equal( space.width, 30, 'space.width' );
+  assert.equal( space.height, 70, 'space.height' );
+  assert.equal( space.x, 0, 'space.x' );
+  assert.equal( space.y, 30, 'space.y' );
 
 });
-test( 'packing with a placed', function() {
+QUnit.test( 'packing with a placed', function( assert ) {
   var packr = new Packer( 30, 100 );
 
   // 225
@@ -85,24 +81,24 @@ test( 'packing with a placed', function() {
   packr.pack( rect4 );
   packr.pack( rect5 );
 
-  equal( rect2.x, 0, 'rect2.x top left' );
-  equal( rect2.y, 0, 'rect2.y top left' );
-  equal( rect3.x, 0, 'rect3.x left side' );
-  equal( rect3.y, 10, 'rect3.y left side' );
-  equal( rect4.x, 10, 'rect4.x bottom center' );
-  equal( rect4.y, 20, 'rect4.y bottom center' );
-  equal( rect5.x, 20, 'rect5.x packed in top right' );
-  equal( rect5.y, 0, 'rect5.y packed in top right' );
+  assert.equal( rect2.x, 0, 'rect2.x top left' );
+  assert.equal( rect2.y, 0, 'rect2.y top left' );
+  assert.equal( rect3.x, 0, 'rect3.x left side' );
+  assert.equal( rect3.y, 10, 'rect3.y left side' );
+  assert.equal( rect4.x, 10, 'rect4.x bottom center' );
+  assert.equal( rect4.y, 20, 'rect4.y bottom center' );
+  assert.equal( rect5.x, 20, 'rect5.x packed in top right' );
+  assert.equal( rect5.y, 0, 'rect5.y packed in top right' );
 
-  equal( packr.spaces.length, 3, '3 spaces left' );
+  assert.equal( packr.spaces.length, 3, '3 spaces left' );
 
 });
 
-test( 'packing horizontal', function() {
+QUnit.test( 'packing horizontal', function( assert ) {
 
   function checkRect( rect, x, y ) {
-    equal( rect.x, x, 'x: ' + x );
-    equal( rect.y, y, 'y: ' + y );
+    assert.equal( rect.x, x, 'x: ' + x );
+    assert.equal( rect.y, y, 'y: ' + y );
   }
 
   var packr = new Packer( 100, 30, 'rightwardTopToBottom' );
@@ -130,12 +126,12 @@ test( 'packing horizontal', function() {
   checkRect( rect5, 10, 10 );
 
   // bottom space is open
-  equal( packr.spaces.length, 1, 'one space open' );
+  assert.equal( packr.spaces.length, 1, 'one space open' );
   var space = packr.spaces[0];
-  equal( space.width, 70, 'space.width' );
-  equal( space.height, 30, 'space.height' );
+  assert.equal( space.width, 70, 'space.width' );
+  assert.equal( space.height, 30, 'space.height' );
   checkRect( space, 30, 0 );
 
 });
 
-})( window );
+})();

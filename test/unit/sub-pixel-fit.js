@@ -1,8 +1,4 @@
-( function() {
-
-'use strict';
-
-test( 'sub-pixel fit', function() {
+QUnit.test( 'sub-pixel fit', function( assert ) {
 
   var pckry = new Packery( '#sub-pixel-fit', {
     itemSelector: '.item',
@@ -22,7 +18,7 @@ test( 'sub-pixel fit', function() {
   for ( var containerWidth = 290; containerWidth < 310; containerWidth++ ) {
     pckry.element.style.width = containerWidth + 'px';
     pckry.layout();
-    equal( 0, getItemsTotalY(), 'items fit at ' + containerWidth + 'px' );
+    assert.equal( 0, getItemsTotalY(), 'items fit at ' + containerWidth + 'px' );
   }
 
   // set grid sizer and do it again
@@ -31,9 +27,7 @@ test( 'sub-pixel fit', function() {
   for ( containerWidth = 290; containerWidth < 310; containerWidth++ ) {
     pckry.element.style.width = containerWidth + 'px';
     pckry.layout();
-    equal( 0, getItemsTotalY(), 'items fit with columnWidth at ' + containerWidth + 'px' );
+    assert.equal( 0, getItemsTotalY(), 'items fit with columnWidth at ' + containerWidth + 'px' );
   }
 
 });
-
-})();

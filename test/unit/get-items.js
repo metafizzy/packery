@@ -1,8 +1,4 @@
-( function() {
-
-'use strict';
-
-test( 'getItems', function() {
+QUnit.test( 'getItems', function( assert ) {
   var defaultElem = document.querySelector('#default');
   var defaultPckry = new Packery( defaultElem );
 
@@ -21,10 +17,8 @@ test( 'getItems', function() {
     itemSelector: '.item'
   });
 
-  equal( defaultPckry.items.length, defaultElem.children.length, 'no itemSelector, all children' );
-  equal( filteredPckry.items.length, 6, 'filtered, itemSelector = .item, not all children' );
-  equal( foundPckry.items.length, 4, 'found itemSelector = .item, querySelectoring' );
-  equal( filterFoundPckry.items.length, 5, 'filter found' );
+  assert.equal( defaultPckry.items.length, defaultElem.children.length, 'no itemSelector, all children' );
+  assert.equal( filteredPckry.items.length, 6, 'filtered, itemSelector = .item, not all children' );
+  assert.equal( foundPckry.items.length, 4, 'found itemSelector = .item, querySelectoring' );
+  assert.equal( filterFoundPckry.items.length, 5, 'filter found' );
 });
-
-})();
