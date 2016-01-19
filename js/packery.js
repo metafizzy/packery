@@ -564,22 +564,20 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
   x -= this.size.paddingLeft;
   y -= this.size.paddingTop;
 
-  this.shift( item, x, y );
-
-  // debounce triggering layout
   var _this = this;
-  function delayed() {
+  function onDrag() {
+    _this.shift( item, x, y );
     _this.layout();
-    delete _this.dragTimeout;
   }
 
-  this.clearDragTimeout();
-  this.dragTimeout = setTimeout( delayed, 40 );
-};
-
-Packery.prototype.clearDragTimeout = function() {
-  if ( this.dragTimeout ) {
+  // throttle
+  var now = new Date();
+  if ( this._itemDragTime && now - this._itemDragTime < 120 ) {
     clearTimeout( this.dragTimeout );
+    this.dragTimeout = setTimeout( onDrag, 120 );
+  } else {
+    onDrag();
+    this._itemDragTime = now;
   }
 };
 
@@ -595,7 +593,7 @@ Packery.prototype.itemDragEnd = function( elem ) {
     return;
   }
 
-  this.clearDragTimeout();
+  clearTimeout( this.dragTimeout );
   item.element.classList.add('is-positioning-post-drag');
 
   var completeCount = 0;
