@@ -8,17 +8,24 @@
     "outlayer": "~2.0.0"
   },
   "devDependencies": {
+    "chalk": "^1.1.1",
     "draggabilly": ">=2.1.0 <3",
-    "grunt": "~0.4.0",
-    "grunt-contrib-jshint": "~0.4.1",
-    "grunt-contrib-uglify": "^0.9.1",
-    "grunt-requirejs": "~0.4.0",
+    "gulp": "^3.9.0",
+    "gulp-jshint": "^2.0.0",
+    "gulp-json-lint": "^0.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
+    "gulp-uglify": "^1.5.1",
+    "gulp-util": "^3.0.7",
     "jquery": ">=2 <4",
     "jquery-bridget": "~2.0.0",
-    "qunitjs": "^1.15"
+    "jshint": "^2.9.1",
+    "minimist": "^1.2.0",
+    "qunitjs": "^1.15",
+    "requirejs": "^2.1.22",
+    "through2": "^2.0.0"
   },
   "directories": {
-    "example": "examples",
     "test": "test"
   },
   "scripts": {
@@ -41,5 +48,6 @@
   "bugs": {
     "url": "https://github.com/metafizzy/packery/issues"
   },
-  "homepage": "http://packery.metafizzy.co"
+  "homepage": "http://packery.metafizzy.co",
+  "license": "GPL-3.0"
 }

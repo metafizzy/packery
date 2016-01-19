@@ -1,8 +1,6 @@
-( function() {
-
-'use strict';
-
 QUnit.test( 'layout', function( assert ) {
+
+  var done = assert.async();
 
   function checkItemPosition( elem, left, top, message ) {
     message = message || '';
@@ -36,10 +34,9 @@ QUnit.test( 'layout', function( assert ) {
     checkItemPosition( elem1, 20, 0, '2nd item' );
     checkItemPosition( elem2, 40, 0, '3nd item' );
 
-    setTimeout( checkHorizontal, 10 );
+    setTimeout( checkHorizontal );
   });
 
-  stop();
   pckry.layout();
   assert.equal( container.style.height, '80px', 'height set' );
 
@@ -53,8 +50,6 @@ QUnit.test( 'layout', function( assert ) {
     checkItemPosition( elem2, 0, 60, 'horizontal, 2nd item' );
     assert.equal( container.style.width, '60px', 'width set' );
 
-    start();
+    done();
   }
 });
-
-})();
