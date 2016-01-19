@@ -5,9 +5,6 @@
   "undef": true,
   "unused": true,
   "globals": {
-    "Packery": true,
-    "define": false,
-    "module": false,
-    "require": false
+    "Packery": true
   }
 }
