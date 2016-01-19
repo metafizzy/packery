@@ -350,12 +350,8 @@ Packery.prototype._bindFitEvents = function( item ) {
 // debounced, layout on resize
 Packery.prototype.resize = function() {
   // don't trigger if size did not change
-  var size = getSize( this.element );
-  // check that this.size and size are there
-  // IE8 triggers resize on body size change, so they might not be
-  var hasSizes = this.size && size;
-  var innerSize = this._getOption('horizontal') ? 'innerHeight' : 'innerWidth';
-  if ( hasSizes && size[ innerSize ] == this.size[ innerSize ] ) {
+  // or if resize was unbound. See #285, outlayer#9
+  if ( !this.isResizeBound || !this.needsResizeLayout() ) {
     return;
   }
 
@@ -366,24 +362,41 @@ Packery.prototype.resize = function() {
   }
 };
 
+/**
+ * check if layout is needed post layout
+ * @returns Boolean
+ */
+Packery.prototype.needsResizeLayout = function() {
+  var size = getSize( this.element );
+  var innerSize = this._getOption('horizontal') ? 'innerHeight' : 'innerWidth';
+  return size[ innerSize ] != this.size[ innerSize ];
+};
+
 Packery.prototype.resizeShiftLayout = function() {
   var items = this._getItemsForLayout( this.items );
 
+  var isHorizontal = this._getOption('horizontal');
+  var coord = isHorizontal ? 'y' : 'x';
+  var measure = isHorizontal ? 'height' : 'width';
+  var segmentName = isHorizontal ? 'rowHeight' : 'columnWidth';
+  var innerSize = isHorizontal ? 'innerHeight' : 'innerWidth';
+
   // proportional re-align items
-  if ( this.columnWidth ) {
-    var previousSegment = this.columnWidth + this.gutter;
-    this._getMeasurement( 'gutter', 'width' );
-    this._getMeasurement( 'columnWidth', 'width' );
-    var currentSegment = this.columnWidth + this.gutter;
+  var previousSegment = this[ segmentName ];
+  previousSegment = previousSegment && previousSegment + this.gutter;
+
+  if ( previousSegment ) {
+    this._getMeasurements();
+    var currentSegment = this[ segmentName ] + this.gutter;
     items.forEach( function( item ) {
-      var col = Math.round( item.rect.x / previousSegment );
-      item.rect.x = col * currentSegment;
+      var seg = Math.round( item.rect[ coord ] / previousSegment );
+      item.rect[ coord ] = seg * currentSegment;
     });
   } else {
-    var currentWidth = getSize( this.element ).innerWidth + this.gutter;
-    var previousWidth = this.packer.width;
+    var currentSize = getSize( this.element )[ innerSize ] + this.gutter;
+    var previousSize = this.packer[ measure ];
     items.forEach( function( item ) {
-      item.rect.x = ( item.rect.x / previousWidth ) * currentWidth;
+      item.rect[ coord ] = ( item.rect[ coord ] / previousSize ) * currentSize;
     });
   }
 
