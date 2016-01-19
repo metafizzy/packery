@@ -165,7 +165,8 @@ Packery.prototype._getMeasurements = function() {
 Packery.prototype._getItemLayoutPosition = function( item ) {
   this._setRectSize( item.element, item.rect );
   if ( this.isShifting || this.dragItemCount > 0 ) {
-    this.packer.columnPack( item.rect );
+    var packMethod = this._getPackMethod();
+    this.packer[ packMethod ]( item.rect );
   } else {
     this.packer.pack( item.rect );
   }
@@ -178,6 +179,10 @@ Packery.prototype.shiftLayout = function() {
   this.isShifting = true;
   this.layout();
   delete this.isShifting;
+};
+
+Packery.prototype._getPackMethod = function() {
+  return this._getOption('horizontal') ? 'rowPack' : 'columnPack';
 };
 
 
@@ -414,6 +419,8 @@ Packery.prototype.updateShiftTargets = function( dropItem ) {
 
   // pack stamps
   this._getBoundingRect();
+  var isOriginLeft = this._getOption('originLeft');
+  var isOriginTop = this._getOption('originTop');
   this.stamps.forEach( function( stamp ) {
     // ignore dragged item
     var item = this.getItem( stamp );
@@ -422,57 +429,69 @@ Packery.prototype.updateShiftTargets = function( dropItem ) {
     }
     var offset = this._getElementOffset( stamp );
     var rect = new Rect({
-      x: this._getOption('originLeft') ? offset.left : offset.right,
-      y: this._getOption('originTop') ? offset.top : offset.bottom
+      x: isOriginLeft ? offset.left : offset.right,
+      y: isOriginTop ? offset.top : offset.bottom
     });
     this._setRectSize( stamp, rect );
     // save its space in the packer
     this.shiftPacker.placed( rect );
   }, this );
 
-  var items = this._getItemsForLayout( this.items );
-
   // reset shiftTargets
+  var isHorizontal = this._getOption('horizontal');
+  var segmentName = isHorizontal ? 'rowHeight' : 'columnWidth';
+  var measure = isHorizontal ? 'height' : 'width';
+
   this.shiftTargetKeys = [];
   this.shiftTargets = [];
-  var boundsWidth;
-  if ( this.columnWidth ) {
-    var segment = this.columnWidth + this.gutter;
-    var colSpan = dropItem.rect.width / segment;
-    var cols = Math.floor( ( this.shiftPacker.width + this.gutter ) / segment );
-    boundsWidth = ( cols - ( colSpan - 1 ) ) * segment;
+  var boundsSize;
+  var segment = this[ segmentName ];
+  segment = segment && segment + this.gutter;
+
+  if ( segment ) {
+    var segmentSpan = dropItem.rect[ measure ] / segment;
+    var segs = Math.floor( ( this.shiftPacker[ measure ] + this.gutter ) / segment );
+    boundsSize = ( segs - ( segmentSpan - 1 ) ) * segment;
     // add targets on top
-    for ( var i=0; i < cols; i++ ) {
-      this.addShiftTarget( i * segment, 0, boundsWidth );
+    for ( var i=0; i < segs; i++ ) {
+      this._addShiftTarget( i * segment, 0, boundsSize );
     }
   } else {
-    boundsWidth = ( this.shiftPacker.width + this.gutter ) - dropItem.rect.width;
+    boundsSize = ( this.shiftPacker[ measure ] + this.gutter ) - dropItem.rect[ measure ];
+    this._addShiftTarget( 0, 0, boundsSize );
   }
 
   // pack each item to measure where shiftTargets are
+  var items = this._getItemsForLayout( this.items );
+  var packMethod = this._getPackMethod();
   items.forEach( function( item ) {
     var rect = item.rect;
     this._setRectSize( item.element, rect );
-    this.shiftPacker.columnPack( rect );
-    this.addShiftTarget( rect.x, rect.y + rect.height, boundsWidth );
+    this.shiftPacker[ packMethod ]( rect );
 
-    if ( this.columnWidth ) {
-      // add targets for each column on bottom
-      var colSpan = Math.round( rect.width / segment );
-      for ( var i=1; i < colSpan; i++ ) {
-        var x = rect.x + segment * i;
-        this.addShiftTarget( x, rect.y + rect.height, boundsWidth );
+    // add top left corner
+    this._addShiftTarget( rect.x, rect.y, boundsSize );
+    // add bottom left / top right corner
+    var cornerX = isHorizontal ? rect.x + rect.width : rect.x;
+    var cornerY = isHorizontal ? rect.y : rect.y + rect.height;
+    this._addShiftTarget( cornerX, cornerY, boundsSize );
+
+    if ( segment ) {
+      // add targets for each column on bottom / row on right
+      var segSpan = Math.round( rect[ measure ] / segment );
+      for ( var i=1; i < segSpan; i++ ) {
+        var segX = isHorizontal ? cornerX : rect.x + segment * i;
+        var segY = isHorizontal ? rect.y + segment * i : cornerY;
+        this._addShiftTarget( segX, segY, boundsSize );
       }
-    } else {
-      // add top left corner for non-grid, organic layouts
-      this.addShiftTarget( rect.x, rect.y, boundsWidth );
     }
   }, this );
 
 };
 
-Packery.prototype.addShiftTarget = function( x, y, boundsWidth ) {
-  if ( x !== 0 && x > boundsWidth ) {
+Packery.prototype._addShiftTarget = function( x, y, boundsSize ) {
+  var checkCoord = this._getOption('horizontal') ? y : x;
+  if ( checkCoord !== 0 && checkCoord > boundsSize ) {
     return;
   }
   // create string for a key, easier to keep track of what targets

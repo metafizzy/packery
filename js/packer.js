@@ -80,6 +80,20 @@ Packer.prototype.columnPack = function( rect ) {
   }
 };
 
+Packer.prototype.rowPack = function( rect ) {
+  for ( var i=0; i < this.spaces.length; i++ ) {
+    var space = this.spaces[i];
+    var canFitInSpaceRow = space.y <= rect.y &&
+      space.y + space.height >= rect.y + rect.height &&
+      space.width >= rect.width - 0.01; // fudge number for rounding error
+    if ( canFitInSpaceRow ) {
+      rect.x = space.x;
+      this.placed( rect );
+      break;
+    }
+  }
+};
+
 Packer.prototype.placeInSpace = function( rect, space ) {
   // place rect in space
   rect.x = space.x;
