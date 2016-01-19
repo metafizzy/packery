@@ -110,11 +110,7 @@ Packery.prototype._create = function() {
   // style drop placeholder
   this.dropPlaceholder = document.createElement('div');
   this.dropPlaceholder.className = 'packery-drop-placeholder';
-  var dropPlaceholderStyle = this.dropPlaceholder.style;
-  dropPlaceholderStyle.position = 'absolute';
-  var transitionValue = 'transform ' + this.options.transitionDuration;
-  dropPlaceholderStyle.WebkitTransition = '-webkit- ' + transitionValue;
-  dropPlaceholderStyle.transition = transitionValue;
+  this.dropPlaceholder.style.position = 'absolute';
 };
 
 
