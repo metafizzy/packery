@@ -21,11 +21,6 @@
 }( window, function factory() {
 'use strict';
 
-// -------------------------- Packery -------------------------- //
-
-// global namespace
-var Packery = window.Packery = function() {};
-
 // -------------------------- Rect -------------------------- //
 
 function Rect( props ) {
@@ -39,9 +34,6 @@ function Rect( props ) {
   }
 
 }
-
-// make available
-Packery.Rect = Rect;
 
 Rect.defaults = {
   x: 0,
