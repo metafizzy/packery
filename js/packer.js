@@ -57,7 +57,7 @@ Packer.prototype.reset = function() {
 
 // change x and y of rect to fit with in Packer's available spaces
 Packer.prototype.pack = function( rect ) {
-  for ( var i=0, len = this.spaces.length; i < len; i++ ) {
+  for ( var i=0; i < this.spaces.length; i++ ) {
     var space = this.spaces[i];
     if ( space.canFit( rect ) ) {
       this.placeInSpace( rect, space );
@@ -67,7 +67,7 @@ Packer.prototype.pack = function( rect ) {
 };
 
 Packer.prototype.columnPack = function( rect ) {
-  for ( var i=0, len = this.spaces.length; i < len; i++ ) {
+  for ( var i=0; i < this.spaces.length; i++ ) {
     var space = this.spaces[i];
     var canFitInSpaceColumn = space.x <= rect.x &&
       space.x + space.width >= rect.x + rect.width &&
@@ -92,7 +92,7 @@ Packer.prototype.placeInSpace = function( rect, space ) {
 Packer.prototype.placed = function( rect ) {
   // update spaces
   var revisedSpaces = [];
-  for ( var i=0, len = this.spaces.length; i < len; i++ ) {
+  for ( var i=0; i < this.spaces.length; i++ ) {
     var space = this.spaces[i];
     var newSpaces = space.getMaximalFreeRects( rect );
     // add either the original space or the new spaces to the revised spaces
