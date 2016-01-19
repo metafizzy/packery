@@ -13,12 +13,12 @@ See [packery.metafizzy.co](http://packery.metafizzy.co) for complete docs and de
 
 ### CDN
 
-Link directly to [Packery files on cdnjs](https://cdnjs.com/libraries/packery).
+Link directly to Packery files on [npmcdn](https://npmcdn.com).
 
 ``` html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/packery/1.4.3/packery.pkgd.js"></script>
+<script src="https://npmcdn.com/packery@2.0/dist/packery.pkgd.js"></script>
 <!-- or -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/packery/1.4.3/packery.pkgd.min.js"></script>
+<script src="https://npmcdn.com/packery@2.0/dist/packery.pkgd.min.js"></script>
 ```
 
 ### Package managers
@@ -55,19 +55,24 @@ With vanilla JavaScript
 ``` js
 // vanilla JS
 var grid = document.querySelector('.grid');
+// initialize with element
 var pckry = new Packery( grid, {
   // options...
   itemSelector: '.grid-item'
+});
+
+// initialize with selector string
+var pckry = new Packery('.grid', {
+  // options...
 });
 ```
 
 With HTML
 
-Add a class of `js-packery` to your element. Options can be set in JSON in `data-packery-options`.
+Add a `data-masonry` attribute to your element. Options can be set in JSON in the value.
 
 ``` html
-<div class="grid js-packery"
-  data-packery-options='{ "itemSelector": ".grid-item" }'>
+<div class="grid" data-packery='{ "itemSelector": ".grid-item" }'>
   <div class="grid-item"></div>
   <div class="grid-item"></div>
   ...
@@ -76,4 +81,4 @@ Add a class of `js-packery` to your element. Options can be set in JSON in `data
 
 ---
 
-Copyright (c) 2015 Metafizzy
+By [Metafizzy](http://metafizzy.co)

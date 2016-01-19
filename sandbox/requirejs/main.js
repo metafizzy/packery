@@ -3,10 +3,10 @@
 /*
 // bower components
 requirejs.config({
-  baseUrl: '../bower_components'
+  baseUrl: '../../bower_components'
 });
 
-requirejs( [ '../js/packery' ], function( Packery ) {
+requirejs( [ '../../js/packery' ], function( Packery ) {
 
   new Packery( document.querySelector('#basic') );
 
@@ -16,7 +16,7 @@ requirejs( [ '../js/packery' ], function( Packery ) {
 /*
 // packery.pkgd.js
 requirejs( [
-  'js/packery.pkgd.js',
+  './../dist/packery.pkgd.js',
   'require'
 ], function( pkgd, require ) {
   require( ['packery/js/packery'], function ( Packery ) {
@@ -26,7 +26,7 @@ requirejs( [
 // */
 
 requirejs( [
-  'js/packery.pkgd.js'
+  '../../dist/packery.pkgd.js'
 ], function( Packery ) {
   new Packery('#basic');
 });
