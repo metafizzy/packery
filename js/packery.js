@@ -107,10 +107,7 @@ Packery.prototype._create = function() {
       _this.itemDragEnd( event.currentTarget );
     }
   };
-  // style drop placeholder
-  this.dropPlaceholder = document.createElement('div');
-  this.dropPlaceholder.className = 'packery-drop-placeholder';
-  this.dropPlaceholder.style.position = 'absolute';
+
 };
 
 
@@ -413,14 +410,10 @@ Packery.prototype.itemDragStart = function( elem ) {
     return;
   }
 
-  item.isDragging = true;
   item.enablePlacing();
+  item.showDropPlaceholder();
   this.dragItemCount++;
   this.updateShiftTargets( item );
-  var dropPlaceholderStyle = this.dropPlaceholder.style;
-  dropPlaceholderStyle.width = item.size.width + 'px';
-  dropPlaceholderStyle.height = item.size.height + 'px';
-  this.element.appendChild( this.dropPlaceholder );
 };
 
 Packery.prototype.updateShiftTargets = function( dropItem ) {
@@ -528,8 +521,6 @@ Packery.prototype.shift = function( item, x, y ) {
   });
   item.rect.x = shiftPosition.x;
   item.rect.y = shiftPosition.y;
-
-  this.positionDropPlaceholder( item );
 };
 
 function getDistance( a, b ) {
@@ -537,15 +528,6 @@ function getDistance( a, b ) {
   var dy = b.y - a.y;
   return Math.sqrt( dx * dx + dy * dy );
 }
-
-Packery.prototype.positionDropPlaceholder = function( item ) {
-  if ( !item.isDragging ) {
-    return;
-  }
-  var style = this.dropPlaceholder.style;
-  style.transform = style.WebkitTransform = 'translate(' + item.rect.x + 'px, ' +
-    item.rect.y + 'px)';
-};
 
 // -------------------------- drag move -------------------------- //
 
@@ -567,6 +549,7 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
   var _this = this;
   function onDrag() {
     _this.shift( item, x, y );
+    item.positionDropPlaceholder();
     _this.layout();
   }
 
@@ -605,13 +588,7 @@ Packery.prototype.itemDragEnd = function( elem ) {
     }
     // reset drag item
     item.element.classList.remove('is-positioning-post-drag');
-    item.isDragging = false;
-    // check in case placeholder was already removed
-    var canRemovePlaceholder = _this.dragItemCount === 0 &&
-      _this.element.contains( _this.dropPlaceholder );
-    if ( canRemovePlaceholder ) {
-      _this.element.removeChild( _this.dropPlaceholder );
-    }
+    item.hideDropPlaceholder();
     _this.dispatchEvent( 'dragItemPositioned', null, [ item ] );
   }
 

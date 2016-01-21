@@ -93,6 +93,33 @@ Item.prototype.removeElem = function() {
   this.emitEvent( 'remove', [ this ] );
 };
 
+// ----- dropPlaceholder ----- //
+
+Item.prototype.showDropPlaceholder = function() {
+  var dropPlaceholder = this.dropPlaceholder;
+  if ( !dropPlaceholder ) {
+    // create dropPlaceholder
+    dropPlaceholder = this.dropPlaceholder = document.createElement('div');
+    dropPlaceholder.className = 'packery-drop-placeholder';
+    dropPlaceholder.style.position = 'absolute';
+  }
+
+  dropPlaceholder.style.width = this.size.width + 'px';
+  dropPlaceholder.style.height = this.size.height + 'px';
+  this.positionDropPlaceholder();
+  this.layout.element.appendChild( dropPlaceholder );
+};
+
+Item.prototype.positionDropPlaceholder = function() {
+  var style = this.dropPlaceholder.style;
+  style.transform = style.WebkitTransform = 'translate(' + this.rect.x + 'px, ' +
+    this.rect.y + 'px)';
+};
+
+Item.prototype.hideDropPlaceholder = function() {
+  this.layout.element.removeChild( this.dropPlaceholder );
+};
+
 // -----  ----- //
 
 return Item;
