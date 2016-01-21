@@ -613,6 +613,16 @@ Packery.prototype.bindDraggabillyEvents = function( draggie ) {
 };
 
 /**
+ * unbind draggabilly events 
+ * @param {Draggabilly} draggie
+ */
+Packery.prototype.unbindDraggabillyEvents = function( draggie ) {
+  draggie.off( 'dragStart', this.handleDraggabilly.dragStart );
+  draggie.off( 'dragMove', this.handleDraggabilly.dragMove );
+  draggie.off( 'dragEnd', this.handleDraggabilly.dragEnd );
+};
+
+/**
  * binds jQuery UI Draggable events
  * @param {jQuery} $elems
  */
@@ -621,6 +631,17 @@ Packery.prototype.bindUIDraggableEvents = function( $elems ) {
     .on( 'dragstart', this.handleUIDraggable.start )
     .on( 'drag', this.handleUIDraggable.drag )
     .on( 'dragstop', this.handleUIDraggable.stop );
+};
+
+/**
+ * unbinds jQuery UI Draggable events
+ * @param {jQuery} $elems
+ */
+Packery.prototype.unbindUIDraggableEvents = function( $elems ) {
+  $elems
+    .off( 'dragstart', this.handleUIDraggable.start )
+    .off( 'drag', this.handleUIDraggable.drag )
+    .off( 'dragstop', this.handleUIDraggable.stop );
 };
 
 Packery.Rect = Rect;
