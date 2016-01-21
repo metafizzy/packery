@@ -68,6 +68,7 @@ proto._create = function() {
   this.packer = new Packer();
   // packer for drop targets
   this.shiftPacker = new Packer();
+  this.isEnabled = true;
 
   // Left over from v1.0
   this.stamp( this.options.stamped );
@@ -405,6 +406,9 @@ proto.resizeShiftLayout = function() {
  * @param {Element} elem
  */
 proto.itemDragStart = function( elem ) {
+  if ( !this.isEnabled ) {
+    return;
+  }
   this.stamp( elem );
   // this.ignore( elem );
   var item = this.getItem( elem );
@@ -540,7 +544,7 @@ function getDistance( a, b ) {
  * @param {Number} y - vertical change in position
  */
 proto.itemDragMove = function( elem, x, y ) {
-  var item = this.getItem( elem );
+  var item = this.isEnabled && this.getItem( elem );
   if ( !item ) {
     return;
   }
@@ -573,7 +577,7 @@ proto.itemDragMove = function( elem, x, y ) {
  * @param {Element} elem
  */
 proto.itemDragEnd = function( elem ) {
-  var item = this.getItem( elem );
+  var item = this.isEnabled && this.getItem( elem );
   if ( !item ) {
     return;
   }
@@ -609,9 +613,18 @@ proto.itemDragEnd = function( elem ) {
  * @param {Draggabilly} draggie
  */
 proto.bindDraggabillyEvents = function( draggie ) {
-  draggie.on( 'dragStart', this.handleDraggabilly.dragStart );
-  draggie.on( 'dragMove', this.handleDraggabilly.dragMove );
-  draggie.on( 'dragEnd', this.handleDraggabilly.dragEnd );
+  this._bindDraggabillyEvents( draggie, 'on' );
+};
+
+proto.unbindDraggabillyEvents = function( draggie ) {
+  this._bindDraggabillyEvents( draggie, 'off' );
+};
+
+proto._bindDraggabillyEvents = function( draggie, method ) {
+  var handlers = this.handleDraggabilly;
+  draggie[ method ]( 'dragStart', handlers.dragStart );
+  draggie[ method ]( 'dragMove', handlers.dragMove );
+  draggie[ method ]( 'dragEnd', handlers.dragEnd );
 };
 
 /**
@@ -619,11 +632,31 @@ proto.bindDraggabillyEvents = function( draggie ) {
  * @param {jQuery} $elems
  */
 proto.bindUIDraggableEvents = function( $elems ) {
-  $elems
-    .on( 'dragstart', this.handleUIDraggable.start )
-    .on( 'drag', this.handleUIDraggable.drag )
-    .on( 'dragstop', this.handleUIDraggable.stop );
+  this._bindUIDraggableEvents( $elems, 'on' );
 };
+
+proto.unbindUIDraggableEvents = function( $elems ) {
+  this._bindUIDraggableEvents( $elems, 'off' );
+};
+
+proto._bindUIDraggableEvents = function( $elems, method ) {
+  var handlers = this.handleUIDraggable;
+  $elems
+    [ method ]( 'dragstart', handlers.start )
+    [ method ]( 'drag', handlers.drag )
+    [ method ]( 'dragstop', handlers.stop );
+};
+
+// ----- destroy ----- //
+
+var _destroy = proto.destroy;
+proto.destroy = function() {
+  _destroy.apply( this, arguments );
+  // disable flag; prevent drag events from triggering. #72
+  this.isEnabled = false;
+};
+
+// -----  ----- //
 
 Packery.Rect = Rect;
 Packery.Packer = Packer;
