@@ -39,9 +39,10 @@ function Packer( width, height, sortDirection ) {
   this.reset();
 }
 
-Packer.prototype.reset = function() {
+var proto = Packer.prototype;
+
+proto.reset = function() {
   this.spaces = [];
-  this.newSpaces = [];
 
   var initialSpace = new Rect({
     x: 0,
@@ -56,7 +57,7 @@ Packer.prototype.reset = function() {
 };
 
 // change x and y of rect to fit with in Packer's available spaces
-Packer.prototype.pack = function( rect ) {
+proto.pack = function( rect ) {
   for ( var i=0; i < this.spaces.length; i++ ) {
     var space = this.spaces[i];
     if ( space.canFit( rect ) ) {
@@ -66,7 +67,7 @@ Packer.prototype.pack = function( rect ) {
   }
 };
 
-Packer.prototype.columnPack = function( rect ) {
+proto.columnPack = function( rect ) {
   for ( var i=0; i < this.spaces.length; i++ ) {
     var space = this.spaces[i];
     var canFitInSpaceColumn = space.x <= rect.x &&
@@ -80,7 +81,7 @@ Packer.prototype.columnPack = function( rect ) {
   }
 };
 
-Packer.prototype.rowPack = function( rect ) {
+proto.rowPack = function( rect ) {
   for ( var i=0; i < this.spaces.length; i++ ) {
     var space = this.spaces[i];
     var canFitInSpaceRow = space.y <= rect.y &&
@@ -94,7 +95,7 @@ Packer.prototype.rowPack = function( rect ) {
   }
 };
 
-Packer.prototype.placeInSpace = function( rect, space ) {
+proto.placeInSpace = function( rect, space ) {
   // place rect in space
   rect.x = space.x;
   rect.y = space.y;
@@ -103,7 +104,7 @@ Packer.prototype.placeInSpace = function( rect, space ) {
 };
 
 // update spaces with placed rect
-Packer.prototype.placed = function( rect ) {
+proto.placed = function( rect ) {
   // update spaces
   var revisedSpaces = [];
   for ( var i=0; i < this.spaces.length; i++ ) {
@@ -122,14 +123,14 @@ Packer.prototype.placed = function( rect ) {
   this.mergeSortSpaces();
 };
 
-Packer.prototype.mergeSortSpaces = function() {
+proto.mergeSortSpaces = function() {
   // remove redundant spaces
   Packer.mergeRects( this.spaces );
   this.spaces.sort( this.sorter );
 };
 
 // add a space back
-Packer.prototype.addSpace = function( rect ) {
+proto.addSpace = function( rect ) {
   this.spaces.push( rect );
   this.mergeSortSpaces();
 };

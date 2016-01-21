@@ -42,12 +42,14 @@ Rect.defaults = {
   height: 0
 };
 
+var proto = Rect.prototype;
+
 /**
  * Determines whether or not this rectangle wholly encloses another rectangle or point.
  * @param {Rect} rect
  * @returns {Boolean}
 **/
-Rect.prototype.contains = function( rect ) {
+proto.contains = function( rect ) {
   // points don't have width or height
   var otherWidth = rect.width || 0;
   var otherHeight = rect.height || 0;
@@ -62,7 +64,7 @@ Rect.prototype.contains = function( rect ) {
  * @param {Rect} rect
  * @returns {Boolean}
 **/
-Rect.prototype.overlaps = function( rect ) {
+proto.overlaps = function( rect ) {
   var thisRight = this.x + this.width;
   var thisBottom = this.y + this.height;
   var rectRight = rect.x + rect.width;
@@ -79,7 +81,7 @@ Rect.prototype.overlaps = function( rect ) {
  * @param {Rect} rect - the overlapping rect
  * @returns {Array} freeRects - rects representing the area around the rect
 **/
-Rect.prototype.getMaximalFreeRects = function( rect ) {
+proto.getMaximalFreeRects = function( rect ) {
 
   // if no intersection, return false
   if ( !this.overlaps( rect ) ) {
@@ -141,7 +143,7 @@ Rect.prototype.getMaximalFreeRects = function( rect ) {
   return freeRects;
 };
 
-Rect.prototype.canFit = function( rect ) {
+proto.canFit = function( rect ) {
   return this.width >= rect.width && this.height >= rect.height;
 };
 

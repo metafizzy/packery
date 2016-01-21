@@ -41,17 +41,17 @@ var Item = function PackeryItem() {
   Outlayer.Item.apply( this, arguments );
 };
 
-Item.prototype = new Outlayer.Item();
+var proto = Item.prototype = Object.create( Outlayer.Item.prototype );
 
-var protoCreate = Item.prototype._create;
-Item.prototype._create = function() {
+var __create = proto._create;
+proto._create = function() {
   // call default _create logic
-  protoCreate.call( this );
+  __create.call( this );
   this.rect = new Rect();
 };
 
-var _moveTo = Item.prototype.moveTo;
-Item.prototype.moveTo = function( x, y ) {
+var _moveTo = proto.moveTo;
+proto.moveTo = function( x, y ) {
   // don't shift 1px while dragging
   var dx = Math.abs( this.position.x - x );
   var dy = Math.abs( this.position.y - y );
@@ -67,7 +67,7 @@ Item.prototype.moveTo = function( x, y ) {
 
 // -------------------------- placing -------------------------- //
 
-Item.prototype.enablePlacing = function() {
+proto.enablePlacing = function() {
   this.removeTransitionStyles();
   // remove transform property from transition
   if ( this.isTransitioning && transformProperty ) {
@@ -79,14 +79,14 @@ Item.prototype.enablePlacing = function() {
   this.isPlacing = true;
 };
 
-Item.prototype.disablePlacing = function() {
+proto.disablePlacing = function() {
   this.isPlacing = false;
 };
 
 // -----  ----- //
 
 // remove element from DOM
-Item.prototype.removeElem = function() {
+proto.removeElem = function() {
   this.element.parentNode.removeChild( this.element );
   // add space back to packer
   this.layout.packer.addSpace( this.rect );
@@ -95,7 +95,7 @@ Item.prototype.removeElem = function() {
 
 // ----- dropPlaceholder ----- //
 
-Item.prototype.showDropPlaceholder = function() {
+proto.showDropPlaceholder = function() {
   var dropPlaceholder = this.dropPlaceholder;
   if ( !dropPlaceholder ) {
     // create dropPlaceholder
@@ -110,13 +110,13 @@ Item.prototype.showDropPlaceholder = function() {
   this.layout.element.appendChild( dropPlaceholder );
 };
 
-Item.prototype.positionDropPlaceholder = function() {
+proto.positionDropPlaceholder = function() {
   var style = this.dropPlaceholder.style;
   style.transform = style.WebkitTransform = 'translate(' + this.rect.x + 'px, ' +
     this.rect.y + 'px)';
 };
 
-Item.prototype.hideDropPlaceholder = function() {
+proto.hideDropPlaceholder = function() {
   this.layout.element.removeChild( this.dropPlaceholder );
 };
 

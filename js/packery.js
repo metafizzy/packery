@@ -58,7 +58,9 @@ Rect.prototype.canFit = function( rect ) {
 var Packery = Outlayer.create('packery');
 Packery.Item = Item;
 
-Packery.prototype._create = function() {
+var proto = Packery.prototype;
+
+proto._create = function() {
   // call super
   Outlayer.prototype._create.call( this );
 
@@ -116,7 +118,7 @@ Packery.prototype._create = function() {
 /**
  * logic before any new layout
  */
-Packery.prototype._resetLayout = function() {
+proto._resetLayout = function() {
   this.getSize();
 
   this._getMeasurements();
@@ -149,13 +151,13 @@ Packery.prototype._resetLayout = function() {
  * update columnWidth, rowHeight, & gutter
  * @private
  */
-Packery.prototype._getMeasurements = function() {
+proto._getMeasurements = function() {
   this._getMeasurement( 'columnWidth', 'width' );
   this._getMeasurement( 'rowHeight', 'height' );
   this._getMeasurement( 'gutter', 'width' );
 };
 
-Packery.prototype._getItemLayoutPosition = function( item ) {
+proto._getItemLayoutPosition = function( item ) {
   this._setRectSize( item.element, item.rect );
   if ( this.isShifting || this.dragItemCount > 0 ) {
     var packMethod = this._getPackMethod();
@@ -168,13 +170,13 @@ Packery.prototype._getItemLayoutPosition = function( item ) {
   return item.rect;
 };
 
-Packery.prototype.shiftLayout = function() {
+proto.shiftLayout = function() {
   this.isShifting = true;
   this.layout();
   delete this.isShifting;
 };
 
-Packery.prototype._getPackMethod = function() {
+proto._getPackMethod = function() {
   return this._getOption('horizontal') ? 'rowPack' : 'columnPack';
 };
 
@@ -184,7 +186,7 @@ Packery.prototype._getPackMethod = function() {
  * @param {Packery.Rect} rect
  * @private
  */
-Packery.prototype._setMaxXY = function( rect ) {
+proto._setMaxXY = function( rect ) {
   this.maxX = Math.max( rect.x + rect.width, this.maxX );
   this.maxY = Math.max( rect.y + rect.height, this.maxY );
 };
@@ -194,7 +196,7 @@ Packery.prototype._setMaxXY = function( rect ) {
  * @param {Element} elem
  * @param {Packery.Rect} rect
  */
-Packery.prototype._setRectSize = function( elem, rect ) {
+proto._setRectSize = function( elem, rect ) {
   var size = getSize( elem );
   var w = size.outerWidth;
   var h = size.outerHeight;
@@ -215,7 +217,7 @@ Packery.prototype._setRectSize = function( elem, rect ) {
  * @param {Number} gridSize - columnWidth or rowHeight
  * @returns measurement
  */
-Packery.prototype._applyGridGutter = function( measurement, gridSize ) {
+proto._applyGridGutter = function( measurement, gridSize ) {
   // just add gutter if no gridSize
   if ( !gridSize ) {
     return measurement + this.gutter;
@@ -228,7 +230,7 @@ Packery.prototype._applyGridGutter = function( measurement, gridSize ) {
   return measurement;
 };
 
-Packery.prototype._getContainerSize = function() {
+proto._getContainerSize = function() {
   if ( this._getOption('horizontal') ) {
     return {
       width: this.maxX - this.gutter
@@ -247,7 +249,7 @@ Packery.prototype._getContainerSize = function() {
  * makes space for element
  * @param {Element} elem
  */
-Packery.prototype._manageStamp = function( elem ) {
+proto._manageStamp = function( elem ) {
 
   var item = this.getItem( elem );
   var rect;
@@ -277,7 +279,7 @@ function horizontalSorter( a, b ) {
   return a.position.x - b.position.x || a.position.y - b.position.y;
 }
 
-Packery.prototype.sortItemsByPosition = function() {
+proto.sortItemsByPosition = function() {
   var sorter = this._getOption('horizontal') ? horizontalSorter : verticalSorter;
   this.items.sort( sorter );
 };
@@ -291,7 +293,7 @@ Packery.prototype.sortItemsByPosition = function() {
  * @param {Number} x - horizontal destination position, optional
  * @param {Number} y - vertical destination position, optional
  */
-Packery.prototype.fit = function( elem, x, y ) {
+proto.fit = function( elem, x, y ) {
   var item = this.getItem( elem );
   if ( !item ) {
     return;
@@ -322,7 +324,7 @@ Packery.prototype.fit = function( elem, x, y ) {
  * @param {Packery.Item} item
  * @private
  */
-Packery.prototype._bindFitEvents = function( item ) {
+proto._bindFitEvents = function( item ) {
   var _this = this;
   var ticks = 0;
   function onLayout() {
@@ -341,7 +343,7 @@ Packery.prototype._bindFitEvents = function( item ) {
 // -------------------------- resize -------------------------- //
 
 // debounced, layout on resize
-Packery.prototype.resize = function() {
+proto.resize = function() {
   // don't trigger if size did not change
   // or if resize was unbound. See #285, outlayer#9
   if ( !this.isResizeBound || !this.needsResizeLayout() ) {
@@ -359,13 +361,13 @@ Packery.prototype.resize = function() {
  * check if layout is needed post layout
  * @returns Boolean
  */
-Packery.prototype.needsResizeLayout = function() {
+proto.needsResizeLayout = function() {
   var size = getSize( this.element );
   var innerSize = this._getOption('horizontal') ? 'innerHeight' : 'innerWidth';
   return size[ innerSize ] != this.size[ innerSize ];
 };
 
-Packery.prototype.resizeShiftLayout = function() {
+proto.resizeShiftLayout = function() {
   var items = this._getItemsForLayout( this.items );
 
   var isHorizontal = this._getOption('horizontal');
@@ -402,7 +404,7 @@ Packery.prototype.resizeShiftLayout = function() {
  * handle an item drag start event
  * @param {Element} elem
  */
-Packery.prototype.itemDragStart = function( elem ) {
+proto.itemDragStart = function( elem ) {
   this.stamp( elem );
   // this.ignore( elem );
   var item = this.getItem( elem );
@@ -416,7 +418,7 @@ Packery.prototype.itemDragStart = function( elem ) {
   this.updateShiftTargets( item );
 };
 
-Packery.prototype.updateShiftTargets = function( dropItem ) {
+proto.updateShiftTargets = function( dropItem ) {
   this.shiftPacker.reset();
 
   // pack stamps
@@ -491,7 +493,7 @@ Packery.prototype.updateShiftTargets = function( dropItem ) {
 
 };
 
-Packery.prototype._addShiftTarget = function( x, y, boundsSize ) {
+proto._addShiftTarget = function( x, y, boundsSize ) {
   var checkCoord = this._getOption('horizontal') ? y : x;
   if ( checkCoord !== 0 && checkCoord > boundsSize ) {
     return;
@@ -508,7 +510,7 @@ Packery.prototype._addShiftTarget = function( x, y, boundsSize ) {
 
 // -------------------------- drop -------------------------- //
 
-Packery.prototype.shift = function( item, x, y ) {
+proto.shift = function( item, x, y ) {
   var shiftPosition;
   var minDistance = Infinity;
   var position = { x: x, y: y };
@@ -537,7 +539,7 @@ function getDistance( a, b ) {
  * @param {Number} x - horizontal change in position
  * @param {Number} y - vertical change in position
  */
-Packery.prototype.itemDragMove = function( elem, x, y ) {
+proto.itemDragMove = function( elem, x, y ) {
   var item = this.getItem( elem );
   if ( !item ) {
     return;
@@ -570,7 +572,7 @@ Packery.prototype.itemDragMove = function( elem, x, y ) {
  * handle an item drag end event
  * @param {Element} elem
  */
-Packery.prototype.itemDragEnd = function( elem ) {
+proto.itemDragEnd = function( elem ) {
   var item = this.getItem( elem );
   if ( !item ) {
     return;
@@ -606,7 +608,7 @@ Packery.prototype.itemDragEnd = function( elem ) {
  * binds Draggabilly events
  * @param {Draggabilly} draggie
  */
-Packery.prototype.bindDraggabillyEvents = function( draggie ) {
+proto.bindDraggabillyEvents = function( draggie ) {
   draggie.on( 'dragStart', this.handleDraggabilly.dragStart );
   draggie.on( 'dragMove', this.handleDraggabilly.dragMove );
   draggie.on( 'dragEnd', this.handleDraggabilly.dragEnd );
@@ -616,7 +618,7 @@ Packery.prototype.bindDraggabillyEvents = function( draggie ) {
  * binds jQuery UI Draggable events
  * @param {jQuery} $elems
  */
-Packery.prototype.bindUIDraggableEvents = function( $elems ) {
+proto.bindUIDraggableEvents = function( $elems ) {
   $elems
     .on( 'dragstart', this.handleUIDraggable.start )
     .on( 'drag', this.handleUIDraggable.drag )
