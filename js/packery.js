@@ -620,9 +620,9 @@ Packery.prototype.itemDragEnd = function( elem ) {
   item.moveTo( item.rect.x, item.rect.y );
   this.layout();
   this.dragItemCount = Math.max( 0, this.dragItemCount - 1 );
-  _this.sortItemsByPosition();
+  this.sortItemsByPosition();
   item.disablePlacing();
-  _this.unstamp( item.element );
+  this.unstamp( item.element );
 };
 
 /**
