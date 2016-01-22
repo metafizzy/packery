@@ -70,9 +70,6 @@ proto._create = function() {
   this.shiftPacker = new Packer();
   this.isEnabled = true;
 
-  // Left over from v1.0
-  this.stamp( this.options.stamped );
-
   this.dragItemCount = 0;
 
   // create drag handlers

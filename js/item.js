@@ -111,9 +111,8 @@ proto.showDropPlaceholder = function() {
 };
 
 proto.positionDropPlaceholder = function() {
-  var style = this.dropPlaceholder.style;
-  style.transform = style.WebkitTransform = 'translate(' + this.rect.x + 'px, ' +
-    this.rect.y + 'px)';
+  this.dropPlaceholder.style[ transformProperty ] = 'translate(' +
+    this.rect.x + 'px, ' + this.rect.y + 'px)';
 };
 
 proto.hideDropPlaceholder = function() {
