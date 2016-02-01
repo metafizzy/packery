@@ -2,7 +2,7 @@
 
 ### Reduced test case required
 
-All bug reports and problem issues require a [**reduced test case**](http://css-tricks.com/reduced-test-cases/). Create one by forking any one of the [CodePen examples](http://codepen.io/desandro/tag/packery-docs) from [the docs](http://packery.metafizzy.co).
+All bug reports and problem issues require a [**reduced test case**](http://css-tricks.com/reduced-test-cases/). Create one by forking any one of the [CodePen examples](http://codepen.io/desandro/pens/tags/?grid_type=list&selected_tag=packery-docs) from [the docs](http://packery.metafizzy.co).
 
 + A reduced test case clearly demonstrates the bug or issue.
 + It contains the bare minimum HTML, CSS, and JavaScript required to demonstrate the bug.
