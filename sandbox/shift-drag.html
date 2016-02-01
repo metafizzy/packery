@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width" />
 
-  <title>piickery uneven</title>
+  <title>shift drag</title>
 
 <style>
 * {
@@ -18,7 +18,7 @@
 
 .grid-item {
   width: 100px;
-  height: 60px;
+  height: 100px;
   border: 1px solid;
   background: #8BE;
 }
@@ -30,37 +30,32 @@
 }
 
 .grid-item.w2 { width: 200px; }
-.grid-item.h2 { height: 100px; }
-.grid-item.h3 { height: 140px; }
-.grid-item.h4 { height: 240px; }
+.grid-item.h2 { height: 200px; }
 </style>
 
 </head>
 <body>
 
-  <h1>piickery uneven</h1>
-
-<p><button class="button-layout">Layout</button></p>
+  <h1>shift drag</h1>
 
 <div class="grid">
-  <div class="grid-item w2 h4"></div>
   <div class="grid-item w2 h2"></div>
   <div class="grid-item"></div>
-  <div class="grid-item h3"></div>
-  <div class="grid-item h2"></div>
-  <div class="grid-item"></div>
-  <div class="grid-item w2 h3"></div>
-  <div class="grid-item h2"></div>
-  <div class="grid-item h3"></div>
   <div class="grid-item"></div>
   <div class="grid-item h2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item w2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item h2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item w2"></div>
   <div class="grid-item w2 h2"></div>
   <div class="grid-item"></div>
   <div class="grid-item"></div>
 </div>
 
 <script src="../bower_components/get-size/get-size.js"></script>
-<script src="../bower_components/matches-selector/matches-selector.js"></script>
+<script src="../bower_components/desandro-matches-selector/matches-selector.js"></script>
 <script src="../bower_components/ev-emitter/ev-emitter.js"></script>
 <script src="../bower_components/fizzy-ui-utils/utils.js"></script>
 <script src="../bower_components/unipointer/unipointer.js"></script>
@@ -77,7 +72,7 @@
 var gridElem = document.querySelector('.grid');
 var pckry = new Packery( gridElem, {
   columnWidth: 100,
-  // gutter: 20
+  rowHeight: 100
 });
 
 var itemElems = gridElem.querySelectorAll('.grid-item');
@@ -87,10 +82,6 @@ for ( var i=0; i < itemElems.length; i++ ) {
   var draggie = new Draggabilly( itemElem );
   pckry.bindDraggabillyEvents( draggie );
 }
-
-document.querySelector('.button-layout').onclick = function() {
-  pckry.layout();
-};
 
 </script>
 

@@ -454,9 +454,9 @@ proto.updateShiftTargets = function( dropItem ) {
   segment = segment && segment + this.gutter;
 
   if ( segment ) {
-    var segmentSpan = dropItem.rect[ measure ] / segment;
+    var segmentSpan = Math.ceil( dropItem.rect[ measure ] / segment );
     var segs = Math.floor( ( this.shiftPacker[ measure ] + this.gutter ) / segment );
-    boundsSize = ( segs - ( segmentSpan - 1 ) ) * segment;
+    boundsSize = ( segs - segmentSpan ) * segment;
     // add targets on top
     for ( var i=0; i < segs; i++ ) {
       this._addShiftTarget( i * segment, 0, boundsSize );
