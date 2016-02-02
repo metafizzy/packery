@@ -534,6 +534,8 @@ function getDistance( a, b ) {
 
 // -------------------------- drag move -------------------------- //
 
+var DRAG_THROTTLE_TIME = 200;
+
 /**
  * handle an item drag move event
  * @param {Element} elem
@@ -558,9 +560,9 @@ proto.itemDragMove = function( elem, x, y ) {
 
   // throttle
   var now = new Date();
-  if ( this._itemDragTime && now - this._itemDragTime < 120 ) {
+  if ( this._itemDragTime && now - this._itemDragTime < DRAG_THROTTLE_TIME ) {
     clearTimeout( this.dragTimeout );
-    this.dragTimeout = setTimeout( onDrag, 120 );
+    this.dragTimeout = setTimeout( onDrag, DRAG_THROTTLE_TIME );
   } else {
     onDrag();
     this._itemDragTime = now;
