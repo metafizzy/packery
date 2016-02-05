@@ -348,8 +348,8 @@ proto.resize = function() {
     return;
   }
 
-  if ( this.options.shiftResize ) {
-    this.resizeShiftLayout();
+  if ( this.options.shiftPercentResize ) {
+    this.resizeShiftPercentLayout();
   } else {
     this.layout();
   }
@@ -365,7 +365,7 @@ proto.needsResizeLayout = function() {
   return size[ innerSize ] != this.size[ innerSize ];
 };
 
-proto.resizeShiftLayout = function() {
+proto.resizeShiftPercentLayout = function() {
   var items = this._getItemsForLayout( this.items );
 
   var isHorizontal = this._getOption('horizontal');
