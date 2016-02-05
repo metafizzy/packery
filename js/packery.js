@@ -534,7 +534,7 @@ function getDistance( a, b ) {
 
 // -------------------------- drag move -------------------------- //
 
-var DRAG_THROTTLE_TIME = 200;
+var DRAG_THROTTLE_TIME = 120;
 
 /**
  * handle an item drag move event
