@@ -1,6 +1,6 @@
 /*!
- * Packery v2.0.0-beta1
- * bin-packing layout library
+ * Packery v2.0.0
+ * Gapless, draggable grid layouts
  *
  * Licensed GPLv3 for open source use
  * or Packery Commercial License for commercial use

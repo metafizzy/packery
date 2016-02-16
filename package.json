@@ -1,7 +1,7 @@
 {
   "name": "packery",
-  "version": "2.0.0-beta1",
-  "description": "Gapless, draggable layout library",
+  "version": "2.0.0",
+  "description": "Gapless, draggable grid layouts",
   "main": "js/packery.js",
   "dependencies": {
     "get-size": "~2.0.2",
@@ -9,13 +9,13 @@
   },
   "devDependencies": {
     "chalk": "^1.1.1",
-    "draggabilly": ">=2.1.0 <3",
+    "draggabilly": "^2.1.0",
     "gulp": "^3.9.0",
     "gulp-jshint": "^2.0.0",
     "gulp-json-lint": "^0.1.0",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
-    "gulp-requirejs-optimize": "metafizzy/gulp-requirejs-optimize",
+    "gulp-requirejs-optimize": "github:metafizzy/gulp-requirejs-optimize",
     "gulp-uglify": "^1.5.1",
     "gulp-util": "^3.0.7",
     "jquery": ">=2 <4",
@@ -41,7 +41,9 @@
     "bin",
     "binpacking",
     "packing",
-    "masonry"
+    "masonry",
+    "gapless",
+    "draggable"
   ],
   "author": "Metafizzy",
   "bugs": {
