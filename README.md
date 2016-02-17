@@ -69,7 +69,7 @@ var pckry = new Packery('.grid', {
 
 With HTML
 
-Add a `data-masonry` attribute to your element. Options can be set in JSON in the value.
+Add a `data-packery` attribute to your element. Options can be set in JSON in the value.
 
 ``` html
 <div class="grid" data-packery='{ "itemSelector": ".grid-item" }'>
