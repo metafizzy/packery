@@ -116,7 +116,11 @@ proto.positionDropPlaceholder = function() {
 };
 
 proto.hideDropPlaceholder = function() {
-  this.layout.element.removeChild( this.dropPlaceholder );
+  // only remove once, #333
+  var parent = this.dropPlaceholder.parentNode;
+  if ( parent ) {
+    parent.removeChild( this.dropPlaceholder );
+  }
 };
 
 // -----  ----- //
