@@ -414,7 +414,15 @@ proto.itemDragStart = function( elem ) {
   }
 
   item.enablePlacing();
-  item.showDropPlaceholder();
+  // get additional class from elem
+  var srcSelector = this._getOption('dropPlaceholderClassSource');
+  var srcAttr = this._getOption('dropPlaceholderSourceAttribute');
+  var additionalClass = null;
+  if ( srcSelector !== undefined && srcAttr !== undefined ) {
+    var srcElem = elem.querySelector( srcSelector );
+    var additionalClass = srcElem.getAttribute( srcAttr );
+  }
+  item.showDropPlaceholder(additionalClass);
   this.dragItemCount++;
   this.updateShiftTargets( item );
 };
