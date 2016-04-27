@@ -1,5 +1,5 @@
 /*!
- * Packery v2.0.0
+ * Packery v2.1.0
  * Gapless, draggable grid layouts
  *
  * Licensed GPLv3 for open source use

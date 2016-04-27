@@ -4,8 +4,8 @@
   "description": "Gapless, draggable grid layouts",
   "main": "js/packery.js",
   "dependencies": {
-    "get-size": "~2.0.2",
-    "outlayer": "~2.0.0"
+    "get-size": "^2.0.2",
+    "outlayer": "^2.0.0"
   },
   "devDependencies": {
     "draggabilly": "^2.1.0",
