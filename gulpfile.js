@@ -56,6 +56,7 @@ function addBanner( str ) {
 var rjsOptimize = require('gulp-requirejs-optimize');
 
 gulp.task( 'requirejs', function() {
+  var definitionRE = /define\(\s*'packery\/packery'(.|\n)+factory\s*\)/;
   var banner = getBanner();
   // HACK src is not needed
   // should refactor rjsOptimize to produce src
@@ -72,8 +73,14 @@ gulp.task( 'requirejs', function() {
         jquery: 'empty:'
       }
     }) )
-    // remove named module
-    .pipe( replace( "'packery/packery',", '' ) )
+    // munge AMD definition
+    .pipe( replace( definitionRE, function( definition ) {
+      // remove named module
+      return definition.replace( "'packery/packery',", '' )
+        // use explicit file paths, './rect' -> 'packery/rect'
+        .replace( /'.\//g, "'packery/js/" );
+    }) )
+    .pipe( replace( "define( 'packery/", "define( 'packery/js/" ) )
     // add banner
     .pipe( addBanner( banner ) )
     .pipe( rename('packery.pkgd.js') )

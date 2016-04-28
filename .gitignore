@@ -1,4 +1,2 @@
-components/
 bower_components/
 node_modules/
-sandbox/**/bundle.js
