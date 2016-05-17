@@ -285,7 +285,7 @@ function setup() {
   body.appendChild( div );
   var style = getStyle( div );
 
-  getSize.isBoxSizeOuter = isBoxSizeOuter = getStyleSize( style.width ) == 200;
+  getSize.isBoxSizeOuter = isBoxSizeOuter = Math.round( getStyleSize( style.width ) ) == 200;
   body.removeChild( div );
 
 }
