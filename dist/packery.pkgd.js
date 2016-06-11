@@ -365,7 +365,7 @@ return getSize;
 });
 
 /**
- * EvEmitter v1.0.2
+ * EvEmitter v1.0.3
  * Lil' event emitter
  * MIT License
  */
@@ -374,7 +374,7 @@ return getSize;
 
 ( function( global, factory ) {
   // universal module definition
-  /* jshint strict: false */ /* globals define, module */
+  /* jshint strict: false */ /* globals define, module, window */
   if ( typeof define == 'function' && define.amd ) {
     // AMD - RequireJS
     define( 'ev-emitter/ev-emitter',factory );
@@ -386,7 +386,7 @@ return getSize;
     global.EvEmitter = factory();
   }
 
-}( this, function() {
+}( typeof window != 'undefined' ? window : this, function() {
 
 
 
@@ -529,7 +529,7 @@ return EvEmitter;
 }));
 
 /**
- * Fizzy UI utils v2.0.1
+ * Fizzy UI utils v2.0.2
  * MIT license
  */
 
@@ -700,7 +700,8 @@ utils.debounceMethod = function( _class, methodName, threshold ) {
 // ----- docReady ----- //
 
 utils.docReady = function( callback ) {
-  if ( document.readyState == 'complete' ) {
+  var readyState = document.readyState;
+  if ( readyState == 'complete' || readyState == 'interactive' ) {
     callback();
   } else {
     document.addEventListener( 'DOMContentLoaded', callback );
@@ -2268,7 +2269,7 @@ return Outlayer;
   /* jshint strict: false */ /* globals define, module */
   if ( typeof define == 'function' && define.amd ) {
     // AMD
-    define( 'packery/rect',factory );
+    define( 'rect',factory );
   } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
     module.exports = factory();
@@ -2421,7 +2422,7 @@ return Rect;
   /* jshint strict: false */ /* globals define, module, require */
   if ( typeof define == 'function' && define.amd ) {
     // AMD
-    define( 'packery/packer',[ './rect' ], factory );
+    define( 'packer',[ 'rect' ], factory );
   } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
     module.exports = factory(
@@ -2618,9 +2619,9 @@ return Packer;
   /* jshint strict: false */ /* globals define, module, require */
   if ( typeof define == 'function' && define.amd ) {
     // AMD
-    define( 'packery/item',[
+    define( 'item',[
         'outlayer/outlayer',
-        './rect'
+        'rect'
       ],
       factory );
   } else if ( typeof module == 'object' && module.exports ) {
@@ -2759,9 +2760,9 @@ return Item;
     define( [
         'get-size/get-size',
         'outlayer/outlayer',
-        './rect',
-        './packer',
-        './item'
+        'rect',
+        'packer',
+        'item'
       ],
       factory );
   } else if ( typeof module == 'object' && module.exports ) {
