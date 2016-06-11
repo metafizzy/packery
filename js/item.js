@@ -9,7 +9,7 @@
     // AMD
     define( [
         'outlayer/outlayer',
-        './rect'
+        'rect'
       ],
       factory );
   } else if ( typeof module == 'object' && module.exports ) {

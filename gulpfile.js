@@ -69,6 +69,9 @@ gulp.task( 'requirejs', function() {
       ],
       paths: {
         packery: '../js/',
+        item: '../js/item',
+        packer: '../js/packer',
+        rect: '../js/rect',
         jquery: 'empty:'
       }
     }) )

@@ -17,9 +17,9 @@
     define( [
         'get-size/get-size',
         'outlayer/outlayer',
-        './rect',
-        './packer',
-        './item'
+        'rect',
+        'packer',
+        'item'
       ],
       factory );
   } else if ( typeof module == 'object' && module.exports ) {
