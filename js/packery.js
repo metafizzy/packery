@@ -459,7 +459,9 @@ proto.updateShiftTargets = function( dropItem ) {
     boundsSize = ( segs - segmentSpan ) * segment;
     // add targets on top
     for ( var i=0; i < segs; i++ ) {
-      this._addShiftTarget( i * segment, 0, boundsSize );
+      var initialX = isHorizontal ? 0 : i * segment;
+      var initialY = isHorizontal ? i * segment : 0;
+      this._addShiftTarget( initialX, initialY, boundsSize );
     }
   } else {
     boundsSize = ( this.shiftPacker[ measure ] + this.gutter ) - dropItem.rect[ measure ];
