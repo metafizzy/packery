@@ -8,8 +8,8 @@ See [packery.metafizzy.co](http://packery.metafizzy.co) for complete docs and de
 
 ### Download
 
-+ [packery.pkgd.js](https://github.com/metafizzy/packery/raw/master/dist/packery.pkgd.js) un-minified, or
-+ [packery.pkgd.min.js](https://github.com/metafizzy/packery/raw/master/dist/packery.pkgd.min.js) minified
++ [packery.pkgd.js](https://npmcdn.com/packery@2.1/dist/packery.pkgd.js) un-minified, or
++ [packery.pkgd.min.js](https://npmcdn.com/packery@2.1/dist/packery.pkgd.min.js) minified
 
 ### CDN
 

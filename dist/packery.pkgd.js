@@ -1,5 +1,5 @@
 /*!
- * Packery PACKAGED v2.1.0
+ * Packery PACKAGED v2.1.1
  * Gapless, draggable grid layouts
  *
  * Licensed GPLv3 for open source use
@@ -2268,7 +2268,7 @@ return Outlayer;
   /* jshint strict: false */ /* globals define, module */
   if ( typeof define == 'function' && define.amd ) {
     // AMD
-    define( 'packery/rect',factory );
+    define( 'packery/js/rect',factory );
   } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
     module.exports = factory();
@@ -2421,7 +2421,7 @@ return Rect;
   /* jshint strict: false */ /* globals define, module, require */
   if ( typeof define == 'function' && define.amd ) {
     // AMD
-    define( 'packery/packer',[ './rect' ], factory );
+    define( 'packery/js/packer',[ './rect' ], factory );
   } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
     module.exports = factory(
@@ -2618,7 +2618,7 @@ return Packer;
   /* jshint strict: false */ /* globals define, module, require */
   if ( typeof define == 'function' && define.amd ) {
     // AMD
-    define( 'packery/item',[
+    define( 'packery/js/item',[
         'outlayer/outlayer',
         './rect'
       ],
@@ -2741,7 +2741,7 @@ return Item;
 }));
 
 /*!
- * Packery v2.1.0
+ * Packery v2.1.1
  * Gapless, draggable grid layouts
  *
  * Licensed GPLv3 for open source use
@@ -2759,9 +2759,9 @@ return Item;
     define( [
         'get-size/get-size',
         'outlayer/outlayer',
-        './rect',
-        './packer',
-        './item'
+        'packery/js/rect',
+        'packery/js/packer',
+        'packery/js/item'
       ],
       factory );
   } else if ( typeof module == 'object' && module.exports ) {
@@ -3201,7 +3201,9 @@ proto.updateShiftTargets = function( dropItem ) {
     boundsSize = ( segs - segmentSpan ) * segment;
     // add targets on top
     for ( var i=0; i < segs; i++ ) {
-      this._addShiftTarget( i * segment, 0, boundsSize );
+      var initialX = isHorizontal ? 0 : i * segment;
+      var initialY = isHorizontal ? i * segment : 0;
+      this._addShiftTarget( initialX, initialY, boundsSize );
     }
   } else {
     boundsSize = ( this.shiftPacker[ measure ] + this.gutter ) - dropItem.rect[ measure ];
