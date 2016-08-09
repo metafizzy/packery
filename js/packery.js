@@ -63,11 +63,25 @@ var proto = Packery.prototype;
 proto._create = function() {
   // call super
   Outlayer.prototype._create.call( this );
-  //handle gutter
-  if(this.gutter) {
-	this.gutterWidth = this.gutter;
-	this.gutterHeight = this.gutter;
+
+  // handle gutter
+  var gutter = this.options.gutter;
+  if ( Array.isArray(gutter) ) {
+    if ( typeof gutter[0] !== undefined ) {
+      this.options.gutterWidth = gutter[0];
+
+      if ( typeof gutter[1] !== 'undefined' ) {
+        this.options.gutterHeight = gutter[1];
+      } else {
+        this.options.gutterHeight = this.options.gutterWidth;
+      }
+    } else {
+      this.options.gutterWidth = this.options.gutterHeight = 0;
+    }
+  } else {
+    this.options.gutterWidth = this.options.gutterHeight = gutter;
   }
+
   // initial properties
   this.packer = new Packer();
   // packer for drop targets
