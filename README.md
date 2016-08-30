@@ -8,17 +8,17 @@ See [packery.metafizzy.co](http://packery.metafizzy.co) for complete docs and de
 
 ### Download
 
-+ [packery.pkgd.js](https://npmcdn.com/packery@2.1/dist/packery.pkgd.js) un-minified, or
-+ [packery.pkgd.min.js](https://npmcdn.com/packery@2.1/dist/packery.pkgd.min.js) minified
++ [packery.pkgd.js](https://unpkg.com/packery@2.1/dist/packery.pkgd.js) un-minified, or
++ [packery.pkgd.min.js](https://unpkg.com/packery@2.1/dist/packery.pkgd.min.js) minified
 
 ### CDN
 
-Link directly to Packery files on [npmcdn](https://npmcdn.com).
+Link directly to Packery files on [unpkg](https://unpkg.com).
 
 ``` html
-<script src="https://npmcdn.com/packery@2.1/dist/packery.pkgd.js"></script>
+<script src="https://unpkg.com/packery@2.1/dist/packery.pkgd.js"></script>
 <!-- or -->
-<script src="https://npmcdn.com/packery@2.1/dist/packery.pkgd.min.js"></script>
+<script src="https://unpkg.com/packery@2.1/dist/packery.pkgd.min.js"></script>
 ```
 
 ### Package managers
