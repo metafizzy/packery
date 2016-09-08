@@ -95,15 +95,18 @@ proto.removeElem = function() {
 
 // ----- dropPlaceholder ----- //
 
-proto.showDropPlaceholder = function() {
+proto.showDropPlaceholder = function(additionalClass) {
   var dropPlaceholder = this.dropPlaceholder;
+  var className = 'packery-drop-placeholder';
   if ( !dropPlaceholder ) {
     // create dropPlaceholder
     dropPlaceholder = this.dropPlaceholder = document.createElement('div');
-    dropPlaceholder.className = 'packery-drop-placeholder';
+    dropPlaceholder.className = className;
     dropPlaceholder.style.position = 'absolute';
   }
-
+  if ( additionalClass !== undefined ) {
+    dropPlaceholder.className = className + ' ' + additionalClass;
+  }
   dropPlaceholder.style.width = this.size.width + 'px';
   dropPlaceholder.style.height = this.size.height + 'px';
   this.positionDropPlaceholder();
