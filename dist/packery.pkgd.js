@@ -474,7 +474,7 @@ return EvEmitter;
 }));
 
 /**
- * matchesSelector v2.0.1
+ * matchesSelector v2.0.2
  * matchesSelector( element, '.selector' )
  * MIT license
  */
@@ -500,7 +500,7 @@ return EvEmitter;
   'use strict';
 
   var matchesMethod = ( function() {
-    var ElemProto = Element.prototype;
+    var ElemProto = window.Element.prototype;
     // check for the standard method name first
     if ( ElemProto.matches ) {
       return 'matches';
@@ -528,7 +528,7 @@ return EvEmitter;
 }));
 
 /**
- * Fizzy UI utils v2.0.2
+ * Fizzy UI utils v2.0.5
  * MIT license
  */
 
@@ -589,7 +589,8 @@ utils.makeArray = function( obj ) {
   if ( Array.isArray( obj ) ) {
     // use object if already an array
     ary = obj;
-  } else if ( obj && typeof obj.length == 'number' ) {
+  } else if ( obj && typeof obj == 'object' &&
+    typeof obj.length == 'number' ) {
     // convert nodeList to array
     for ( var i=0; i < obj.length; i++ ) {
       ary.push( obj[i] );
@@ -613,7 +614,7 @@ utils.removeFrom = function( ary, obj ) {
 // ----- getParent ----- //
 
 utils.getParent = function( elem, selector ) {
-  while ( elem != document.body ) {
+  while ( elem.parentNode && elem != document.body ) {
     elem = elem.parentNode;
     if ( matchesSelector( elem, selector ) ) {
       return elem;
@@ -701,7 +702,8 @@ utils.debounceMethod = function( _class, methodName, threshold ) {
 utils.docReady = function( callback ) {
   var readyState = document.readyState;
   if ( readyState == 'complete' || readyState == 'interactive' ) {
-    callback();
+    // do async to allow for other scripts to run. metafizzy/flickity#441
+    setTimeout( callback );
   } else {
     document.addEventListener( 'DOMContentLoaded', callback );
   }
@@ -749,7 +751,7 @@ utils.htmlInit = function( WidgetClass, namespace ) {
       }
       // initialize
       var instance = new WidgetClass( elem, options );
-      // make available via $().data('layoutname')
+      // make available via $().data('namespace')
       if ( jQuery ) {
         jQuery.data( elem, namespace, instance );
       }
@@ -899,13 +901,16 @@ proto.getPosition = function() {
   var isOriginTop = this.layout._getOption('originTop');
   var xValue = style[ isOriginLeft ? 'left' : 'right' ];
   var yValue = style[ isOriginTop ? 'top' : 'bottom' ];
+  var x = parseFloat( xValue );
+  var y = parseFloat( yValue );
   // convert percent to pixels
   var layoutSize = this.layout.size;
-  var x = xValue.indexOf('%') != -1 ?
-    ( parseFloat( xValue ) / 100 ) * layoutSize.width : parseInt( xValue, 10 );
-  var y = yValue.indexOf('%') != -1 ?
-    ( parseFloat( yValue ) / 100 ) * layoutSize.height : parseInt( yValue, 10 );
-
+  if ( xValue.indexOf('%') != -1 ) {
+    x = ( x / 100 ) * layoutSize.width;
+  }
+  if ( yValue.indexOf('%') != -1 ) {
+    y = ( y / 100 ) * layoutSize.height;
+  }
   // clean up 'auto' or other non-integer values
   x = isNaN( x ) ? 0 : x;
   y = isNaN( y ) ? 0 : y;
@@ -968,9 +973,7 @@ proto._transitionTo = function( x, y ) {
   var curX = this.position.x;
   var curY = this.position.y;
 
-  var compareX = parseInt( x, 10 );
-  var compareY = parseInt( y, 10 );
-  var didNotMove = compareX === this.position.x && compareY === this.position.y;
+  var didNotMove = x == this.position.x && y == this.position.y;
 
   // save end position
   this.setPosition( x, y );
@@ -1013,8 +1016,8 @@ proto.goTo = function( x, y ) {
 proto.moveTo = proto._transitionTo;
 
 proto.setPosition = function( x, y ) {
-  this.position.x = parseInt( x, 10 );
-  this.position.y = parseInt( y, 10 );
+  this.position.x = parseFloat( x );
+  this.position.y = parseFloat( y );
 };
 
 // ----- transition ----- //
@@ -1319,7 +1322,7 @@ return Item;
 }));
 
 /*!
- * Outlayer v2.1.0
+ * Outlayer v2.1.1
  * the brains and guts of a layout library
  * MIT license
  */
