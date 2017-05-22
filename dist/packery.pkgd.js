@@ -3125,6 +3125,14 @@ proto.resize = function() {
  * @returns Boolean
  */
 proto.needsResizeLayout = function() {
+  if (this.isFullscreen()) {
+    this.fullscreen = true;
+    return false;
+  } else if (this.fullscreen) {
+    this.fullscreen = false;
+    return false;
+  }
+
   var size = getSize( this.element );
   var innerSize = this._getOption('horizontal') ? 'innerHeight' : 'innerWidth';
   return size[ innerSize ] != this.size[ innerSize ];
@@ -3160,6 +3168,13 @@ proto.resizeShiftPercentLayout = function() {
   }
 
   this.shiftLayout();
+};
+
+proto.isFullscreen = function() {
+  return !!document.fullscreenElement ||
+    !!document.webkitFullscreenElement ||
+    !!document.mozFullScreenElement ||
+    !!document.msFullscreenElement;
 };
 
 // -------------------------- drag -------------------------- //
