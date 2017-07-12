@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+
+  <title>fluid</title>
+
+  <style>
+  * { box-sizing: border-box; }
+
+body { font-family: sans-serif; }
+
+/* ---- grid ---- */
+
+.grid {
+  background: #DDD;
+}
+
+/* clear fix */
+.grid:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+/* ---- .grid-item ---- */
+
+.grid-item {
+  float: left;
+  width: 32.666666666666%;
+  height: 100px;
+  background: #C09;
+}
+
+.gutter {
+  width: 1%;
+}
+
+.grid-item--width2 { width: 66.333333333334%; }
+.grid-item--height2 { height: 210px; }
+
+  </style>
+
+</head>
+<body>
+
+  <h1>Packery - resize: false</h1>
+
+<div class="container">
+<div class="grid">
+<div class="gutter"></div>
+  <div class="grid-item grid-item--width2"></div>
+  <div class="grid-item grid-item--height2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--width2 grid-item--height2"></div>
+  <div class="grid-item grid-item--width2"></div>
+  <div class="grid-item grid-item--width2"></div>
+  <div class="grid-item grid-item--height2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--width2"></div>
+  <div class="grid-item grid-item--height2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--width2 grid-item--height2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--width2"></div>
+  <div class="grid-item grid-item--height2"></div>
+  <div class="grid-item"></div>
+</div>
+</div>
+
+
+<script src="../dist/packery.pkgd.js"></script>
+
+<script>
+  var pckry = new Packery( '.grid', {
+	itemSelector: '.grid-item',
+	resize: false,
+	percentPosition: true,
+	gutter: ['.gutter', 10]
+  });
+</script>
+
+</body>
+</html>

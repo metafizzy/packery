@@ -64,6 +64,24 @@ proto._create = function() {
   // call super
   Outlayer.prototype._create.call( this );
 
+  // handle gutter
+  var gutter = this.options.gutter;
+  if ( Array.isArray(gutter) ) {
+    if ( typeof gutter[0] !== undefined ) {
+      this.options.gutterWidth = gutter[0];
+
+      if ( typeof gutter[1] !== 'undefined' ) {
+        this.options.gutterHeight = gutter[1];
+      } else {
+        this.options.gutterHeight = this.options.gutterWidth;
+      }
+    } else {
+      this.options.gutterWidth = this.options.gutterHeight = 0;
+    }
+  } else {
+    this.options.gutterWidth = this.options.gutterHeight = gutter;
+  }
+
   // initial properties
   this.packer = new Packer();
   // packer for drop targets
@@ -126,10 +144,10 @@ proto._resetLayout = function() {
   // packer settings, if horizontal or vertical
   if ( this._getOption('horizontal') ) {
     width = Infinity;
-    height = this.size.innerHeight + this.gutter;
+    height = this.size.innerHeight + this.gutterHeight;
     sortDirection = 'rightwardTopToBottom';
   } else {
-    width = this.size.innerWidth + this.gutter;
+    width = this.size.innerWidth + this.gutterWidth;
     height = Infinity;
     sortDirection = 'downwardLeftToRight';
   }
@@ -152,7 +170,8 @@ proto._resetLayout = function() {
 proto._getMeasurements = function() {
   this._getMeasurement( 'columnWidth', 'width' );
   this._getMeasurement( 'rowHeight', 'height' );
-  this._getMeasurement( 'gutter', 'width' );
+  this._getMeasurement( 'gutterWidth', 'width' );
+  this._getMeasurement( 'gutterHeight', 'height' );
 };
 
 proto._getItemLayoutPosition = function( item ) {
@@ -201,8 +220,8 @@ proto._setRectSize = function( elem, rect ) {
   // size for columnWidth and rowHeight, if available
   // only check if size is non-zero, #177
   if ( w || h ) {
-    w = this._applyGridGutter( w, this.columnWidth );
-    h = this._applyGridGutter( h, this.rowHeight );
+    w = this._applyGridGutter( w, this.columnWidth, true );
+    h = this._applyGridGutter( h, this.rowHeight, false );
   }
   // rect must fit in packer
   rect.width = Math.min( w, this.packer.width );
@@ -215,12 +234,13 @@ proto._setRectSize = function( elem, rect ) {
  * @param {Number} gridSize - columnWidth or rowHeight
  * @returns measurement
  */
-proto._applyGridGutter = function( measurement, gridSize ) {
+proto._applyGridGutter = function( measurement, gridSize, isWidth ) {
   // just add gutter if no gridSize
+  var gutter = isWidth ? this.gutterWidth : this.gutterHeight;
   if ( !gridSize ) {
-    return measurement + this.gutter;
+    return measurement + gutter;
   }
-  gridSize += this.gutter;
+  gridSize += gutter;
   // fit item to columnWidth/rowHeight
   var remainder = measurement % gridSize;
   var mathMethod = remainder && remainder < 1 ? 'round' : 'ceil';
@@ -231,11 +251,11 @@ proto._applyGridGutter = function( measurement, gridSize ) {
 proto._getContainerSize = function() {
   if ( this._getOption('horizontal') ) {
     return {
-      width: this.maxX - this.gutter
+      width: this.maxX - this.gutterWidth
     };
   } else {
     return {
-      height: this.maxY - this.gutter
+      height: this.maxY - this.gutterHeight
     };
   }
 };
@@ -360,6 +380,14 @@ proto.resize = function() {
  * @returns Boolean
  */
 proto.needsResizeLayout = function() {
+  if (this.isFullscreen()) {
+    this.fullscreen = true;
+    return false;
+  } else if (this.fullscreen) {
+    this.fullscreen = false;
+    return false;
+  }
+
   var size = getSize( this.element );
   var innerSize = this._getOption('horizontal') ? 'innerHeight' : 'innerWidth';
   return size[ innerSize ] != this.size[ innerSize ];
@@ -373,20 +401,21 @@ proto.resizeShiftPercentLayout = function() {
   var measure = isHorizontal ? 'height' : 'width';
   var segmentName = isHorizontal ? 'rowHeight' : 'columnWidth';
   var innerSize = isHorizontal ? 'innerHeight' : 'innerWidth';
+  var gutter = isHorizontal ? this.gutterHeight : this.gutterWidth;
 
   // proportional re-align items
   var previousSegment = this[ segmentName ];
-  previousSegment = previousSegment && previousSegment + this.gutter;
+  previousSegment = previousSegment && previousSegment + gutter;
 
   if ( previousSegment ) {
     this._getMeasurements();
-    var currentSegment = this[ segmentName ] + this.gutter;
+    var currentSegment = this[ segmentName ] + gutter;
     items.forEach( function( item ) {
       var seg = Math.round( item.rect[ coord ] / previousSegment );
       item.rect[ coord ] = seg * currentSegment;
     });
   } else {
-    var currentSize = getSize( this.element )[ innerSize ] + this.gutter;
+    var currentSize = getSize( this.element )[ innerSize ] + gutter;
     var previousSize = this.packer[ measure ];
     items.forEach( function( item ) {
       item.rect[ coord ] = ( item.rect[ coord ] / previousSize ) * currentSize;
@@ -394,6 +423,13 @@ proto.resizeShiftPercentLayout = function() {
   }
 
   this.shiftLayout();
+};
+
+proto.isFullscreen = function() {
+  return !!document.fullscreenElement ||
+    !!document.webkitFullscreenElement ||
+    !!document.mozFullScreenElement ||
+    !!document.msFullscreenElement;
 };
 
 // -------------------------- drag -------------------------- //
@@ -446,16 +482,17 @@ proto.updateShiftTargets = function( dropItem ) {
   var isHorizontal = this._getOption('horizontal');
   var segmentName = isHorizontal ? 'rowHeight' : 'columnWidth';
   var measure = isHorizontal ? 'height' : 'width';
+  var gutter = isHorizontal ? this.gutterHeight : this.gutterWidth;
 
   this.shiftTargetKeys = [];
   this.shiftTargets = [];
   var boundsSize;
   var segment = this[ segmentName ];
-  segment = segment && segment + this.gutter;
+  segment = segment && segment + gutter;
 
   if ( segment ) {
     var segmentSpan = Math.ceil( dropItem.rect[ measure ] / segment );
-    var segs = Math.floor( ( this.shiftPacker[ measure ] + this.gutter ) / segment );
+    var segs = Math.floor( ( this.shiftPacker[ measure ] + gutter ) / segment );
     boundsSize = ( segs - segmentSpan ) * segment;
     // add targets on top
     for ( var i=0; i < segs; i++ ) {
@@ -464,7 +501,7 @@ proto.updateShiftTargets = function( dropItem ) {
       this._addShiftTarget( initialX, initialY, boundsSize );
     }
   } else {
-    boundsSize = ( this.shiftPacker[ measure ] + this.gutter ) - dropItem.rect[ measure ];
+    boundsSize = ( this.shiftPacker[ measure ] + gutter ) - dropItem.rect[ measure ];
     this._addShiftTarget( 0, 0, boundsSize );
   }
 

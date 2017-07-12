@@ -11,20 +11,19 @@
 
 /**
  * Bridget makes jQuery widgets
- * v2.0.0
+ * v2.0.1
  * MIT license
  */
 
 /* jshint browser: true, strict: true, undef: true, unused: true */
 
 ( function( window, factory ) {
-  'use strict';
-  /* globals define: false, module: false, require: false */
-
+  // universal module definition
+  /*jshint strict: false */ /* globals define, module, require */
   if ( typeof define == 'function' && define.amd ) {
     // AMD
     define( 'jquery-bridget/jquery-bridget',[ 'jquery' ], function( jQuery ) {
-      factory( window, jQuery );
+      return factory( window, jQuery );
     });
   } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
@@ -365,7 +364,7 @@ return getSize;
 });
 
 /**
- * EvEmitter v1.0.2
+ * EvEmitter v1.0.3
  * Lil' event emitter
  * MIT License
  */
@@ -374,7 +373,7 @@ return getSize;
 
 ( function( global, factory ) {
   // universal module definition
-  /* jshint strict: false */ /* globals define, module */
+  /* jshint strict: false */ /* globals define, module, window */
   if ( typeof define == 'function' && define.amd ) {
     // AMD - RequireJS
     define( 'ev-emitter/ev-emitter',factory );
@@ -386,7 +385,7 @@ return getSize;
     global.EvEmitter = factory();
   }
 
-}( this, function() {
+}( typeof window != 'undefined' ? window : this, function() {
 
 
 
@@ -475,7 +474,7 @@ return EvEmitter;
 }));
 
 /**
- * matchesSelector v2.0.1
+ * matchesSelector v2.0.2
  * matchesSelector( element, '.selector' )
  * MIT license
  */
@@ -501,7 +500,7 @@ return EvEmitter;
   'use strict';
 
   var matchesMethod = ( function() {
-    var ElemProto = Element.prototype;
+    var ElemProto = window.Element.prototype;
     // check for the standard method name first
     if ( ElemProto.matches ) {
       return 'matches';
@@ -529,7 +528,7 @@ return EvEmitter;
 }));
 
 /**
- * Fizzy UI utils v2.0.1
+ * Fizzy UI utils v2.0.5
  * MIT license
  */
 
@@ -590,7 +589,8 @@ utils.makeArray = function( obj ) {
   if ( Array.isArray( obj ) ) {
     // use object if already an array
     ary = obj;
-  } else if ( obj && typeof obj.length == 'number' ) {
+  } else if ( obj && typeof obj == 'object' &&
+    typeof obj.length == 'number' ) {
     // convert nodeList to array
     for ( var i=0; i < obj.length; i++ ) {
       ary.push( obj[i] );
@@ -614,7 +614,7 @@ utils.removeFrom = function( ary, obj ) {
 // ----- getParent ----- //
 
 utils.getParent = function( elem, selector ) {
-  while ( elem != document.body ) {
+  while ( elem.parentNode && elem != document.body ) {
     elem = elem.parentNode;
     if ( matchesSelector( elem, selector ) ) {
       return elem;
@@ -700,8 +700,10 @@ utils.debounceMethod = function( _class, methodName, threshold ) {
 // ----- docReady ----- //
 
 utils.docReady = function( callback ) {
-  if ( document.readyState == 'complete' ) {
-    callback();
+  var readyState = document.readyState;
+  if ( readyState == 'complete' || readyState == 'interactive' ) {
+    // do async to allow for other scripts to run. metafizzy/flickity#441
+    setTimeout( callback );
   } else {
     document.addEventListener( 'DOMContentLoaded', callback );
   }
@@ -749,7 +751,7 @@ utils.htmlInit = function( WidgetClass, namespace ) {
       }
       // initialize
       var instance = new WidgetClass( elem, options );
-      // make available via $().data('layoutname')
+      // make available via $().data('namespace')
       if ( jQuery ) {
         jQuery.data( elem, namespace, instance );
       }
@@ -899,13 +901,16 @@ proto.getPosition = function() {
   var isOriginTop = this.layout._getOption('originTop');
   var xValue = style[ isOriginLeft ? 'left' : 'right' ];
   var yValue = style[ isOriginTop ? 'top' : 'bottom' ];
+  var x = parseFloat( xValue );
+  var y = parseFloat( yValue );
   // convert percent to pixels
   var layoutSize = this.layout.size;
-  var x = xValue.indexOf('%') != -1 ?
-    ( parseFloat( xValue ) / 100 ) * layoutSize.width : parseInt( xValue, 10 );
-  var y = yValue.indexOf('%') != -1 ?
-    ( parseFloat( yValue ) / 100 ) * layoutSize.height : parseInt( yValue, 10 );
-
+  if ( xValue.indexOf('%') != -1 ) {
+    x = ( x / 100 ) * layoutSize.width;
+  }
+  if ( yValue.indexOf('%') != -1 ) {
+    y = ( y / 100 ) * layoutSize.height;
+  }
   // clean up 'auto' or other non-integer values
   x = isNaN( x ) ? 0 : x;
   y = isNaN( y ) ? 0 : y;
@@ -968,9 +973,7 @@ proto._transitionTo = function( x, y ) {
   var curX = this.position.x;
   var curY = this.position.y;
 
-  var compareX = parseInt( x, 10 );
-  var compareY = parseInt( y, 10 );
-  var didNotMove = compareX === this.position.x && compareY === this.position.y;
+  var didNotMove = x == this.position.x && y == this.position.y;
 
   // save end position
   this.setPosition( x, y );
@@ -1013,8 +1016,8 @@ proto.goTo = function( x, y ) {
 proto.moveTo = proto._transitionTo;
 
 proto.setPosition = function( x, y ) {
-  this.position.x = parseInt( x, 10 );
-  this.position.y = parseInt( y, 10 );
+  this.position.x = parseFloat( x );
+  this.position.y = parseFloat( y );
 };
 
 // ----- transition ----- //
@@ -1319,7 +1322,7 @@ return Item;
 }));
 
 /*!
- * Outlayer v2.1.0
+ * Outlayer v2.1.1
  * the brains and guts of a layout library
  * MIT license
  */
@@ -2806,6 +2809,24 @@ proto._create = function() {
   // call super
   Outlayer.prototype._create.call( this );
 
+  // handle gutter
+  var gutter = this.options.gutter;
+  if ( Array.isArray(gutter) ) {
+    if ( typeof gutter[0] !== undefined ) {
+      this.options.gutterWidth = gutter[0];
+
+      if ( typeof gutter[1] !== 'undefined' ) {
+        this.options.gutterHeight = gutter[1];
+      } else {
+        this.options.gutterHeight = this.options.gutterWidth;
+      }
+    } else {
+      this.options.gutterWidth = this.options.gutterHeight = 0;
+    }
+  } else {
+    this.options.gutterWidth = this.options.gutterHeight = gutter;
+  }
+
   // initial properties
   this.packer = new Packer();
   // packer for drop targets
@@ -2868,10 +2889,10 @@ proto._resetLayout = function() {
   // packer settings, if horizontal or vertical
   if ( this._getOption('horizontal') ) {
     width = Infinity;
-    height = this.size.innerHeight + this.gutter;
+    height = this.size.innerHeight + this.gutterHeight;
     sortDirection = 'rightwardTopToBottom';
   } else {
-    width = this.size.innerWidth + this.gutter;
+    width = this.size.innerWidth + this.gutterWidth;
     height = Infinity;
     sortDirection = 'downwardLeftToRight';
   }
@@ -2894,7 +2915,8 @@ proto._resetLayout = function() {
 proto._getMeasurements = function() {
   this._getMeasurement( 'columnWidth', 'width' );
   this._getMeasurement( 'rowHeight', 'height' );
-  this._getMeasurement( 'gutter', 'width' );
+  this._getMeasurement( 'gutterWidth', 'width' );
+  this._getMeasurement( 'gutterHeight', 'height' );
 };
 
 proto._getItemLayoutPosition = function( item ) {
@@ -2943,8 +2965,8 @@ proto._setRectSize = function( elem, rect ) {
   // size for columnWidth and rowHeight, if available
   // only check if size is non-zero, #177
   if ( w || h ) {
-    w = this._applyGridGutter( w, this.columnWidth );
-    h = this._applyGridGutter( h, this.rowHeight );
+    w = this._applyGridGutter( w, this.columnWidth, true );
+    h = this._applyGridGutter( h, this.rowHeight, false );
   }
   // rect must fit in packer
   rect.width = Math.min( w, this.packer.width );
@@ -2957,12 +2979,13 @@ proto._setRectSize = function( elem, rect ) {
  * @param {Number} gridSize - columnWidth or rowHeight
  * @returns measurement
  */
-proto._applyGridGutter = function( measurement, gridSize ) {
+proto._applyGridGutter = function( measurement, gridSize, isWidth ) {
   // just add gutter if no gridSize
+  var gutter = isWidth ? this.gutterWidth : this.gutterHeight;
   if ( !gridSize ) {
-    return measurement + this.gutter;
+    return measurement + gutter;
   }
-  gridSize += this.gutter;
+  gridSize += gutter;
   // fit item to columnWidth/rowHeight
   var remainder = measurement % gridSize;
   var mathMethod = remainder && remainder < 1 ? 'round' : 'ceil';
@@ -2973,11 +2996,11 @@ proto._applyGridGutter = function( measurement, gridSize ) {
 proto._getContainerSize = function() {
   if ( this._getOption('horizontal') ) {
     return {
-      width: this.maxX - this.gutter
+      width: this.maxX - this.gutterWidth
     };
   } else {
     return {
-      height: this.maxY - this.gutter
+      height: this.maxY - this.gutterHeight
     };
   }
 };
@@ -3102,6 +3125,14 @@ proto.resize = function() {
  * @returns Boolean
  */
 proto.needsResizeLayout = function() {
+  if (this.isFullscreen()) {
+    this.fullscreen = true;
+    return false;
+  } else if (this.fullscreen) {
+    this.fullscreen = false;
+    return false;
+  }
+
   var size = getSize( this.element );
   var innerSize = this._getOption('horizontal') ? 'innerHeight' : 'innerWidth';
   return size[ innerSize ] != this.size[ innerSize ];
@@ -3115,20 +3146,21 @@ proto.resizeShiftPercentLayout = function() {
   var measure = isHorizontal ? 'height' : 'width';
   var segmentName = isHorizontal ? 'rowHeight' : 'columnWidth';
   var innerSize = isHorizontal ? 'innerHeight' : 'innerWidth';
+  var gutter = isHorizontal ? this.gutterHeight : this.gutterWidth;
 
   // proportional re-align items
   var previousSegment = this[ segmentName ];
-  previousSegment = previousSegment && previousSegment + this.gutter;
+  previousSegment = previousSegment && previousSegment + gutter;
 
   if ( previousSegment ) {
     this._getMeasurements();
-    var currentSegment = this[ segmentName ] + this.gutter;
+    var currentSegment = this[ segmentName ] + gutter;
     items.forEach( function( item ) {
       var seg = Math.round( item.rect[ coord ] / previousSegment );
       item.rect[ coord ] = seg * currentSegment;
     });
   } else {
-    var currentSize = getSize( this.element )[ innerSize ] + this.gutter;
+    var currentSize = getSize( this.element )[ innerSize ] + gutter;
     var previousSize = this.packer[ measure ];
     items.forEach( function( item ) {
       item.rect[ coord ] = ( item.rect[ coord ] / previousSize ) * currentSize;
@@ -3136,6 +3168,13 @@ proto.resizeShiftPercentLayout = function() {
   }
 
   this.shiftLayout();
+};
+
+proto.isFullscreen = function() {
+  return !!document.fullscreenElement ||
+    !!document.webkitFullscreenElement ||
+    !!document.mozFullScreenElement ||
+    !!document.msFullscreenElement;
 };
 
 // -------------------------- drag -------------------------- //
@@ -3188,16 +3227,17 @@ proto.updateShiftTargets = function( dropItem ) {
   var isHorizontal = this._getOption('horizontal');
   var segmentName = isHorizontal ? 'rowHeight' : 'columnWidth';
   var measure = isHorizontal ? 'height' : 'width';
+  var gutter = isHorizontal ? this.gutterHeight : this.gutterWidth;
 
   this.shiftTargetKeys = [];
   this.shiftTargets = [];
   var boundsSize;
   var segment = this[ segmentName ];
-  segment = segment && segment + this.gutter;
+  segment = segment && segment + gutter;
 
   if ( segment ) {
     var segmentSpan = Math.ceil( dropItem.rect[ measure ] / segment );
-    var segs = Math.floor( ( this.shiftPacker[ measure ] + this.gutter ) / segment );
+    var segs = Math.floor( ( this.shiftPacker[ measure ] + gutter ) / segment );
     boundsSize = ( segs - segmentSpan ) * segment;
     // add targets on top
     for ( var i=0; i < segs; i++ ) {
@@ -3206,7 +3246,7 @@ proto.updateShiftTargets = function( dropItem ) {
       this._addShiftTarget( initialX, initialY, boundsSize );
     }
   } else {
-    boundsSize = ( this.shiftPacker[ measure ] + this.gutter ) - dropItem.rect[ measure ];
+    boundsSize = ( this.shiftPacker[ measure ] + gutter ) - dropItem.rect[ measure ];
     this._addShiftTarget( 0, 0, boundsSize );
   }
 
