@@ -87,7 +87,10 @@ proto.disablePlacing = function() {
 
 // remove element from DOM
 proto.removeElem = function() {
-  this.element.parentNode.removeChild( this.element );
+  var parent = this.element.parentNode;
+  if ( parent ) {
+    parent.removeChild( this.element );
+  }
   // add space back to packer
   this.layout.packer.addSpace( this.rect );
   this.emitEvent( 'remove', [ this ] );
