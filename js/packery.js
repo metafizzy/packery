@@ -56,7 +56,7 @@ Rect.prototype.canFit = function( rect ) {
 
 // create an Outlayer layout class
 var Packery = Outlayer.create( 'packery', {
-  pack: 'shift',
+  placePack: 'shift',
 });
 Packery.Item = Item;
 
@@ -159,9 +159,9 @@ proto._getMeasurements = function() {
 
 proto._getItemLayoutPosition = function( item ) {
   this._setRectSize( item.element, item.rect );
-  var isDragShifting = this.options.pack == 'shift' && this.dragItemCount > 0;
-  if ( this.isShifting || isDragShifting ) {
-    var packMethod = this._getShiftPackMethod();
+  var isDragging = this.dragItemCount > 0;
+  if ( this.isShifting || isDragging ) {
+    var packMethod = this._getPackMethod();
     this.packer[ packMethod ]( item.rect );
   } else {
     this.packer.pack( item.rect );
@@ -177,7 +177,10 @@ proto.shiftLayout = function() {
   delete this.isShifting;
 };
 
-proto._getShiftPackMethod = function() {
+proto._getPackMethod = function() {
+  if ( this.options.placePack != 'shift' ) {
+    return 'pack';
+  }
   return this._getOption('horizontal') ? 'rowPack' : 'columnPack';
 };
 
@@ -456,8 +459,7 @@ proto.updatePlaceTargets = function( placeItem ) {
 
   // pack each item to measure where placeTargets are
   var items = this._getItemsForLayout( this.items );
-  var packMethod = this.options.pack == 'shift' ? this._getShiftPackMethod() :
-    'pack';
+  var packMethod = this._getPackMethod();
   items.forEach( function( item ) {
     var rect = item.rect;
     this._setRectSize( item.element, rect );
