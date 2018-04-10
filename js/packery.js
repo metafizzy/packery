@@ -562,7 +562,8 @@ proto.itemDragMove = function( elem, x, y ) {
 
   // throttle
   var now = new Date();
-  if ( this._itemDragTime && now - this._itemDragTime < DRAG_THROTTLE_TIME ) {
+  var isThrottled = this._itemDragTime && now - this._itemDragTime < DRAG_THROTTLE_TIME;
+  if ( isThrottled ) {
     clearTimeout( this.dragTimeout );
     this.dragTimeout = setTimeout( onDrag, DRAG_THROTTLE_TIME );
   } else {
