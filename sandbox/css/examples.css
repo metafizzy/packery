@@ -1,5 +1,7 @@
 * { box-sizing: border-box; }
 
+html { overflow-y: scroll; }
+
 body {
   font-family: sans-serif;
 }
@@ -8,6 +10,12 @@ body {
   width: 500px;
   margin-bottom: 20px;
   background: #EEE;
+}
+
+.container:after {
+  content: '';
+  display: block;
+  clear: both;
 }
 
 .item {

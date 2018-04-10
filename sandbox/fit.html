@@ -7,26 +7,26 @@
 
   <link rel="stylesheet" href="css/examples.css" />
   <style>
-  #expanding-demo {
+  .expanding-demo {
     width: 40%;
   }
 
-  #expanding-demo .item {
+  .expanding-demo .item {
     height: 40px;
     width: 25%;
   }
 
-  #expanding-demo .item.is-expanded {
+  .expanding-demo .item.is-expanded {
     height: 60px;
     width: 50%;
     background: #1D6;
   }
 
-  #position-demo {
+  .position-demo {
     width: 30%;
   }
 
-  #position-demo .item {
+  .position-demo .item {
     width: 60px;
     height: 60px;
   }
@@ -35,9 +35,11 @@
 </head>
 <body>
 
-  <h1>fit</h1>
+<h1>fit</h1>
 
-<div id="expanding-demo" class="container">
+<h2>expand, shift</h2>
+
+<div class="container expanding-demo shift">
   <div class="item"></div>
   <div class="item"></div>
   <div class="item"></div>
@@ -49,7 +51,37 @@
   <div class="item"></div>
 </div>
 
-<div id="position-demo" class="container">
+<h2>position, shift</h2>
+
+<div class="container position-demo shift">
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+</div>
+
+<h2>expand, flow</h2>
+
+<div class="container expanding-demo flow">
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+</div>
+
+<h2>position, flow</h2>
+
+<div class="container position-demo flow">
   <div class="item"></div>
   <div class="item"></div>
   <div class="item"></div>
@@ -74,45 +106,51 @@
 
 <script>
 
-  ( function() {
-    var container = document.querySelector('#expanding-demo');
-    var pckry = new Packery( container );
 
-    container.addEventListener( 'click', function( event ) {
-      // don't proceed if item was not clicked on
-      var target = event.target;
-      if ( !matchesSelector( target, '.item' ) ) {
-        return;
-      }
+var expandShiftPckry = new Packery('.expanding-demo.shift');
+var expandFlowPckry = new Packery( '.expanding-demo.flow', {
+  placePack: 'flow',
+});
+expandFit( expandShiftPckry )
+expandFit( expandFlowPckry )
 
-      var isExpanded = target.classList.contains('is-expanded');
-      target.classList.toggle('is-expanded');
-
-      if ( isExpanded ) {
-        // if shrinking, just layout
-        pckry.shiftLayout();
-      } else {
-        // if expanding, fit it
-        pckry.fit( target );
-      }
-    });
-  })();
+var positionShiftPckry = new Packery('.position-demo.shift');
+var positionFlowPckry = new Packery( '.position-demo.flow', {
+  placePack: 'flow',
+});
+positionFit( positionShiftPckry )
+positionFit( positionFlowPckry )
 
 
-  ( function() {
-    var container = document.querySelector('#position-demo');
-    var pckry = new Packery( container );
+function addEventSelect( element, eventName, selector, listener ) {
+  element.addEventListener( eventName, function( event ) {
+    if ( matchesSelector( event.target, selector ) ) {
+      listener( event );
+    }
+  });
+}
 
-    container.addEventListener( 'click', function( event ) {
-      // don't proceed if item was not clicked on
-      var target = event.target;
-      if ( !matchesSelector( target, '.item' ) ) {
-        return;
-      }
-      // position item at 40, 40
-      pckry.fit( target, 40, 40 );
-    });
-  })();
+function expandFit( pckry ) {
+  addEventSelect( pckry.element, 'click', '.item', function( event ) {
+    var target = event.target;
+    var isExpanded = target.classList.contains('is-expanded');
+    target.classList.toggle('is-expanded');
+
+    if ( isExpanded ) {
+      // if shrinking, just layout
+      pckry.shiftLayout();
+    } else {
+      // if expanding, fit it
+      pckry.fit( target );
+    }
+  });
+}
+
+function positionFit( pckry ) {
+  addEventSelect( pckry.element, 'click', '.item', function( event ){
+    pckry.fit( event.target, 40, 40 );
+  });
+}
 
 </script>
 
