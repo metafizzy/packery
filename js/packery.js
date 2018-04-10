@@ -69,7 +69,7 @@ proto._create = function() {
   // initial properties
   this.packer = new Packer();
   // packer for drop targets
-  this.shiftPacker = new Packer();
+  this.placePacker = new Packer();
   this.isEnabled = true;
 
   this.dragItemCount = 0;
@@ -136,9 +136,9 @@ proto._resetLayout = function() {
     sortDirection = 'downwardLeftToRight';
   }
 
-  this.packer.width = this.shiftPacker.width = width;
-  this.packer.height = this.shiftPacker.height = height;
-  this.packer.sortDirection = this.shiftPacker.sortDirection = sortDirection;
+  this.packer.width = this.placePacker.width = width;
+  this.packer.height = this.placePacker.height = height;
+  this.packer.sortDirection = this.placePacker.sortDirection = sortDirection;
 
   this.packer.reset();
 
@@ -304,12 +304,12 @@ proto.fit = function( elem, x, y ) {
   this.stamp( item.element );
   // set placing flag
   item.enablePlacing();
-  this.updateShiftTargets( item );
+  this.updatePlaceTargets( item );
   // fall back to current position for fitting
   x = x === undefined ? item.rect.x: x;
   y = y === undefined ? item.rect.y: y;
   // position it best at its destination
-  this.shift( item, x, y );
+  this.placeItem( item, x, y );
   this._bindFitEvents( item );
   item.moveTo( item.rect.x, item.rect.y );
   // layout everything else
@@ -418,13 +418,11 @@ proto.itemDragStart = function( elem ) {
   item.enablePlacing();
   item.showDropPlaceholder();
   this.dragItemCount++;
-  // if ( this.options.pack == 'shift' ) {
-    this.updateShiftTargets( item );
-  // }
+  this.updatePlaceTargets( item );
 };
 
-proto.updateShiftTargets = function( dropItem ) {
-  this.shiftPacker.reset();
+proto.updatePlaceTargets = function( dropItem ) {
+  this.placePacker.reset();
 
   // pack stamps
   this._getBoundingRect();
@@ -443,49 +441,49 @@ proto.updateShiftTargets = function( dropItem ) {
     });
     this._setRectSize( stamp, rect );
     // save its space in the packer
-    this.shiftPacker.placed( rect );
+    this.placePacker.placed( rect );
   }, this );
 
-  // reset shiftTargets
+  // reset placeTargets
   var isHorizontal = this._getOption('horizontal');
   var segmentName = isHorizontal ? 'rowHeight' : 'columnWidth';
   var measure = isHorizontal ? 'height' : 'width';
 
-  this.shiftTargetKeys = [];
-  this.shiftTargets = [];
+  this.placeTargetKeys = [];
+  this.placeTargets = [];
   var boundsSize;
   var segment = this[ segmentName ];
   segment = segment && segment + this.gutter;
 
   if ( segment ) {
     var segmentSpan = Math.ceil( dropItem.rect[ measure ] / segment );
-    var segs = Math.floor( ( this.shiftPacker[ measure ] + this.gutter ) / segment );
+    var segs = Math.floor( ( this.placePacker[ measure ] + this.gutter ) / segment );
     boundsSize = ( segs - segmentSpan ) * segment;
     // add targets on top
     for ( var i=0; i < segs; i++ ) {
       var initialX = isHorizontal ? 0 : i * segment;
       var initialY = isHorizontal ? i * segment : 0;
-      this._addShiftTarget( initialX, initialY, boundsSize );
+      this._addPlaceTarget( initialX, initialY, boundsSize );
     }
   } else {
-    boundsSize = ( this.shiftPacker[ measure ] + this.gutter ) - dropItem.rect[ measure ];
-    this._addShiftTarget( 0, 0, boundsSize );
+    boundsSize = ( this.placePacker[ measure ] + this.gutter ) - dropItem.rect[ measure ];
+    this._addPlaceTarget( 0, 0, boundsSize );
   }
 
-  // pack each item to measure where shiftTargets are
+  // pack each item to measure where placeTargets are
   var items = this._getItemsForLayout( this.items );
   var packMethod = this._getPackMethod();
   items.forEach( function( item ) {
     var rect = item.rect;
     this._setRectSize( item.element, rect );
-    this.shiftPacker[ packMethod ]( rect );
+    this.placePacker[ packMethod ]( rect );
 
     // add top left corner
-    this._addShiftTarget( rect.x, rect.y, boundsSize );
+    this._addPlaceTarget( rect.x, rect.y, boundsSize );
     // add bottom left / top right corner
     var cornerX = isHorizontal ? rect.x + rect.width : rect.x;
     var cornerY = isHorizontal ? rect.y : rect.y + rect.height;
-    this._addShiftTarget( cornerX, cornerY, boundsSize );
+    this._addPlaceTarget( cornerX, cornerY, boundsSize );
 
     if ( segment ) {
       // add targets for each column on bottom / row on right
@@ -493,51 +491,45 @@ proto.updateShiftTargets = function( dropItem ) {
       for ( var i=1; i < segSpan; i++ ) {
         var segX = isHorizontal ? cornerX : rect.x + segment * i;
         var segY = isHorizontal ? rect.y + segment * i : cornerY;
-        this._addShiftTarget( segX, segY, boundsSize );
+        this._addPlaceTarget( segX, segY, boundsSize );
       }
     }
   }, this );
 
 };
 
-proto._addShiftTarget = function( x, y, boundsSize ) {
+proto._addPlaceTarget = function( x, y, boundsSize ) {
   var checkCoord = this._getOption('horizontal') ? y : x;
   if ( checkCoord !== 0 && checkCoord > boundsSize ) {
     return;
   }
   // create string for a key, easier to keep track of what targets
   var key = x + ',' + y;
-  var hasKey = this.shiftTargetKeys.indexOf( key ) != -1;
+  var hasKey = this.placeTargetKeys.indexOf( key ) != -1;
   if ( hasKey ) {
     return;
   }
-  this.shiftTargetKeys.push( key );
-  this.shiftTargets.push({ x: x, y: y });
+  this.placeTargetKeys.push( key );
+  this.placeTargets.push({ x: x, y: y });
 };
 
 // -------------------------- placeItem -------------------------- //
 
+// position item to closest placeTarget
 proto.placeItem = function( item, x, y ) {
-  // var isPackFlow = this.options.pack == 'flow';
-  // var method = isPackFlow ? 'getItemFlowPosition' : 'getItemShiftPosition';
-  var position = this.getItemShiftPosition( item, x, y );
-  // set item position
-  item.rect.x = position.x;
-  item.rect.y = position.y;
-};
-
-proto.getItemShiftPosition = function( item, x, y ) {
-  var shiftPosition;
+  var placePosition;
   var minDistance = Infinity;
   var position = { x: x, y: y };
-  this.shiftTargets.forEach( function( target ) {
+  this.placeTargets.forEach( function( target ) {
     var distance = getDistance( target, position );
     if ( distance < minDistance ) {
-      shiftPosition = target;
+      placePosition = target;
       minDistance = distance;
     }
   });
-  return shiftPosition;
+  // set item position
+  item.rect.x = placePosition.x;
+  item.rect.y = placePosition.y;
 };
 
 function getDistance( a, b ) {
@@ -545,10 +537,6 @@ function getDistance( a, b ) {
   var dy = b.y - a.y;
   return Math.sqrt( dx * dx + dy * dy );
 }
-
-proto.getItemFlowPosition = function( item, x, y ) {
-  return { x: x, y: y };
-};
 
 // -------------------------- drag move -------------------------- //
 
