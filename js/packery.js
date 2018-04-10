@@ -55,7 +55,9 @@ Rect.prototype.canFit = function( rect ) {
 // -------------------------- Packery -------------------------- //
 
 // create an Outlayer layout class
-var Packery = Outlayer.create('packery');
+var Packery = Outlayer.create( 'packery', {
+  pack: 'shift',
+});
 Packery.Item = Item;
 
 var proto = Packery.prototype;
@@ -157,7 +159,8 @@ proto._getMeasurements = function() {
 
 proto._getItemLayoutPosition = function( item ) {
   this._setRectSize( item.element, item.rect );
-  if ( this.isShifting || this.dragItemCount > 0 ) {
+  var isDragShifting = this.options.pack == 'shift' && this.dragItemCount > 0;
+  if ( this.isShifting || isDragShifting ) {
     var packMethod = this._getPackMethod();
     this.packer[ packMethod ]( item.rect );
   } else {
@@ -406,17 +409,18 @@ proto.itemDragStart = function( elem ) {
   if ( !this.isEnabled ) {
     return;
   }
-  this.stamp( elem );
-  // this.ignore( elem );
   var item = this.getItem( elem );
   if ( !item ) {
     return;
   }
 
+  this.stamp( elem );
   item.enablePlacing();
   item.showDropPlaceholder();
   this.dragItemCount++;
-  this.updateShiftTargets( item );
+  // if ( this.options.pack == 'shift' ) {
+    this.updateShiftTargets( item );
+  // }
 };
 
 proto.updateShiftTargets = function( dropItem ) {
@@ -511,9 +515,18 @@ proto._addShiftTarget = function( x, y, boundsSize ) {
   this.shiftTargets.push({ x: x, y: y });
 };
 
-// -------------------------- drop -------------------------- //
+// -------------------------- placeItem -------------------------- //
 
-proto.shift = function( item, x, y ) {
+proto.placeItem = function( item, x, y ) {
+  // var isPackFlow = this.options.pack == 'flow';
+  // var method = isPackFlow ? 'getItemFlowPosition' : 'getItemShiftPosition';
+  var position = this.getItemShiftPosition( item, x, y );
+  // set item position
+  item.rect.x = position.x;
+  item.rect.y = position.y;
+};
+
+proto.getItemShiftPosition = function( item, x, y ) {
   var shiftPosition;
   var minDistance = Infinity;
   var position = { x: x, y: y };
@@ -524,8 +537,7 @@ proto.shift = function( item, x, y ) {
       minDistance = distance;
     }
   });
-  item.rect.x = shiftPosition.x;
-  item.rect.y = shiftPosition.y;
+  return shiftPosition;
 };
 
 function getDistance( a, b ) {
@@ -533,6 +545,10 @@ function getDistance( a, b ) {
   var dy = b.y - a.y;
   return Math.sqrt( dx * dx + dy * dy );
 }
+
+proto.getItemFlowPosition = function( item, x, y ) {
+  return { x: x, y: y };
+};
 
 // -------------------------- drag move -------------------------- //
 
@@ -555,7 +571,7 @@ proto.itemDragMove = function( elem, x, y ) {
 
   var _this = this;
   function onDrag() {
-    _this.shift( item, x, y );
+    _this.placeItem( item, x, y );
     item.positionDropPlaceholder();
     _this.layout();
   }

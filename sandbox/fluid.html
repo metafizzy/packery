@@ -73,6 +73,21 @@
     <div class="grid-item"></div>
   </div>
 
+  <h2>Draggable, flow</h2>
+
+  <div class="grid grid--draggable-flow">
+    <div class="grid-sizer"></div>
+    <div class="grid-item w2"></div>
+    <div class="grid-item h2"></div>
+    <div class="grid-item"></div>
+    <div class="grid-item w3"></div>
+    <div class="grid-item"></div>
+    <div class="grid-item h3"></div>
+    <div class="grid-item w2 h2"></div>
+    <div class="grid-item"></div>
+    <div class="grid-item"></div>
+  </div>
+
 <script src="../bower_components/get-size/get-size.js"></script>
 <script src="../bower_components/desandro-matches-selector/matches-selector.js"></script>
 <script src="../bower_components/ev-emitter/ev-emitter.js"></script>
@@ -90,19 +105,31 @@
 <script src="../js/packery.js"></script>
 
 <script>
-  var pckry = new Packery( '.grid--draggable', {
-    itemSelector: '.grid-item',
-    columnWidth: '.grid-sizer',
-    percentPosition: true,
+
+var pckry1 = new Packery( '.grid--draggable', {
+  itemSelector: '.grid-item',
+  columnWidth: '.grid-sizer',
+  percentPosition: true,
+});
+
+bindDragItems( pckry1 );
+
+var pckry2 = new Packery( '.grid--draggable-flow', {
+  pack: 'flow',
+  itemSelector: '.grid-item',
+  columnWidth: '.grid-sizer',
+  percentPosition: true,
+});
+
+
+bindDragItems( pckry2 );
+
+function bindDragItems( packery ) {
+  var itemElems = packery.getItemElements().forEach( function( itemElem ) {
+    var draggie = new Draggabilly( itemElem );
+    packery.bindDraggabillyEvents( draggie );
   });
-
-  var dragElems = document.querySelectorAll('.grid--draggable .grid-item');
-
-  for ( var i=0; i < dragElems.length; i++ ) {
-    var dragElem = dragElems[i];
-    var draggie = new Draggabilly( dragElem );
-    pckry.bindDraggabillyEvents( draggie );
-  }
+}
 </script>
 
 </body>
