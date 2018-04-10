@@ -7,10 +7,10 @@
   <title>fluid</title>
 
   <style>
-  * {
-    -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
+
+  /* force scrollbar */
+  html { overflow-y: scroll; }
 
   body {
     font-family: sans-serif;
@@ -22,9 +22,13 @@
     /*padding: 20px 5%;*/
   }
 
+  .grid-item,
+  .grid-sizer {
+    width: 25%;
+  }
+
   .grid-item {
     float: left;
-    width: 25%;
     height: 80px;
     border: 1px solid;
     background: #ACE;
@@ -57,6 +61,7 @@
   <h2>Draggable</h2>
 
   <div class="grid grid--draggable">
+    <div class="grid-sizer"></div>
     <div class="grid-item w2"></div>
     <div class="grid-item h2"></div>
     <div class="grid-item"></div>
@@ -86,12 +91,14 @@
 
 <script>
   var pckry = new Packery( '.grid--draggable', {
-    percentPosition: true
+    itemSelector: '.grid-item',
+    columnWidth: '.grid-sizer',
+    percentPosition: true,
   });
 
   var dragElems = document.querySelectorAll('.grid--draggable .grid-item');
 
-  for ( var i=0, len = dragElems.length; i < len; i++ ) {
+  for ( var i=0; i < dragElems.length; i++ ) {
     var dragElem = dragElems[i];
     var draggie = new Draggabilly( dragElem );
     pckry.bindDraggabillyEvents( draggie );
