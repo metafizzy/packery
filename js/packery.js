@@ -161,7 +161,7 @@ proto._getItemLayoutPosition = function( item ) {
   this._setRectSize( item.element, item.rect );
   var isDragShifting = this.options.pack == 'shift' && this.dragItemCount > 0;
   if ( this.isShifting || isDragShifting ) {
-    var packMethod = this._getPackMethod();
+    var packMethod = this._getShiftPackMethod();
     this.packer[ packMethod ]( item.rect );
   } else {
     this.packer.pack( item.rect );
@@ -177,7 +177,7 @@ proto.shiftLayout = function() {
   delete this.isShifting;
 };
 
-proto._getPackMethod = function() {
+proto._getShiftPackMethod = function() {
   return this._getOption('horizontal') ? 'rowPack' : 'columnPack';
 };
 
@@ -421,58 +421,43 @@ proto.itemDragStart = function( elem ) {
   this.updatePlaceTargets( item );
 };
 
-proto.updatePlaceTargets = function( dropItem ) {
+proto.updatePlaceTargets = function( placeItem ) {
   this.placePacker.reset();
-
-  // pack stamps
   this._getBoundingRect();
-  var isOriginLeft = this._getOption('originLeft');
-  var isOriginTop = this._getOption('originTop');
-  this.stamps.forEach( function( stamp ) {
-    // ignore dragged item
-    var item = this.getItem( stamp );
-    if ( item && item.isPlacing ) {
-      return;
-    }
-    var offset = this._getElementOffset( stamp );
-    var rect = new Rect({
-      x: isOriginLeft ? offset.left : offset.right,
-      y: isOriginTop ? offset.top : offset.bottom
-    });
-    this._setRectSize( stamp, rect );
-    // save its space in the packer
-    this.placePacker.placed( rect );
-  }, this );
+  this._updateStampPlaceTargets();
 
-  // reset placeTargets
+  // sizes and measures
   var isHorizontal = this._getOption('horizontal');
   var segmentName = isHorizontal ? 'rowHeight' : 'columnWidth';
   var measure = isHorizontal ? 'height' : 'width';
-
-  this.placeTargetKeys = [];
-  this.placeTargets = [];
-  var boundsSize;
   var segment = this[ segmentName ];
   segment = segment && segment + this.gutter;
+  var containSize = this.placePacker[ measure ] + this.gutter;
+  var itemSize = placeItem.rect[ measure ];
+  var boundsSize = containSize - itemSize;
 
+  // reset placeTargets
+  this.placeTargetKeys = [];
+  this.placeTargets = [];
+  // set inital placeTargets
   if ( segment ) {
-    var segmentSpan = Math.ceil( dropItem.rect[ measure ] / segment );
-    var segs = Math.floor( ( this.placePacker[ measure ] + this.gutter ) / segment );
+    var segmentSpan = Math.ceil( itemSize / segment );
+    var segs = Math.floor( containSize / segment );
     boundsSize = ( segs - segmentSpan ) * segment;
-    // add targets on top
+    // add targets on starting side (top for vertical)
     for ( var i=0; i < segs; i++ ) {
       var initialX = isHorizontal ? 0 : i * segment;
       var initialY = isHorizontal ? i * segment : 0;
       this._addPlaceTarget( initialX, initialY, boundsSize );
     }
   } else {
-    boundsSize = ( this.placePacker[ measure ] + this.gutter ) - dropItem.rect[ measure ];
     this._addPlaceTarget( 0, 0, boundsSize );
   }
 
   // pack each item to measure where placeTargets are
   var items = this._getItemsForLayout( this.items );
-  var packMethod = this._getPackMethod();
+  var packMethod = this.options.pack == 'shift' ? this._getShiftPackMethod() :
+    'pack';
   items.forEach( function( item ) {
     var rect = item.rect;
     this._setRectSize( item.element, rect );
@@ -495,7 +480,29 @@ proto.updatePlaceTargets = function( dropItem ) {
       }
     }
   }, this );
+};
 
+proto._updateStampPlaceTargets = function() {
+  if ( !this.stamps || !this.stamps.length ) {
+    return;
+  }
+  var isOriginLeft = this._getOption('originLeft');
+  var isOriginTop = this._getOption('originTop');
+  this.stamps.forEach( function( stamp ) {
+    // ignore dragged item
+    var item = this.getItem( stamp );
+    if ( item && item.isPlacing ) {
+      return;
+    }
+    var offset = this._getElementOffset( stamp );
+    var rect = new Rect({
+      x: isOriginLeft ? offset.left : offset.right,
+      y: isOriginTop ? offset.top : offset.bottom
+    });
+    this._setRectSize( stamp, rect );
+    // save its space in the packer
+    this.placePacker.placed( rect );
+  }, this );
 };
 
 proto._addPlaceTarget = function( x, y, boundsSize ) {
