@@ -5,8 +5,8 @@
  * Licensed GPLv3 for open source use
  * or Packery Commercial License for commercial use
  *
- * http://packery.metafizzy.co
- * Copyright 2016 Metafizzy
+ * https://packery.metafizzy.co
+ * Copyright 2018 Metafizzy
  */
 
 ( function( window, factory ) {

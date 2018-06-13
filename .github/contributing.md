@@ -2,14 +2,14 @@
 
 ### Reduced test case required
 
-All bug reports and problem issues require a [**reduced test case**](http://css-tricks.com/reduced-test-cases/). Create one by forking any one of the [CodePen examples](http://codepen.io/desandro/pens/tags/?grid_type=list&selected_tag=packery-docs) from [the docs](http://packery.metafizzy.co).
+All bug reports and problem issues require a [**reduced test case**](https://css-tricks.com/reduced-test-cases/). Create one by forking any one of the [CodePen examples](https://codepen.io/desandro/pens/tags/?grid_type=list&selected_tag=packery-docs) from [the docs](https://packery.metafizzy.co).
 
 **CodePens**
 
-+ [Basic layout](http://codepen.io/desandro/pen/QyrEgX)
-+ [Fluid layout](http://codepen.io/desandro/pen/xZjOXq)
-+ [Images](http://codepen.io/desandro/pen/pgVbLv)
-+ [Draggable](http://codepen.io/desandro/pen/aGvIq)
++ [Basic layout](https://codepen.io/desandro/pen/QyrEgX)
++ [Fluid layout](https://codepen.io/desandro/pen/xZjOXq)
++ [Images](https://codepen.io/desandro/pen/pgVbLv)
++ [Draggable](https://codepen.io/desandro/pen/aGvIq)
 
 **Test cases**
 
@@ -21,4 +21,12 @@ Providing a reduced test case is the best way to get your issue addressed. Witho
 
 ## Pull requests
 
-Contributions are welcome! Please note: your code may be used as part of a commercial product if merged. Be clear about what license applies to your patch. [The MIT license](http://choosealicense.com/licenses/mit/) or [public domain unlicense](http://choosealicense.com/licenses/unlicense/) are permissive, and allow integration of your patch into Packery as part of a commercial product.
+Contributions are welcome!
+
++ **For typos and one-line fixes,** send those right in.
++ **For larger features,** open an issue before starting any significant work. Let's discuss to see how your feature fits within Packery's vision.
++ **Follow the code style.** Spaces in brackets, semicolons, trailing commas.
++ **Do not edit `packery.pkgd.js`.** Make your edits to source files in `js/`.
++ **Do not run `gulp` to update `dist/` files.** I'll take care of this when I create a new release.
+
+Your code will be used as part of a commercial product if merged. By submitting a Pull Request, you are giving your consent for your code to be integrated into Packery as part of a commercial product.

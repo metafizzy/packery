@@ -70,7 +70,7 @@ proto.overlaps = function( rect ) {
   var rectRight = rect.x + rect.width;
   var rectBottom = rect.y + rect.height;
 
-  // http://stackoverflow.com/a/306332
+  // https://stackoverflow.com/a/306332
   return this.x < rectRight &&
     thisRight > rect.x &&
     this.y < rectBottom &&
