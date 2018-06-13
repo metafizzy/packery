@@ -56,7 +56,7 @@ Rect.prototype.canFit = function( rect ) {
 
 // create an Outlayer layout class
 var Packery = Outlayer.create( 'packery', {
-  placePack: 'shift',
+  packStyle: 'shift',
 });
 Packery.Item = Item;
 
@@ -178,7 +178,7 @@ proto.shiftLayout = function() {
 };
 
 proto._getPackMethod = function() {
-  if ( this.options.placePack != 'shift' ) {
+  if ( this.options.packStyle != 'shift' ) {
     return 'pack';
   }
   return this._getOption('horizontal') ? 'rowPack' : 'columnPack';
