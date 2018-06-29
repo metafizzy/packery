@@ -1,6 +1,6 @@
 {
   "name": "packery",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Gapless, draggable grid layouts",
   "main": "js/packery.js",
   "dependencies": {

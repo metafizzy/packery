@@ -1,12 +1,12 @@
 /*!
- * Packery v2.1.1
+ * Packery v2.1.2
  * Gapless, draggable grid layouts
  *
  * Licensed GPLv3 for open source use
  * or Packery Commercial License for commercial use
  *
  * http://packery.metafizzy.co
- * Copyright 2016 Metafizzy
+ * Copyright 2013-2018 Metafizzy
  */
 
 ( function( window, factory ) {

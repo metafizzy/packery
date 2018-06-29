@@ -1,30 +1,29 @@
 /*!
- * Packery PACKAGED v2.1.1
+ * Packery PACKAGED v2.1.2
  * Gapless, draggable grid layouts
  *
  * Licensed GPLv3 for open source use
  * or Packery Commercial License for commercial use
  *
  * http://packery.metafizzy.co
- * Copyright 2016 Metafizzy
+ * Copyright 2013-2018 Metafizzy
  */
 
 /**
  * Bridget makes jQuery widgets
- * v2.0.0
+ * v2.0.1
  * MIT license
  */
 
 /* jshint browser: true, strict: true, undef: true, unused: true */
 
 ( function( window, factory ) {
-  'use strict';
-  /* globals define: false, module: false, require: false */
-
+  // universal module definition
+  /*jshint strict: false */ /* globals define, module, require */
   if ( typeof define == 'function' && define.amd ) {
     // AMD
     define( 'jquery-bridget/jquery-bridget',[ 'jquery' ], function( jQuery ) {
-      factory( window, jQuery );
+      return factory( window, jQuery );
     });
   } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
@@ -155,22 +154,19 @@ return jQueryBridget;
 }));
 
 /*!
- * getSize v2.0.2
+ * getSize v2.0.3
  * measure size of elements
  * MIT license
  */
 
-/*jshint browser: true, strict: true, undef: true, unused: true */
-/*global define: false, module: false, console: false */
+/* jshint browser: true, strict: true, undef: true, unused: true */
+/* globals console: false */
 
 ( function( window, factory ) {
-  'use strict';
-
+  /* jshint strict: false */ /* globals define, module */
   if ( typeof define == 'function' && define.amd ) {
     // AMD
-    define( 'get-size/get-size',[],function() {
-      return factory();
-    });
+    define( 'get-size/get-size',factory );
   } else if ( typeof module == 'object' && module.exports ) {
     // CommonJS
     module.exports = factory();
@@ -245,7 +241,7 @@ function getStyle( elem ) {
   if ( !style ) {
     logError( 'Style returned ' + style +
       '. Are you running this code in a hidden iframe on Firefox? ' +
-      'See http://bit.ly/getsizebug1' );
+      'See https://bit.ly/getsizebug1' );
   }
   return style;
 }
@@ -271,8 +267,8 @@ function setup() {
   // -------------------------- box sizing -------------------------- //
 
   /**
-   * WebKit measures the outer-width on style.width on border-box elems
-   * IE & Firefox<29 measures the inner-width
+   * Chrome & Safari measure the outer-width on style.width on border-box elems
+   * IE11 & Firefox<29 measures the inner-width
    */
   var div = document.createElement('div');
   div.style.width = '200px';
@@ -284,10 +280,11 @@ function setup() {
   var body = document.body || document.documentElement;
   body.appendChild( div );
   var style = getStyle( div );
+  // round value for browser zoom. desandro/masonry#928
+  isBoxSizeOuter = Math.round( getStyleSize( style.width ) ) == 200;
+  getSize.isBoxSizeOuter = isBoxSizeOuter;
 
-  getSize.isBoxSizeOuter = isBoxSizeOuter = getStyleSize( style.width ) == 200;
   body.removeChild( div );
-
 }
 
 // -------------------------- getSize -------------------------- //
@@ -365,7 +362,7 @@ return getSize;
 });
 
 /**
- * EvEmitter v1.0.2
+ * EvEmitter v1.1.0
  * Lil' event emitter
  * MIT License
  */
@@ -374,7 +371,7 @@ return getSize;
 
 ( function( global, factory ) {
   // universal module definition
-  /* jshint strict: false */ /* globals define, module */
+  /* jshint strict: false */ /* globals define, module, window */
   if ( typeof define == 'function' && define.amd ) {
     // AMD - RequireJS
     define( 'ev-emitter/ev-emitter',factory );
@@ -386,7 +383,7 @@ return getSize;
     global.EvEmitter = factory();
   }
 
-}( this, function() {
+}( typeof window != 'undefined' ? window : this, function() {
 
 
 
@@ -445,13 +442,14 @@ proto.emitEvent = function( eventName, args ) {
   if ( !listeners || !listeners.length ) {
     return;
   }
-  var i = 0;
-  var listener = listeners[i];
+  // copy over to avoid interference if .off() in listener
+  listeners = listeners.slice(0);
   args = args || [];
   // once stuff
   var onceListeners = this._onceEvents && this._onceEvents[ eventName ];
 
-  while ( listener ) {
+  for ( var i=0; i < listeners.length; i++ ) {
+    var listener = listeners[i]
     var isOnce = onceListeners && onceListeners[ listener ];
     if ( isOnce ) {
       // remove listener
@@ -462,12 +460,14 @@ proto.emitEvent = function( eventName, args ) {
     }
     // trigger listener
     listener.apply( this, args );
-    // get next listener
-    i += isOnce ? 0 : 1;
-    listener = listeners[i];
   }
 
   return this;
+};
+
+proto.allOff = function() {
+  delete this._events;
+  delete this._onceEvents;
 };
 
 return EvEmitter;
@@ -475,7 +475,7 @@ return EvEmitter;
 }));
 
 /**
- * matchesSelector v2.0.1
+ * matchesSelector v2.0.2
  * matchesSelector( element, '.selector' )
  * MIT license
  */
@@ -501,7 +501,7 @@ return EvEmitter;
   'use strict';
 
   var matchesMethod = ( function() {
-    var ElemProto = Element.prototype;
+    var ElemProto = window.Element.prototype;
     // check for the standard method name first
     if ( ElemProto.matches ) {
       return 'matches';
@@ -529,7 +529,7 @@ return EvEmitter;
 }));
 
 /**
- * Fizzy UI utils v2.0.1
+ * Fizzy UI utils v2.0.7
  * MIT license
  */
 
@@ -584,22 +584,27 @@ utils.modulo = function( num, div ) {
 
 // ----- makeArray ----- //
 
+var arraySlice = Array.prototype.slice;
+
 // turn element or nodeList into an array
 utils.makeArray = function( obj ) {
-  var ary = [];
   if ( Array.isArray( obj ) ) {
     // use object if already an array
-    ary = obj;
-  } else if ( obj && typeof obj.length == 'number' ) {
-    // convert nodeList to array
-    for ( var i=0; i < obj.length; i++ ) {
-      ary.push( obj[i] );
-    }
-  } else {
-    // array of single index
-    ary.push( obj );
+    return obj;
   }
-  return ary;
+  // return empty array if undefined or null. #6
+  if ( obj === null || obj === undefined ) {
+    return [];
+  }
+
+  var isArrayLike = typeof obj == 'object' && typeof obj.length == 'number';
+  if ( isArrayLike ) {
+    // convert nodeList to array
+    return arraySlice.call( obj );
+  }
+
+  // array of single index
+  return [ obj ];
 };
 
 // ----- removeFrom ----- //
@@ -614,7 +619,7 @@ utils.removeFrom = function( ary, obj ) {
 // ----- getParent ----- //
 
 utils.getParent = function( elem, selector ) {
-  while ( elem != document.body ) {
+  while ( elem.parentNode && elem != document.body ) {
     elem = elem.parentNode;
     if ( matchesSelector( elem, selector ) ) {
       return elem;
@@ -678,30 +683,31 @@ utils.filterFindElements = function( elems, selector ) {
 // ----- debounceMethod ----- //
 
 utils.debounceMethod = function( _class, methodName, threshold ) {
+  threshold = threshold || 100;
   // original method
   var method = _class.prototype[ methodName ];
   var timeoutName = methodName + 'Timeout';
 
   _class.prototype[ methodName ] = function() {
     var timeout = this[ timeoutName ];
-    if ( timeout ) {
-      clearTimeout( timeout );
-    }
-    var args = arguments;
+    clearTimeout( timeout );
 
+    var args = arguments;
     var _this = this;
     this[ timeoutName ] = setTimeout( function() {
       method.apply( _this, args );
       delete _this[ timeoutName ];
-    }, threshold || 100 );
+    }, threshold );
   };
 };
 
 // ----- docReady ----- //
 
 utils.docReady = function( callback ) {
-  if ( document.readyState == 'complete' ) {
-    callback();
+  var readyState = document.readyState;
+  if ( readyState == 'complete' || readyState == 'interactive' ) {
+    // do async to allow for other scripts to run. metafizzy/flickity#441
+    setTimeout( callback );
   } else {
     document.addEventListener( 'DOMContentLoaded', callback );
   }
@@ -749,7 +755,7 @@ utils.htmlInit = function( WidgetClass, namespace ) {
       }
       // initialize
       var instance = new WidgetClass( elem, options );
-      // make available via $().data('layoutname')
+      // make available via $().data('namespace')
       if ( jQuery ) {
         jQuery.data( elem, namespace, instance );
       }
@@ -899,13 +905,16 @@ proto.getPosition = function() {
   var isOriginTop = this.layout._getOption('originTop');
   var xValue = style[ isOriginLeft ? 'left' : 'right' ];
   var yValue = style[ isOriginTop ? 'top' : 'bottom' ];
+  var x = parseFloat( xValue );
+  var y = parseFloat( yValue );
   // convert percent to pixels
   var layoutSize = this.layout.size;
-  var x = xValue.indexOf('%') != -1 ?
-    ( parseFloat( xValue ) / 100 ) * layoutSize.width : parseInt( xValue, 10 );
-  var y = yValue.indexOf('%') != -1 ?
-    ( parseFloat( yValue ) / 100 ) * layoutSize.height : parseInt( yValue, 10 );
-
+  if ( xValue.indexOf('%') != -1 ) {
+    x = ( x / 100 ) * layoutSize.width;
+  }
+  if ( yValue.indexOf('%') != -1 ) {
+    y = ( y / 100 ) * layoutSize.height;
+  }
   // clean up 'auto' or other non-integer values
   x = isNaN( x ) ? 0 : x;
   y = isNaN( y ) ? 0 : y;
@@ -968,9 +977,7 @@ proto._transitionTo = function( x, y ) {
   var curX = this.position.x;
   var curY = this.position.y;
 
-  var compareX = parseInt( x, 10 );
-  var compareY = parseInt( y, 10 );
-  var didNotMove = compareX === this.position.x && compareY === this.position.y;
+  var didNotMove = x == this.position.x && y == this.position.y;
 
   // save end position
   this.setPosition( x, y );
@@ -1013,8 +1020,8 @@ proto.goTo = function( x, y ) {
 proto.moveTo = proto._transitionTo;
 
 proto.setPosition = function( x, y ) {
-  this.position.x = parseInt( x, 10 );
-  this.position.y = parseInt( y, 10 );
+  this.position.x = parseFloat( x );
+  this.position.y = parseFloat( y );
 };
 
 // ----- transition ----- //
@@ -1319,7 +1326,7 @@ return Item;
 }));
 
 /*!
- * Outlayer v2.1.0
+ * Outlayer v2.1.1
  * the brains and guts of a layout library
  * MIT license
  */
@@ -2698,7 +2705,10 @@ proto.disablePlacing = function() {
 
 // remove element from DOM
 proto.removeElem = function() {
-  this.element.parentNode.removeChild( this.element );
+  var parent = this.element.parentNode;
+  if ( parent ) {
+    parent.removeChild( this.element );
+  }
   // add space back to packer
   this.layout.packer.addSpace( this.rect );
   this.emitEvent( 'remove', [ this ] );
@@ -2741,14 +2751,14 @@ return Item;
 }));
 
 /*!
- * Packery v2.1.1
+ * Packery v2.1.2
  * Gapless, draggable grid layouts
  *
  * Licensed GPLv3 for open source use
  * or Packery Commercial License for commercial use
  *
  * http://packery.metafizzy.co
- * Copyright 2016 Metafizzy
+ * Copyright 2013-2018 Metafizzy
  */
 
 ( function( window, factory ) {
@@ -3304,7 +3314,8 @@ proto.itemDragMove = function( elem, x, y ) {
 
   // throttle
   var now = new Date();
-  if ( this._itemDragTime && now - this._itemDragTime < DRAG_THROTTLE_TIME ) {
+  var isThrottled = this._itemDragTime && now - this._itemDragTime < DRAG_THROTTLE_TIME;
+  if ( isThrottled ) {
     clearTimeout( this.dragTimeout );
     this.dragTimeout = setTimeout( onDrag, DRAG_THROTTLE_TIME );
   } else {
