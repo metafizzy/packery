@@ -264,7 +264,9 @@ proto._manageStamp = function( elem ) {
   this._setRectSize( elem, rect );
   // save its space in the packer
   this.packer.placed( rect );
-  this._setMaxXY( rect );
+
+  // ignore stamps in overall layout height
+  //this._setMaxXY( rect );
 };
 
 // -------------------------- methods -------------------------- //
