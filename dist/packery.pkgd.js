@@ -1,5 +1,5 @@
 /*!
- * Packery PACKAGED v2.1.2
+ * Packery PACKAGED v2.1.3
  * Gapless, draggable grid layouts
  *
  * Licensed GPLv3 for open source use
@@ -3008,15 +3008,17 @@ proto._manageStamp = function( elem ) {
   } else {
     var offset = this._getElementOffset( elem );
     rect = new Rect({
-      x: this._getOption('originLeft') ? offset.left : offset.right,
-      y: this._getOption('originTop') ? offset.top : offset.bottom
+      x: Math.round( this._getOption('originLeft') ? offset.left : offset.right ),
+      y: Math.round( this._getOption('originTop') ? offset.top : offset.bottom )
     });
   }
 
   this._setRectSize( elem, rect );
   // save its space in the packer
   this.packer.placed( rect );
-  this._setMaxXY( rect );
+  
+  // ignore stamps in overall layout height
+  //this._setMaxXY( rect );
 };
 
 // -------------------------- methods -------------------------- //
