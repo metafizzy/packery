@@ -5,7 +5,7 @@
  * Licensed GPLv3 for open source use
  * or Packery Commercial License for commercial use
  *
- * http://packery.metafizzy.co
+ * https://packery.metafizzy.co
  * Copyright 2013-2018 Metafizzy
  */
 
@@ -2757,7 +2757,7 @@ return Item;
  * Licensed GPLv3 for open source use
  * or Packery Commercial License for commercial use
  *
- * http://packery.metafizzy.co
+ * https://packery.metafizzy.co
  * Copyright 2013-2018 Metafizzy
  */
 
@@ -2841,19 +2841,19 @@ proto._create = function() {
   this.handleUIDraggable = {
     start: function handleUIDraggableStart( event, ui ) {
       // HTML5 may trigger dragstart, dismiss HTML5 dragging
-      if ( !ui ) {
+      if ( !ui || ui.helper.index(this) === -1 ) {
         return;
       }
       _this.itemDragStart( event.currentTarget );
     },
     drag: function handleUIDraggableDrag( event, ui ) {
-      if ( !ui ) {
+      if ( !ui || ui.helper.index(this) === -1 ) {
         return;
       }
       _this.itemDragMove( event.currentTarget, ui.position.left, ui.position.top );
     },
     stop: function handleUIDraggableStop( event, ui ) {
-      if ( !ui ) {
+      if ( !ui || ui.helper.index(this) === -1 ) {
         return;
       }
       _this.itemDragEnd( event.currentTarget );
