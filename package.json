@@ -1,6 +1,6 @@
 {
   "name": "packery",
-  "version": "2.1.2",
+  "version": "3.0.0",
   "description": "Gapless, draggable grid layouts",
   "main": "js/packery.js",
   "dependencies": {
@@ -50,5 +50,5 @@
     "url": "https://github.com/metafizzy/packery/issues"
   },
   "homepage": "https://packery.metafizzy.co",
-  "license": "GPL-3.0"
+  "license": "MIT"
 }
